@@ -1,2 +1,2 @@
 # lucky-omelet
-CMPUT 301 Fall Porject
+CMPUT 301 Fall Project
