@@ -29,7 +29,7 @@ We are aiming to make an event-lottery app. It allows users to create an event, 
 ## Features
 
 ## Wiki Page
-This wiki page contains everything you need to know about our app, including storyboards, work planning, and more. Take a look for more details! [WIKI](https://github.com/CMPUT301F24T63/lucky-omelet/wiki)
+This wiki page contains everything you need to know about our app, including storyboards, work planning, and more. Take a look for more details! [WIKI HOME](https://github.com/CMPUT301F24T63/lucky-omelet/wiki)
 We also have a project planning Kanban board, to see all of the issues in progress. [Project Board](https://github.com/orgs/CMPUT301F24T63/projects/1)
 
 ## License
