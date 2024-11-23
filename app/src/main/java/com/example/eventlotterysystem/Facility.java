@@ -5,4 +5,9 @@ public class Facility {
     private String description;
     private int creatorRef;
     private String poster;
+
+
+    public int getCreatorRef() {
+        return creatorRef;
+    }
 }

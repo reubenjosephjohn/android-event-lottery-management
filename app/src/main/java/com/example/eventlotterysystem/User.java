@@ -8,7 +8,6 @@ public class User {
     private String email;
     private String contact;
     private String picture;
-    private int facilityRef;
     private boolean isAdmin;
     private ArrayList<Integer> notificationRefs;
     private ArrayList<Integer> enrolledEventRefs;
