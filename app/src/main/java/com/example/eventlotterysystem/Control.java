@@ -152,8 +152,31 @@ public class Control {
                 .addOnFailureListener(e -> Log.e("Firestore", "Notification save failed", e));
     }
 
+    // Getters and Setters
+    public int getCurrentUserID() {
+        return currentUserID;
+    }
 
-    // finder methods
+
+    public int getCurrentUserIDForUserCreation() {
+        int result = currentEventID;
+        currentEventID++;
+        db.collection("control").document("ControlData").update("currentEventID", currentEventID);
+        return result;
+    }
+
+    public int getCurrentEventID() {
+        return currentEventID;
+    }
+
+    public int getCurrentEventIDForEventCreation() {
+        int result = currentEventID;
+        currentEventID++;
+        db.collection("control").document("ControlData").update("currentEventID", currentEventID);
+        return result;
+    }
+
+    // finder methods (use try-catch to handle errors)
     public User findUserByID(int userID) {
         for (User user : userList) {
             if (user.getUserID() == userID) {
