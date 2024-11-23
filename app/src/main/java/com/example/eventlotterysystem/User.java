@@ -72,18 +72,6 @@ public class User {
         this.isAdmin = isAdmin;
     }
 
-    public ArrayList<Integer> getNotificationRefs() {
-        return notificationRefs;
-    }
-
-    public ArrayList<Integer> getEnrolledEventRefs() {
-        return enrolledEventRefs;
-    }
-
-    public ArrayList<Integer> getOrganizedEventRefs() {
-        return organizedEventRefs;
-    }
-
     public Boolean getNotificationSetting() {
         return notificationSetting;
     }
