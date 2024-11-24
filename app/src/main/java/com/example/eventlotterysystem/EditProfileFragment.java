@@ -129,7 +129,7 @@ public class EditProfileFragment extends DialogFragment {
                     String fields = TextUtils.join(", ", missingFields);
                     message = "Please fill in the following fields: " + fields + ".";
                 }
-                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show(); // Replace 'this' with appropriate context if needed
+                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -147,6 +147,7 @@ public class EditProfileFragment extends DialogFragment {
 
         return view;
     }
+
     @Override
     public void onResume() {
         super.onResume();

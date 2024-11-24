@@ -2,16 +2,21 @@ package com.example.eventlotterysystem;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A DialogFragment that allows users to edit facility details such as name and description.
@@ -76,17 +81,49 @@ public class EditFacilityFragment extends DialogFragment {
         Button cancelButton = view.findViewById(R.id.cancel_button);
 
         finishButton.setOnClickListener(v -> {
+            String name = nameEditText.getText().toString().trim();
+            String description = descriptionEditText.getText().toString().trim();
+
+            List<String> missingFields = new ArrayList<>();
+            boolean hasError = false;
+
+            if (name.isEmpty()) {
+                nameEditText.setError("Facility Name is required");
+                missingFields.add("Facility Name");
+                hasError = true;
+            } else {
+                nameEditText.setError(null);
+            }
+
+            if (description.isEmpty()) {
+                descriptionEditText.setError("Facility Description is required");
+                missingFields.add("Facility Description");
+                hasError = true;
+            } else {
+                descriptionEditText.setError(null);
+            }
+
+            if (hasError) {
+                String message;
+                if (missingFields.size() == 1) {
+                    message = "Please fill in the " + missingFields.get(0) + " field.";
+                } else {
+                    String fields = TextUtils.join(", ", missingFields);
+                    message = "Please fill in the following fields: " + fields + ".";
+                }
+                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             if (facilityUpdatedListener != null) {
                 facilityUpdatedListener.onFacilityUpdated(
-                        nameEditText.getText().toString(),
-                        descriptionEditText.getText().toString()
+                        name,
+                        description
                 );
             }
             dismiss();
         });
-
         cancelButton.setOnClickListener(v -> dismiss());
-
         return view;
     }
 
