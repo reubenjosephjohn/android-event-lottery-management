@@ -58,31 +58,4 @@ public class QRCodeDialogFragment extends DialogFragment {
         byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
         return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
     }
-
-//    /**
-//     * Generates a QR code bitmap from the given data string.
-//     * @param data the data to encode in the QR code
-//     * @return a Bitmap representing the QR code, or null if generation fails
-//     */
-//    private Bitmap generateQRCode(String data) {
-//        QRCodeWriter writer = new QRCodeWriter();
-//        try {
-//            // Define QR code dimensions
-//            int width = 200;
-//            int height = 200;
-//            // Generate QR code bit matrix
-//            com.google.zxing.common.BitMatrix bitMatrix = writer.encode(data, BarcodeFormat.QR_CODE, width, height);
-//            // Create a bitmap from the bit matrix
-//            Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
-//            for (int x = 0; x < width; x++) {
-//                for (int y = 0; y < height; y++) {
-//                    bitmap.setPixel(x, y, bitMatrix.get(x, y) ? 0xFF000000 : 0xFFFFFFFF);
-//                }
-//            }
-//            return bitmap;
-//        } catch (WriterException e) {
-//            e.printStackTrace();
-//            return null;
-//        }
-//    }
 }
