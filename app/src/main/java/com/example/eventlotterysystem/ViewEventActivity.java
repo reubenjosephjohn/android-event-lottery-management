@@ -95,8 +95,8 @@ public class ViewEventActivity extends AppCompatActivity {
             joinbutton.setText("Cancel Event");
             declinebutton.setVisibility(View.GONE);
         }else if(inList(curEvent.getChosenUserRefs(), curUser.getUserID())){
-            joinbutton.setText("Accept Invitation");
-            declinebutton.setText("Decline Invitation");
+            joinbutton.setVisibility(View.GONE);
+            declinebutton.setVisibility(View.GONE);
         }else if(inList(curEvent.getFinalUserRefs(), curUser.getUserID())){
             joinbutton.setVisibility(View.GONE);
             declinebutton.setVisibility(View.GONE);
