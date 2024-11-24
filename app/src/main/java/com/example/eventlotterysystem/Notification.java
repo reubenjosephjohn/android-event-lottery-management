@@ -7,6 +7,7 @@ public class Notification {
     private Boolean isAccepted;
     private Boolean isDeclined;
     private String customMessage;
+    private String documentID;
 
     // Default no-argument constructor (required for Firestore)
     public Notification() {}
@@ -19,14 +20,39 @@ public class Notification {
         this.isAccepted = false;
         this.isDeclined = false;
         this.customMessage = customMessage;
+        this.documentID = "";
     }
 
     // Getters and Setters
     public int getEventRef() {
         return eventRef;
     }
+
     public int getUserRef() {
         return userRef;
     }
 
+    public String getDocumentID() {
+        return documentID;
+    }
+
+    public void setDocumentID(String documentID) {
+        this.documentID = documentID;
+    }
+
+    public String getCustomMessage() {
+        return customMessage;
+    }
+
+    public Boolean getNeedAccept() {
+        return needAccept;
+    }
+
+    public Boolean getAccepted() {
+        return isAccepted;
+    }
+
+    public Boolean getDeclined() {
+        return isDeclined;
+    }
 }

@@ -47,6 +47,12 @@ public class MainActivity extends AppCompatActivity {
 //        control.getUserList().add(jerry);
 //        control.saveUser(jerry);
 
+        // Create notification
+        Notification n1 = new Notification(1, 0, true, "Test message 1");
+        control.getNotificationList().add(n1);
+        control.saveNotification(n1);
+
+
         Toast.makeText(MainActivity.this, "Synchronizing data...", Toast.LENGTH_SHORT).show();
         new android.os.Handler().postDelayed(new Runnable() {
             @Override
