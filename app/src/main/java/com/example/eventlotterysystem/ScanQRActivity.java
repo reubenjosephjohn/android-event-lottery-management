@@ -33,10 +33,10 @@ public class ScanQRActivity extends AppCompatActivity {
             if (result.getContents() == null) {
                 Toast.makeText(this, "Scan canceled", Toast.LENGTH_SHORT).show();
             } else {
-                int eventID = Integer.parseInt(result.getContents());
                 try {
                     // Try to parse the event ID from the QR code contents
                     // Launch the event view activity
+                    int eventID = Integer.parseInt(result.getContents());
                     Intent intent = new Intent(this, ViewEventActivity.class);
                     intent.putExtra("eventID", eventID);
                     startActivity(intent);
