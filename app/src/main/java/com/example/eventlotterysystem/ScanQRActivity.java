@@ -33,16 +33,13 @@ public class ScanQRActivity extends AppCompatActivity {
             if (result.getContents() == null) {
                 Toast.makeText(this, "Scan canceled", Toast.LENGTH_SHORT).show();
             } else {
-                int key = 19467382;
-                String eventIDString = result.getContents();
-                String enc = eventIDString.substring(12, eventIDString.length() - 12); // Remove first 6 and last 6 characters
-                int eventID = Integer.parseInt(enc, 16)^key;
+                int eventID = Integer.parseInt(result.getContents());
                 try {
                     // Try to parse the event ID from the QR code contents
                     // Launch the event view activity
-//                    Intent intent = new Intent(this, ViewEventActivity.class);
-//                    intent.putExtra("eventID", eventID);
-//                    startActivity(intent);
+                    Intent intent = new Intent(this, ViewEventActivity.class);
+                    intent.putExtra("eventID", eventID);
+                    startActivity(intent);
                 } catch (NumberFormatException e) {
                     // Handle invalid format if the QR code does not contain a valid event ID
                     Toast.makeText(this, "Invalid QR code format", Toast.LENGTH_SHORT).show();
