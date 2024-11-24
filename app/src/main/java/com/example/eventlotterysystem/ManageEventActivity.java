@@ -94,10 +94,10 @@ public class ManageEventActivity extends AppCompatActivity {
 
         // Manage members
         buttonManage.setOnClickListener(v -> {
-//            Intent intent = new Intent(ManageEventActivity.this, WaitingListManageActivity.class);
-//            intent.putExtra("eventId", curEvent.getEventID());  // Pass the eventId
-//            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-//            startActivity(intent);
+            Intent intent = new Intent(ManageEventActivity.this, WaitingListManageActivity.class);
+            intent.putExtra("eventId", curEvent.getEventID());  // Pass the eventId
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(intent);
         });
         buttonEdit.setOnClickListener(v -> {
             EditEventDialogFragment dialog = new EditEventDialogFragment(curEvent);
