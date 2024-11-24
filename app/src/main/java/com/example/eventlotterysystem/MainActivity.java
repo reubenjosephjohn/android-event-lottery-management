@@ -40,12 +40,18 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Create users
-//        User tom = new User(Control.getInstance().getCurrentUserIDForUserCreation(), "Tom");
+//        User tom = new User(2, "Tom");
 //        control.getUserList().add(tom);
 //        control.saveUser(tom);
-//        User jerry = new User(Control.getInstance().getCurrentUserIDForUserCreation(), "Jerry");
+//        User jerry = new User(3, "Jerry");
 //        control.getUserList().add(jerry);
 //        control.saveUser(jerry);
+//        User bob = new User(4, "Bob");
+//        control.getUserList().add(bob);
+//        control.saveUser(bob);
+//        User macy = new User(5, "Macy");
+//        control.getUserList().add(macy);
+//        control.saveUser(macy);
 
         // Create notification
 //        Notification n1 = new Notification(16, 6, false, "Test message 2");
@@ -64,6 +70,6 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, Landing_page.class);
                 startActivity(intent);
             }
-        }, 2500);
+        }, 5000);
     }
 }
