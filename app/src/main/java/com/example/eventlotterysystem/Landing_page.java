@@ -86,13 +86,13 @@ public class Landing_page extends AppCompatActivity {
         });
 
         ImageView notificationIcon = findViewById(R.id.notificationsIcon);
-//        notificationIcon.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(Landing_page.this, NotificationActivity.class);
-//                startActivity(intent);
-//            }
-//        });
+        notificationIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Landing_page.this, NotificationActivity.class);
+                startActivity(intent);
+            }
+        });
 
         ImageView facilityIcon = findViewById(R.id.facilitiesIcon);
         facilityIcon.setOnClickListener(new View.OnClickListener() {

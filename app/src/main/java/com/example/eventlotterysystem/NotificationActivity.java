@@ -18,7 +18,7 @@ import java.util.ArrayList;
  */
 public class NotificationActivity extends AppCompatActivity {
     private User curUser;
-    private LinearLayout List;
+    private LinearLayout list;
 
     /**
      * Called when the activity is first created. Initializes the UI and populates notifications.
@@ -37,12 +37,14 @@ public class NotificationActivity extends AppCompatActivity {
         ImageButton returnButton = findViewById(R.id.return_button);
         returnButton.setOnClickListener(view -> finish());
 
-        List = findViewById(R.id.notificationList);
+        list = findViewById(R.id.notificationList);
 
         // Populate notifications
-//        for (Notification noti : curUser.getNotificationList()) {
-//            addNotiToSection(noti, List);
-//        }
+        for (Notification noti: Control.getInstance().getNotificationList()) {
+            if (noti.getUserRef() == curUser.getUserID()) {
+                addNotiToSection(noti, list);
+            }
+        }
     }
 
     /**
@@ -57,18 +59,20 @@ public class NotificationActivity extends AppCompatActivity {
 
         TextView titleTextView = NotifiView.findViewById(R.id.notification_title);
         TextView messageTextView = NotifiView.findViewById(R.id.notification_message);
-//        titleTextView.setText(noti.getEvent().getName());
-//        messageTextView.setText(noti.getCustomMessage());
+        Event relatedEvent = Control.getInstance().findEventByID(noti.getEventRef());
+        String message = noti.getCustomMessage();
+        titleTextView.setText(relatedEvent.getName());
+        messageTextView.setText(message);
 
         Button AcceptButton = NotifiView.findViewById(R.id.btnAccept);
         Button DeclineButton = NotifiView.findViewById(R.id.btnDecline);
         Button DeleteButton = NotifiView.findViewById(R.id.btnRemove);
 
         // if no need to accept/decline, disable buttons
-//        if (!noti.needAccept() || !inList(noti.getEvent().getChosenList(), curUser)) {
-//            AcceptButton.setEnabled(false);
-//            DeclineButton.setEnabled(false);
-//        }
+        if (!noti.getNeedAccept() || noti.getAccepted() || noti.getDeclined()) {
+            AcceptButton.setEnabled(false);
+            DeclineButton.setEnabled(false);
+        }
 
         // handle accept button
         AcceptButton.setOnClickListener(v -> {
