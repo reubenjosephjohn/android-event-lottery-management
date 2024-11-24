@@ -47,7 +47,7 @@
             android:id="@+id/textView7"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="People Limit for Waiting List" />
+            android:text="People Limit for Waiting List(Optional)" />
 
         <EditText
             android:id="@+id/editTextNumber"

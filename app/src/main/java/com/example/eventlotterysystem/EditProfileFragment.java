@@ -1,16 +1,21 @@
 package com.example.eventlotterysystem;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A DialogFragment that allows users to edit their profile details such as name, email, and contact.
@@ -85,11 +90,54 @@ public class EditProfileFragment extends DialogFragment {
         Button cancelButton = view.findViewById(R.id.cancel_button);
 
         finishButton.setOnClickListener(v -> {
+            String name = nameEditText.getText().toString().trim();
+            String email = emailEditText.getText().toString().trim();
+            String user_contact = contactEditText.getText().toString().trim();
+
+            List<String> missingFields = new ArrayList<>();
+            boolean hasError = false;
+
+            if (name.isEmpty()) {
+                nameEditText.setError("Name is required");
+                missingFields.add("Name");
+                hasError = true;
+            } else {
+                nameEditText.setError(null);
+            }
+
+            if (email.isEmpty()) {
+                emailEditText.setError("Email is required");
+                missingFields.add("Email");
+                hasError = true;
+            } else {
+                emailEditText.setError(null);
+            }
+
+            if (user_contact.isEmpty()) {
+                contactEditText.setError("Contact is required");
+                missingFields.add("Contact");
+                hasError = true;
+            } else {
+                contactEditText.setError(null);
+            }
+
+            if (hasError) {
+                String message;
+                if (missingFields.size() == 1) {
+                    message = "Please fill in the " + missingFields.get(0) + " field.";
+                } else {
+                    String fields = TextUtils.join(", ", missingFields);
+                    message = "Please fill in the following fields: " + fields + ".";
+                }
+                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show(); // Replace 'this' with appropriate context if needed
+                return;
+            }
+
             if (profileUpdatedListener != null) {
                 profileUpdatedListener.onProfileUpdated(
-                        nameEditText.getText().toString(),
-                        emailEditText.getText().toString(),
-                        contactEditText.getText().toString()
+                        name,
+                        email,
+                        user_contact
                 );
             }
             dismiss();

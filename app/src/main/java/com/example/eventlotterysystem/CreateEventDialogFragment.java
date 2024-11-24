@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +26,8 @@ import com.bumptech.glide.Glide;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -104,24 +107,94 @@ public class CreateEventDialogFragment extends DialogFragment {
         });
 
         finishButton.setOnClickListener(v -> {
-            // Create a new Event using user input
+            // Retrieve and trim input values
             String eventTitle = titleEdit.getText().toString().trim();
             String eventDescription = descriptionEdit.getText().toString().trim();
             String limitChosenString = limitChosenEdit.getText().toString().trim();
             String limitWaitingString = limitWaitingEdit.getText().toString().trim();
 
-            if (eventTitle.isEmpty() || eventDescription.isEmpty() || limitChosenString.isEmpty()) {
-                Toast.makeText(getContext(), "Please fill in required fields", Toast.LENGTH_SHORT).show();
+            boolean hasError = false;
+            List<String> missingFields = new ArrayList<>();
+
+            // Validate Event Title
+            if (eventTitle.isEmpty()) {
+                titleEdit.setError(getString(R.string.error_event_title_required));
+                missingFields.add(getString(R.string.label_event_title));
+                hasError = true;
+            } else {
+                titleEdit.setError(null);
+            }
+
+            // Validate Event Description
+            if (eventDescription.isEmpty()) {
+                descriptionEdit.setError(getString(R.string.error_event_description_required));
+                missingFields.add(getString(R.string.label_event_description));
+                hasError = true;
+            } else {
+                descriptionEdit.setError(null);
+            }
+
+            // Validate Limit Chosen
+            int limitChosen = 0;
+            if (limitChosenString.isEmpty()) {
+                limitChosenEdit.setError(getString(R.string.error_limit_chosen_required));
+                missingFields.add(getString(R.string.label_limit_chosen));
+                hasError = true;
+            } else {
+                try {
+                    limitChosen = Integer.parseInt(limitChosenString);
+                    if (limitChosen <= 0) {
+                        limitChosenEdit.setError(getString(R.string.error_limit_positive));
+                        missingFields.add(getString(R.string.label_limit_chosen));
+                        hasError = true;
+                    } else {
+                        limitChosenEdit.setError(null);
+                    }
+                } catch (NumberFormatException e) {
+                    limitChosenEdit.setError(getString(R.string.error_limit_chosen_invalid));
+                    missingFields.add(getString(R.string.label_limit_chosen));
+                    hasError = true;
+                }
+            }
+
+            // Validate Limit Waiting (Optional Field)
+            int limitWaiting = 9999; // Default value
+            if (!limitWaitingString.isEmpty()) {
+                try {
+                    limitWaiting = Integer.parseInt(limitWaitingString);
+                    if (limitWaiting <= 0) {
+                        limitWaitingEdit.setError(getString(R.string.error_limit_positive));
+                        missingFields.add(getString(R.string.label_limit_waiting));
+                        hasError = true;
+                    } else {
+                        limitWaitingEdit.setError(null);
+                    }
+                } catch (NumberFormatException e) {
+                    limitWaitingEdit.setError(getString(R.string.error_limit_waiting_invalid));
+                    missingFields.add(getString(R.string.label_limit_waiting));
+                    hasError = true;
+                }
+            } else {
+                // If the waiting limit is optional and left empty, remove any previous errors
+                limitWaitingEdit.setError(null);
+            }
+
+            // If there are any validation errors, show a Toast and halt the process
+            if (hasError) {
+                String message;
+                if (missingFields.size() == 1) {
+                    message = "Please fill in the " + missingFields.get(0) + " field.";
+                } else if (missingFields.size() > 1) {
+                    String fields = TextUtils.join(", ", missingFields);
+                    message = "Please fill in the following fields: " + fields + ".";
+                } else {
+                    // Fallback message if no specific fields are missing
+                    message = getString(R.string.toast_fill_required_fields);
+                }
+                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            int limitChosen = Integer.parseInt(limitChosenString);
-            int limitWaiting = limitWaitingString.isEmpty() ? 9999 : Integer.parseInt(limitWaitingString);
-
-            if (limitChosen <= 0 || limitWaiting <= 0) {
-                Toast.makeText(getContext(), "Limits must be greater than zero.", Toast.LENGTH_SHORT).show();
-                return;
-            }
             boolean geo = locationSwitch.isChecked();
             Event newEvent = new Event(Control.getInstance().getCurrentEventIDForEventCreation(), eventTitle, eventDescription, limitChosen, limitWaiting, geo);
             newEvent.setCreatorRef(curUser.getUserID());
@@ -138,6 +211,7 @@ public class CreateEventDialogFragment extends DialogFragment {
             String qrCodeHash = newEvent.getHashCodeQR(); // Replace with your QR code generation method
             QRCodeDialogFragment qrCodeDialog = QRCodeDialogFragment.newInstance(qrCodeHash);
             qrCodeDialog.show(getParentFragmentManager(), "QRCodeDialogFragment");
+
             dismiss(); // Close the dialog
         });
 
