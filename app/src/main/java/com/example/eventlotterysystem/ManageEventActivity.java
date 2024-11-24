@@ -10,6 +10,7 @@ import android.util.Base64;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -103,14 +104,18 @@ public class ManageEventActivity extends AppCompatActivity {
         });
 
         buttonQRCode.setOnClickListener(v -> {
+            if (curEvent.getHashCodeQR() == null){
+                curEvent.generateQR();
+                Control.getInstance().saveEvent(curEvent);
+            }
             QRCodeDialogFragment dialog = QRCodeDialogFragment.newInstance(curEvent.getHashCodeQR());
             dialog.show(getSupportFragmentManager(), "QRCodeDialogFragment");
         });
         buttonMap.setOnClickListener(v -> {
-            curEvent.getLatitudeList().add(53.5461);
-            curEvent.getLongitudeList().add(-113.4937);
-            curEvent.getLatitudeList().add(51.0447);
-            curEvent.getLongitudeList().add(-114.0719);
+//            curEvent.getLatitudeList().add(53.5461);
+//            curEvent.getLongitudeList().add(-113.4937);
+//            curEvent.getLatitudeList().add(51.0447);
+//            curEvent.getLongitudeList().add(-114.0719);
             MapDialogFragment mapDialogFragment = new MapDialogFragment(curEvent);
             mapDialogFragment.show(getSupportFragmentManager(), "MapDialogFragment");
         });
