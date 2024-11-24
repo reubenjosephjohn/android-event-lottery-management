@@ -157,9 +157,9 @@ public class Control {
 
 
     public int getCurrentUserIDForUserCreation() {
-        int result = currentEventID;
-        currentEventID++;
-        db.collection("control").document("ControlData").update("currentEventID", currentEventID);
+        int result = currentUserID;
+        currentUserID++;
+        db.collection("control").document("ControlData").update("currentUserID", currentUserID);
         return result;
     }
 
