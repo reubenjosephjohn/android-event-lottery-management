@@ -50,6 +50,118 @@ public class Event {
         return eventID;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public int getLimitChosenList() {
+        return limitChosenList;
+    }
+
+    public void setLimitChosenList(int limitChosenList) {
+        this.limitChosenList = limitChosenList;
+    }
+
+    public int getLimitWaitingList() {
+        return limitWaitingList;
+    }
+
+    public void setLimitWaitingList(int limitWaitingList) {
+        this.limitWaitingList = limitWaitingList;
+    }
+
+    public int getCreatorRef() {
+        return creatorRef;
+    }
+
+    public void setCreatorRef(int creatorRef) {
+        this.creatorRef = creatorRef;
+    }
+
+    public String getPoster() {
+        return poster;
+    }
+
+    public void setPoster(String poster) {
+        this.poster = poster;
+    }
+
+    public String getHashCodeQR() {
+        return hashCodeQR;
+    }
+
+    public void setHashCodeQR(String hashCodeQR) {
+        this.hashCodeQR = hashCodeQR;
+    }
+
+    public ArrayList<Integer> getWaitingUserRefs() {
+        return waitingUserRefs;
+    }
+
+    public void setWaitingUserRefs(ArrayList<Integer> waitingUserRefs) {
+        this.waitingUserRefs = waitingUserRefs;
+    }
+
+    public ArrayList<Integer> getCancelledUserRefs() {
+        return cancelledUserRefs;
+    }
+
+    public void setCancelledUserRefs(ArrayList<Integer> cancelledUserRefs) {
+        this.cancelledUserRefs = cancelledUserRefs;
+    }
+
+    public ArrayList<Integer> getChosenUserRefs() {
+        return chosenUserRefs;
+    }
+
+    public void setChosenUserRefs(ArrayList<Integer> chosenUserRefs) {
+        this.chosenUserRefs = chosenUserRefs;
+    }
+
+    public ArrayList<Integer> getFinalUserRefs() {
+        return finalUserRefs;
+    }
+
+    public void setFinalUserRefs(ArrayList<Integer> finalUserRefs) {
+        this.finalUserRefs = finalUserRefs;
+    }
+
+    public Boolean getGeoSetting() {
+        return geoSetting;
+    }
+
+    public void setGeoSetting(Boolean geoSetting) {
+        this.geoSetting = geoSetting;
+    }
+
+    public ArrayList<Double> getLatitudeList() {
+        return latitudeList;
+    }
+
+    public void setLatitudeList(ArrayList<Double> latitudeList) {
+        this.latitudeList = latitudeList;
+    }
+
+    public ArrayList<Double> getLongitudeList() {
+        return longitudeList;
+    }
+
+    public void setLongitudeList(ArrayList<Double> longitudeList) {
+        this.longitudeList = longitudeList;
+    }
+
     public void generateQR() {
         QRCodeWriter writer = new QRCodeWriter();
         try {
