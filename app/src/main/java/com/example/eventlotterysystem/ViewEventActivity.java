@@ -181,7 +181,7 @@ public class ViewEventActivity extends AppCompatActivity {
                                             }
                                         });
                                 // User confirmed, proceed with joining the event
-//                                Control.getCurrentUser().joinEvent(curEvent);
+                                curEvent.getWaitingUserRefs().add(curUser.getUserID());
                                 joinbutton.setText("Cancel Event");
                                 // Update event details
                                 eventDetail.setText("Description: " + curEvent.getDescription() + "\n"
@@ -198,7 +198,7 @@ public class ViewEventActivity extends AppCompatActivity {
                             .show();
                 } else {
                     // No geo requirement, join the event directly
-//                    Control.getCurrentUser().joinEvent(curEvent);
+                    curEvent.getWaitingUserRefs().add(curUser.getUserID());
                     joinbutton.setText("Cancel Event");
 
                     // Update event details
@@ -218,7 +218,7 @@ public class ViewEventActivity extends AppCompatActivity {
                 Control.getInstance().saveEvent(curEvent);
             } else {
                 // User clicked to cancel event
-//                Control.getCurrentUser().cancelEvent(curEvent);
+                curEvent.getWaitingUserRefs().remove(curUser.getUserID());
                 joinbutton.setText("Join Event");
                 // Update event details
                 eventDetail.setText("Description: " + curEvent.getDescription() + "\n"
@@ -229,6 +229,7 @@ public class ViewEventActivity extends AppCompatActivity {
             }
         });
         declinebutton.setOnClickListener(v -> {
+            // User clicked to decline event
             curEvent.getChosenUserRefs().remove(curUser.getUserID());
             curEvent.getCancelledUserRefs().add(curUser.getUserID());
             joinbutton.setVisibility(View.GONE);
