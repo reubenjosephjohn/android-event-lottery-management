@@ -1,5 +1,13 @@
 package com.example.eventlotterysystem;
 
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Typeface;
+import android.util.Base64;
+
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
 public class User {
@@ -86,5 +94,64 @@ public class User {
 
     public void setFID(String FID) {
         this.FID = FID;
+    }
+
+    public void generate_picture() {
+        if (name != null && !name.isEmpty()) {
+            // Extract initials from the user's name
+            String initials = getInitials(name);
+
+            // Create the picture (Bitmap) for the user
+            Bitmap bitmap = createImageWithInitials(initials);
+
+            // Create a Picture object with the generated Bitmap (assumes the current user is the uploader)
+            this.picture = encodeBitmap(bitmap); // You may need a way to encode the bitmap as a String
+        }
+    }
+
+    // Helper method to extract initials from the name
+    private String getInitials(String name) {
+        String[] nameParts = name.split(" ");
+        StringBuilder initials = new StringBuilder();
+        for (String part : nameParts) {
+            if (!part.isEmpty()) {
+                initials.append(part.charAt(0));  // Take the first letter of each name part
+            }
+        }
+        return initials.toString().toUpperCase();  // Convert initials to uppercase
+    }
+
+    // Helper method to create a Bitmap with initials
+    private Bitmap createImageWithInitials(String initials) {
+        int width = 200;  // Image width
+        int height = 200; // Image height
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+
+        // Set background color
+        canvas.drawColor(Color.parseColor("#4CAF50")); // Green background (you can change the color)
+
+        // Set up paint object for text
+        Paint paint = new Paint();
+        paint.setColor(Color.WHITE);  // Text color
+        paint.setTextSize(100);  // Text size
+        paint.setTypeface(Typeface.DEFAULT_BOLD);
+        paint.setTextAlign(Paint.Align.CENTER);
+
+        // Draw initials in the center of the canvas
+        float xPos = width / 2;
+        float yPos = (height / 2) - ((paint.descent() + paint.ascent()) / 2);
+        canvas.drawText(initials, xPos, yPos, paint);
+
+        return bitmap;  // Return the generated bitmap
+    }
+
+    // Helper method to encode Bitmap to a String (Base64 encoding or any method you prefer)
+    private String encodeBitmap(Bitmap bitmap) {
+        // Convert bitmap to a Base64 encoded string (as an example)
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] byteArray = baos.toByteArray();
+        return Base64.encodeToString(byteArray, Base64.DEFAULT);
     }
 }

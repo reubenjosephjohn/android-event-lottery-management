@@ -174,6 +174,14 @@ public class Control {
         return result;
     }
 
+    public static User getCurrentUser() {
+        return currentUser;
+    }
+
+    public static void setCurrentUser(User currentUser) {
+        Control.currentUser = currentUser;
+    }
+
     public ArrayList<User> getUserList() {
         return userList;
     }
