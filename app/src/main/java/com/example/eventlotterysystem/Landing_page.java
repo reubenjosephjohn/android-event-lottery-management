@@ -26,23 +26,10 @@ public class Landing_page extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.landing_page);
 
-        Control.setCurrentUser(Control.getInstance().getUserList().get(1));
-//        if (Control.getCurrentUser() == null){
-//            checkDevice(Control.getInstance());
-//        }
-//        Control.setCurrentUser(Control.getInstance().getUserList().get(1));
-//        else {
-//            int currentUserID = Control.getCurrentUser().getUserID();
-//            Control control = new Control();
-//            Control.setInstance(control);
-//            FirestoreManager.getInstance().loadControl(Control.getInstance());
-//            for (User user : Control.getInstance().getUserList()) {
-//                if (user.getUserID() == currentUserID) {
-//                    Control.setCurrentUser(user);
-//                    break;
-//                }
-//            }
-//        }
+        // Control.setCurrentUser(Control.getInstance().getUserList().get(1));
+        if (Control.getCurrentUser() == null){
+            checkDevice(Control.getInstance());
+        }
 
         // Set up the OnBackPressedCallback
         OnBackPressedDispatcher dispatcher = this.getOnBackPressedDispatcher();
@@ -133,24 +120,20 @@ public class Landing_page extends AppCompatActivity {
         super.onDestroy();
     }
 
-//    protected void checkDevice(Control control){
-//        for (User user : Control.getInstance().getUserList()) {
-//            if (user.getFID().equals(Control.getLocalFID())) {
-//                Toast.makeText(this, String.valueOf(user.getUserID()), Toast.LENGTH_SHORT).show();
-//                Control.setCurrentUser(user);
-//                return;
-//            }
-//        }
-//        if (Control.getCurrentUser() == null){
-//            User me = new User(Control.getInstance().getUserIDForUserCreation());
-//            me.setFID(Control.getLocalFID());
-//            Control.getInstance().getUserList().add(me);
-//            Control.setCurrentUser(me);
-//        }
-//
-//        FirestoreManager.getInstance().saveControl(Control.getInstance());
-//
-//    }
+    protected void checkDevice(Control control){
+        for (User user : Control.getInstance().getUserList()) {
+            if (user.getFID().equals(Control.getLocalFID())) {
+                Control.setCurrentUser(user);
+                return;
+            }
+        }
+        if (Control.getCurrentUser() == null){
+            User me = new User(Control.getInstance().getCurrentUserIDForUserCreation(), Control.getLocalFID());
+            Control.getInstance().getUserList().add(me);
+            Control.setCurrentUser(me);
+            Control.getInstance().saveUser(me);
+        }
+    }
 
     @Override
     protected void onRestart() {

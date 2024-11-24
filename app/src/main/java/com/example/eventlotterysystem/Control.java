@@ -198,6 +198,14 @@ public class Control {
         return notificationList;
     }
 
+    public static String getLocalFID() {
+        return localFID;
+    }
+
+    public static void setLocalFID(String localFID) {
+        Control.localFID = localFID;
+    }
+
     // finder methods (use try-catch to handle errors)
     public User findUserByID(int userID) {
         for (User user : userList) {
