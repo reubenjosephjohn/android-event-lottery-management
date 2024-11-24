@@ -1,5 +1,6 @@
 package com.example.eventlotterysystem;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -32,7 +33,9 @@ public class MainActivity extends AppCompatActivity {
 //        User jerry = new User(Control.getInstance().getCurrentUserIDForUserCreation(), "Jerry");
 //        control.getUserList().add(jerry);
 //        control.saveUser(jerry);
-
+        Control.getInstance();
+        Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+        startActivity(intent);
 
 
 
