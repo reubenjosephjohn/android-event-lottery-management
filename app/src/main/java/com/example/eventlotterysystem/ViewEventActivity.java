@@ -22,6 +22,7 @@ import android.location.Location;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -155,79 +156,90 @@ public class ViewEventActivity extends AppCompatActivity {
         // Join or cancel participation in the event based on current status
         joinbutton.setOnClickListener(v -> {
             if (joinbutton.getText().equals("Join Event")) {
+                if ("000-000-0000".equals(curUser.getContact())) {
+                    AlertDialog dialog = new AlertDialog.Builder(this)
+                            .setTitle("Cannot Join")
+                            .setMessage("You need a valid profile to join")
+                            .setPositiveButton("Confirm", (dialogInterface, which) -> {
+                                dialogInterface.dismiss();
+                            })
+                            .create();
+                    dialog.show();
+                }
+                else{
+                    if (curEvent.getGeoSetting()) {
+                        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                                != PackageManager.PERMISSION_GRANTED
+                                && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION)
+                                != PackageManager.PERMISSION_GRANTED) {
 
-                if (curEvent.getGeoSetting()) {
-                    if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
-                            != PackageManager.PERMISSION_GRANTED
-                            && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION)
-                            != PackageManager.PERMISSION_GRANTED) {
-
-                        // Request location permissions from the user
-                        ActivityCompat.requestPermissions(this,
-                                new String[]{
-                                        android.Manifest.permission.ACCESS_FINE_LOCATION,
-                                        android.Manifest.permission.ACCESS_COARSE_LOCATION
-                                },
-                                1001); // Request code (unique identifier)
-                        return; // Exit the current method to wait for the user's response
-                    }
-                    // Create a dialog if geolocation is required
-                    new android.app.AlertDialog.Builder(ViewEventActivity.this)
-                            .setMessage("This event requires geo information. Do you want to join?")
-                            .setPositiveButton("Confirm", (dialog, which) -> {
-                                LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                                // Permission is already granted; proceed with location access
-                                fusedLocationClient.getLastLocation()
-                                        .addOnCompleteListener(this, new OnCompleteListener<Location>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Location> task) {
-                                                if (task.isSuccessful() && task.getResult() != null) {
-                                                    // Location found, now get the latitude and longitude
-                                                    Location location = task.getResult();
-                                                    double latitude = location.getLatitude();
-                                                    double longitude = location.getLongitude();
-                                                    // Store geo-location in Firestore
-                                                    curEvent.getLatitudeList().add(latitude);
-                                                    curEvent.getLongitudeList().add(longitude);
-                                                    Toast.makeText(getApplicationContext(),
-                                                            "Latitude: " + latitude + ", Longitude: " + longitude,
-                                                            Toast.LENGTH_SHORT).show();
-                                                    // Save user action to Firestore
-                                                    Control.getInstance().saveEvent(curEvent);
+                            // Request location permissions from the user
+                            ActivityCompat.requestPermissions(this,
+                                    new String[]{
+                                            android.Manifest.permission.ACCESS_FINE_LOCATION,
+                                            android.Manifest.permission.ACCESS_COARSE_LOCATION
+                                    },
+                                    1001); // Request code (unique identifier)
+                            return; // Exit the current method to wait for the user's response
+                        }
+                        // Create a dialog if geolocation is required
+                        new android.app.AlertDialog.Builder(ViewEventActivity.this)
+                                .setMessage("This event requires geo information. Do you want to join?")
+                                .setPositiveButton("Confirm", (dialog, which) -> {
+                                    LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                                    // Permission is already granted; proceed with location access
+                                    fusedLocationClient.getLastLocation()
+                                            .addOnCompleteListener(this, new OnCompleteListener<Location>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Location> task) {
+                                                    if (task.isSuccessful() && task.getResult() != null) {
+                                                        // Location found, now get the latitude and longitude
+                                                        Location location = task.getResult();
+                                                        double latitude = location.getLatitude();
+                                                        double longitude = location.getLongitude();
+                                                        // Store geo-location in Firestore
+                                                        curEvent.getLatitudeList().add(latitude);
+                                                        curEvent.getLongitudeList().add(longitude);
+                                                        Toast.makeText(getApplicationContext(),
+                                                                "Latitude: " + latitude + ", Longitude: " + longitude,
+                                                                Toast.LENGTH_SHORT).show();
+                                                        // Save user action to Firestore
+                                                        Control.getInstance().saveEvent(curEvent);
+                                                    }
                                                 }
-                                            }
-                                        });
-                                // User confirmed, proceed with joining the event
-                                curEvent.getWaitingUserRefs().add(curUser.getUserID());
-                                joinbutton.setText("Cancel Event");
-                                // Update event details
-                                eventDetail.setText("Description: " + curEvent.getDescription() + "\n"
-                                        + "Capacity of Event: (" + (curEvent.getChosenUserRefs().size() + curEvent.getFinalUserRefs().size()) + "/" + curEvent.getLimitChosenList() + ")\n"
-                                        + "Capacity of Waiting List: (" + curEvent.getWaitingUserRefs().size() + "/" + curEvent.getLimitWaitingList() + ")");
-                                // Save user action to Firestore
-                                Control.getInstance().saveEvent(curEvent);
-                            })
-                            .setNegativeButton("Cancel", (dialog, which) -> {
-                                // User canceled, don't join the event
-                                dialog.dismiss();
-                            })
-                            .create()
-                            .show();
-                } else {
-                    // No geo requirement, join the event directly
-                    curEvent.getWaitingUserRefs().add(curUser.getUserID());
-                    joinbutton.setText("Cancel Event");
+                                            });
+                                    // User confirmed, proceed with joining the event
+                                    curEvent.getWaitingUserRefs().add(curUser.getUserID());
+                                    joinbutton.setText("Cancel Event");
+                                    // Update event details
+                                    eventDetail.setText("Description: " + curEvent.getDescription() + "\n"
+                                            + "Capacity of Event: (" + (curEvent.getChosenUserRefs().size() + curEvent.getFinalUserRefs().size()) + "/" + curEvent.getLimitChosenList() + ")\n"
+                                            + "Capacity of Waiting List: (" + curEvent.getWaitingUserRefs().size() + "/" + curEvent.getLimitWaitingList() + ")");
+                                    // Save user action to Firestore
+                                    Control.getInstance().saveEvent(curEvent);
+                                })
+                                .setNegativeButton("Cancel", (dialog, which) -> {
+                                    // User canceled, don't join the event
+                                    dialog.dismiss();
+                                })
+                                .create()
+                                .show();
+                    } else {
+                        // No geo requirement, join the event directly
+                        curEvent.getWaitingUserRefs().add(curUser.getUserID());
+                        joinbutton.setText("Cancel Event");
 
-                    // Update event details
-                    eventDetail.setText("Description: " + curEvent.getDescription() + "\n"
-                            + "Capacity of Event: (" + (curEvent.getChosenUserRefs().size() + curEvent.getFinalUserRefs().size()) + "/" + curEvent.getLimitChosenList() + ")\n"
-                            + "Capacity of Waiting List: (" + curEvent.getWaitingUserRefs().size() + "/" + curEvent.getLimitWaitingList() + ")");
+                        // Update event details
+                        eventDetail.setText("Description: " + curEvent.getDescription() + "\n"
+                                + "Capacity of Event: (" + (curEvent.getChosenUserRefs().size() + curEvent.getFinalUserRefs().size()) + "/" + curEvent.getLimitChosenList() + ")\n"
+                                + "Capacity of Waiting List: (" + curEvent.getWaitingUserRefs().size() + "/" + curEvent.getLimitWaitingList() + ")");
 
-                    // Save user action to Firestore
-                    Control.getInstance().saveEvent(curEvent);
+                        // Save user action to Firestore
+                        Control.getInstance().saveEvent(curEvent);
+                        }
                 }
             } else if (joinbutton.getText().equals("Accept Invitation")) {
-                curEvent.getChosenUserRefs().remove(curUser.getUserID());
+                curEvent.getChosenUserRefs().remove(Integer.valueOf(curUser.getUserID()));
                 curEvent.getFinalUserRefs().add(curUser.getUserID());
                 joinbutton.setVisibility(View.GONE);
                 declinebutton.setVisibility(View.GONE);
@@ -235,7 +247,7 @@ public class ViewEventActivity extends AppCompatActivity {
                 Control.getInstance().saveEvent(curEvent);
             } else {
                 // User clicked to cancel event
-                curEvent.getWaitingUserRefs().remove(curUser.getUserID());
+                curEvent.getWaitingUserRefs().remove(Integer.valueOf(curUser.getUserID()));
                 joinbutton.setText("Join Event");
                 // Update event details
                 eventDetail.setText("Description: " + curEvent.getDescription() + "\n"
@@ -247,7 +259,7 @@ public class ViewEventActivity extends AppCompatActivity {
         });
         declinebutton.setOnClickListener(v -> {
             // User clicked to decline event
-            curEvent.getChosenUserRefs().remove(curUser.getUserID());
+            curEvent.getChosenUserRefs().remove(Integer.valueOf(curUser.getUserID()));
             curEvent.getCancelledUserRefs().add(curUser.getUserID());
             joinbutton.setVisibility(View.GONE);
             declinebutton.setVisibility(View.GONE);
