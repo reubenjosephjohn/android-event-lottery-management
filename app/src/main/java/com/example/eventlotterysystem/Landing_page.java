@@ -76,7 +76,6 @@ public class Landing_page extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Landing_page.this, EventslistActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 startActivity(intent);
             }
         });

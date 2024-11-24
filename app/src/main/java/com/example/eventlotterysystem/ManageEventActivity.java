@@ -70,7 +70,7 @@ public class ManageEventActivity extends AppCompatActivity {
         // Return button to go back
         returnButton.setOnClickListener(v -> {
             Intent intent = new Intent(ManageEventActivity.this, EventslistActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);
         });
 

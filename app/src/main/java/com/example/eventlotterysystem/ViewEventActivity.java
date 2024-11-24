@@ -125,7 +125,7 @@ public class ViewEventActivity extends AppCompatActivity {
         // Set up the return button to go back to the Events list
         returnButton.setOnClickListener(v -> {
             Intent intent = new Intent(ViewEventActivity.this, EventslistActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);
         });
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);

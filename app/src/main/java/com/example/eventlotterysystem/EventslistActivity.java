@@ -61,7 +61,7 @@ public class EventslistActivity extends AppCompatActivity {
         ImageButton returnButton = findViewById(R.id.return_button);
         returnButton.setOnClickListener(v -> {
             Intent intent = new Intent(EventslistActivity.this, Landing_page.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);
         });
 
