@@ -61,6 +61,7 @@ public class ViewEventActivity extends AppCompatActivity {
 
     /** The currently logged-in user */
     private User curUser;
+    private TextView textView10;
 
     private FusedLocationProviderClient fusedLocationClient;
 
@@ -87,6 +88,7 @@ public class ViewEventActivity extends AppCompatActivity {
         returnButton = findViewById(R.id.return_button);
         joinbutton = findViewById(R.id.Entrant_join_button);
         declinebutton = findViewById(R.id.decline);
+        textView10 = findViewById(R.id.textView10);
 
         // Retrieve the Event object passed via intent
         int id = (int) getIntent().getSerializableExtra("eventID");
@@ -111,6 +113,7 @@ public class ViewEventActivity extends AppCompatActivity {
         }else if(inList(curEvent.getChosenUserRefs(), curUser.getUserID())){
             joinbutton.setVisibility(View.GONE);
             declinebutton.setVisibility(View.GONE);
+            textView10.setVisibility(View.VISIBLE);
         }else if(inList(curEvent.getFinalUserRefs(), curUser.getUserID())){
             joinbutton.setVisibility(View.GONE);
             declinebutton.setVisibility(View.GONE);

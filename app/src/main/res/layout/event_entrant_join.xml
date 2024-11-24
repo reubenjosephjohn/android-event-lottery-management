@@ -94,6 +94,7 @@
         android:text="Congratulations, you have been SELECTED! ! Go to notifications to ACCEPT or DECLINE"
         android:textColor="#020202"
         android:textSize="14sp"
+        android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@+id/Entrant_join_button"
         tools:layout_editor_absoluteX="84dp" />
 
