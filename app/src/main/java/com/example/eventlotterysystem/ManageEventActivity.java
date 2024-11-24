@@ -1,13 +1,21 @@
 package com.example.eventlotterysystem;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Base64;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 /**
  * ManageEventActivity is responsible for displaying and managing event details.
@@ -59,6 +67,14 @@ public class ManageEventActivity extends AppCompatActivity {
                 break;
             }
         }
+
+        String picture = curEvent.getPoster();  // Get the current picture from the user object
+        if (picture != null) {
+            // If a picture exists, decode the Base64 content and set it to the ImageView
+            Bitmap pictureBitmap = decodeBitmap(picture);  // Assuming decodeBitmap method to convert String to Bitmap
+            eventPoster.setImageBitmap(pictureBitmap);  // Set the generated bitmap as the ImageView source
+        }
+
         if (curEvent != null) {
             // Populate the UI with event data
             eventTitle.setText(curEvent.getName());
@@ -128,5 +144,32 @@ public class ManageEventActivity extends AppCompatActivity {
                     + "Capacity of Waiting List: (" + curEvent.getWaitingUserRefs().size() + "/" + curEvent.getLimitWaitingList() + ")");
         }
         Control.getInstance().saveEvent(curEvent);
+    }
+
+    /**
+     * Decodes a Base64 encoded string back to a Bitmap.
+     *
+     * @param encodedImage The Base64 encoded image content.
+     * @return The decoded Bitmap.
+     */
+    private Bitmap decodeBitmap(String encodedImage) {
+        byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
+        return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+    }
+    private Bitmap getBitmapFromUri(Uri uri) {
+        try {
+            return MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    // Helper method to encode Bitmap to a String (Base64 encoding or any method you prefer)
+    private String encodeBitmap(Bitmap bitmap) {
+        // Convert bitmap to a Base64 encoded string (as an example)
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] byteArray = baos.toByteArray();
+        return Base64.encodeToString(byteArray, Base64.DEFAULT);
     }
 }
