@@ -146,8 +146,18 @@ public class Control {
 
     public void saveNotification(Notification notification) {
         db.collection("notifications").add(notification)
-                .addOnSuccessListener(aVoid -> Log.i("Firestore", "Notification saved"))
+                .addOnSuccessListener(documentReference -> {
+                    notification.setDocumentID(documentReference.getId());
+                    updateNotification(notification);
+                    Log.i("Firestore", "Notification saved");
+                })
                 .addOnFailureListener(e -> Log.e("Firestore", "Notification save failed", e));
+    }
+
+    public void updateNotification(Notification notification) {
+        db.collection("notifications").document(notification.getDocumentID()).set(notification)
+                .addOnSuccessListener(aVoid -> Log.i("Firestore", "Notification updated"))
+                .addOnFailureListener(e -> Log.e("Firestore", "Notification update failed", e));
     }
 
     // Getters and Setters
