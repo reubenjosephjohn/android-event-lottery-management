@@ -137,10 +137,22 @@ public class Control {
                 .addOnFailureListener(e -> Log.e("Firestore", "Facility save failed", e));
     }
 
+    public void deleteFacility(Facility facility) {
+        db.collection("facilities").document(String.valueOf(facility.getCreatorRef())).delete()
+                .addOnSuccessListener(aVoid -> Log.i("Firestore", "Facility deleted"))
+                .addOnFailureListener(e -> Log.e("Firestore", "Facility delete failed", e));
+    }
+
     public void saveEvent(Event event) {
         db.collection("events").document(String.valueOf(event.getEventID())).set(event)
                 .addOnSuccessListener(aVoid -> Log.i("Firestore", "Event saved"))
                 .addOnFailureListener(e -> Log.e("Firestore", "Event save failed", e));
+    }
+
+    public void deleteEvent(Event event) {
+        db.collection("events").document(String.valueOf(event.getEventID())).delete()
+                .addOnSuccessListener(aVoid -> Log.i("Firestore", "Event deleted"))
+                .addOnFailureListener(e -> Log.e("Firestore", "Event delete failed", e));
     }
 
     public void addNotification(Notification notification) {

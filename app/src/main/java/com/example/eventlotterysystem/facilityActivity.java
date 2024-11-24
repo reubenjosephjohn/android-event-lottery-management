@@ -8,6 +8,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
+import java.util.ArrayList;
+
 /**
  * An Activity that displays and allows editing of the user's facility information.
  */
@@ -56,20 +58,45 @@ public class facilityActivity extends AppCompatActivity implements EditFacilityF
         returnButton.setOnClickListener(view -> finish());
 
         ImageButton deleteButton = findViewById(R.id.del_button);
-//        deleteButton.setOnClickListener(v -> {
-//            if (curUser.getFacility() != null) {
-//                new AlertDialog.Builder(facilityActivity.this)
-//                        .setTitle("Delete Facility")
-//                        .setMessage("Are you sure you want to delete your facility?")
-//                        .setPositiveButton("Delete", (dialog, which) -> {
-//                            FirestoreManager.getInstance().deleteFacilityFromDatabase(curUser.getFacility());
-//                            curUser.deleteFacility(Control.getInstance());
-//                            finish();
-//                        })
-//                        .setNegativeButton("Cancel", null)
-//                        .show();
-//            }
-//        });
+        deleteButton.setOnClickListener(v -> {
+            for (Facility facility : Control.getInstance().getFacilityList()) {
+                // If the user's facility is found
+                if (facility.getCreatorRef() == curUser.getUserID()) {
+                    new AlertDialog.Builder(facilityActivity.this)
+                            .setTitle("Delete Facility")
+                            .setMessage("Are you sure you want to delete your facility?\n\nThis will delete all your managed events. " )
+                            .setPositiveButton("Delete", (dialog, which) -> {
+                                // Delete facility from database and Control
+                                Control.getInstance().deleteFacility(facility);
+                                Control.getInstance().getFacilityList().remove(facility);
+                                // Find all events created by the user
+                                ArrayList<Event> eventsToDelete = new ArrayList<>();
+                                for (Event event : Control.getInstance().getEventList()) {
+                                    if (event.getCreatorRef() == curUser.getUserID()) {
+                                        // Delete notifications related to this event
+                                        ArrayList<Notification> notificationsToDelete = new ArrayList<>();
+                                        for (Notification notification: Control.getInstance().getNotificationList()) {
+                                            if (notification.getEventRef() == event.getEventID()) {
+                                                Control.getInstance().deleteNotification(notification);
+                                                notificationsToDelete.add(notification);
+                                            }
+                                        }
+                                        Control.getInstance().getNotificationList().removeAll(notificationsToDelete);
+                                        // Delete event from database and Control
+                                        Control.getInstance().deleteEvent(event);
+                                        eventsToDelete.add(event);
+                                    }
+                                }
+                                Control.getInstance().getEventList().removeAll(eventsToDelete);
+                                finish();
+                            })
+                            .setNegativeButton("Cancel", null)
+                            .show();
+                    break;
+                }
+            }
+
+        });
     }
 
     /**
