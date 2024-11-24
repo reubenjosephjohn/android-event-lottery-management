@@ -128,13 +128,13 @@ public class ProfileActivity extends AppCompatActivity implements EditProfileFra
                                 event.getWaitingUserRefs().remove(Integer.valueOf(curUser.getUserID()));
                                 Control.getInstance().saveEvent(event);
                             }
-
                             // chosen
                             if (event.getChosenUserRefs().contains(Integer.valueOf(curUser.getUserID()))) {
                                 event.getCancelledUserRefs().add(curUser.getUserID());
                                 event.getChosenUserRefs().remove(Integer.valueOf(curUser.getUserID()));
                                 Control.getInstance().saveEvent(event);
                             }
+                            // final
                             if (event.getFinalUserRefs().contains(Integer.valueOf(curUser.getUserID()))) {
                                 event.getCancelledUserRefs().add(curUser.getUserID());
                                 event.getFinalUserRefs().remove(Integer.valueOf(curUser.getUserID()));

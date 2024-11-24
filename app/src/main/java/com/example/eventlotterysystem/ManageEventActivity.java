@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * ManageEventActivity is responsible for displaying and managing event details.
@@ -121,20 +122,27 @@ public class ManageEventActivity extends AppCompatActivity {
         });
 
         deleteButton.setOnClickListener(v -> {
-//            new AlertDialog.Builder(ManageEventActivity.this)
-//                    .setTitle("Delete Event")
-//                    .setMessage("Are you sure you want to delete your event?")
-//                    .setPositiveButton("Delete", (dialog, which) -> {
-//                        User currentUser = Control.getCurrentUser();
-//                        if (curEvent != null && currentUser != null) {
-//                            FirestoreManager.getInstance().deleteEventFromDatabase(curEvent);
-//                            currentUser.deleteEvent(Control.getInstance(), curEvent);
-//                            finish();
-//
-//                        }
-//                    })
-//                    .setNegativeButton("Cancel", null)
-//                    .show();
+            new AlertDialog.Builder(ManageEventActivity.this)
+                    .setTitle("Delete Event")
+                    .setMessage("Are you sure you want to delete your event?")
+                    .setPositiveButton("Delete", (dialog, which) -> {
+                        User currentUser = Control.getCurrentUser();
+                        // Delete related Notifications
+                        ArrayList<Notification> notificationsToDelete = new ArrayList<>();
+                        for (Notification notification : Control.getInstance().getNotificationList()) {
+                            if (notification.getEventRef() == curEvent.getEventID()) {
+                                Control.getInstance().deleteNotification(notification);
+                                notificationsToDelete.add(notification);
+                            }
+                        }
+                        Control.getInstance().getNotificationList().removeAll(notificationsToDelete);
+                        // Delete event from database and Control
+                        Control.getInstance().deleteEvent(curEvent);
+                        Control.getInstance().getEventList().remove(curEvent);
+                        finish();
+                    })
+                    .setNegativeButton("Cancel", null)
+                    .show();
         });
 
 

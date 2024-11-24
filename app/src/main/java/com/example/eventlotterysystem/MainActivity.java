@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
 //        control.saveUser(jerry);
 
         // Create notification
-//        Notification n1 = new Notification(1, 6, false, "Test message 2");
+//        Notification n1 = new Notification(16, 6, false, "Test message 2");
 //        control.getNotificationList().add(n1);
 //        control.addNotification(n1);
 
