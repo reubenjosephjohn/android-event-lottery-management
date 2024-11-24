@@ -123,6 +123,12 @@ public class ChosenListManageActivity extends AppCompatActivity implements Notif
                         ArrayList<Integer> waitingListCopy = new ArrayList<>(event.getWaitingUserRefs());
                         Collections.shuffle(waitingListCopy);
                         for (int i = 0; i < remainingSpots; i++) {
+                            String automaticMessage = "[Auto] Congratulations! You have been chosen to attend " + event.getName() + "! Click 'Accept' below to accept the invitation!";;
+                            Notification notification = new Notification(event.getEventID(), waitingListCopy.get(i), true, automaticMessage);
+                            Control.getInstance().getNotificationList().add(notification);
+                            Control.getInstance().addNotification(notification);
+                        }
+                        for (int i = 0; i < remainingSpots; i++) {
                             event.getChosenUserRefs().add(waitingListCopy.get(i));
                             event.getWaitingUserRefs().remove(waitingListCopy.get(i));
                         }
