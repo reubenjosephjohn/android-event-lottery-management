@@ -103,6 +103,13 @@ public class ChosenListManageActivity extends AppCompatActivity implements Notif
             return true;
         });
 
+        memberList.setOnItemClickListener((parent, view, position, id) -> {
+            User user = (User) parent.getItemAtPosition(position);
+            Intent intent = new Intent(this, ViewOtherUserProfileActivity.class);
+            intent.putExtra("userID", user.getUserID());
+            startActivity(intent);
+        });
+
 
         findViewById(R.id.roll_button).setOnClickListener(v -> {
             User organizer = Control.getCurrentUser();
@@ -134,7 +141,6 @@ public class ChosenListManageActivity extends AppCompatActivity implements Notif
                         }
 
                     }
-
                     adapter.notifyDataSetChanged();
                     // Save user action
                     Control.getInstance().saveEvent(event);

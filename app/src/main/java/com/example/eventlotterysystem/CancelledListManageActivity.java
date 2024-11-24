@@ -89,6 +89,13 @@ public class CancelledListManageActivity extends AppCompatActivity implements No
             }
         });
 
+        memberList.setOnItemClickListener((parent, view, position, id) -> {
+            User user = (User) parent.getItemAtPosition(position);
+            Intent intent = new Intent(this, ViewOtherUserProfileActivity.class);
+            intent.putExtra("userID", user.getUserID());
+            startActivity(intent);
+        });
+
         bottomNavigationView.setSelectedItemId(R.id.nav_cancelled);
 
         ImageButton returnButton = findViewById(R.id.return_button);

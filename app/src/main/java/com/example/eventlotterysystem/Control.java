@@ -241,6 +241,7 @@ public class Control {
             }
         }
         throw new IllegalArgumentException("User with ID " + userID + " not found.");
+        // return null;
     }
 
     public Event findEventByID(int eventID) {
@@ -250,6 +251,7 @@ public class Control {
             }
         }
         throw new IllegalArgumentException("Event with ID " + eventID + " not found.");
+        // return null;
     }
 
 }

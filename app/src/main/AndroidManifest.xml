@@ -48,6 +48,7 @@
         <activity android:name=".FinalListManageActivity" />
         <activity android:name=".ViewEventActivity" />
         <activity android:name=".ScanQRActivity" />
+        <activity android:name=".ViewOtherUserProfileActivity" />
 
     </application>
 

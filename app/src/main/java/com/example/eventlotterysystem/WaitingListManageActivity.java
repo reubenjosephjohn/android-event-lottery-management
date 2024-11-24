@@ -57,7 +57,6 @@ public class WaitingListManageActivity extends AppCompatActivity implements Noti
         adapter = new UserAdapter(this, waitingList);
         memberList.setAdapter(adapter);
 
-
         BottomNavigationView bottomNavigationView = findViewById(R.id.bot_nav_bar);
         bottomNavigationView.setOnItemSelectedListener(new BottomNavigationView.OnItemSelectedListener() {
             @Override
@@ -89,6 +88,14 @@ public class WaitingListManageActivity extends AppCompatActivity implements Noti
                 return false;
             }
         });
+
+        memberList.setOnItemClickListener((parent, view, position, id) -> {
+            User user = (User) parent.getItemAtPosition(position);
+            Intent intent = new Intent(this, ViewOtherUserProfileActivity.class);
+            intent.putExtra("userID", user.getUserID());
+            startActivity(intent);
+        });
+
         bottomNavigationView.setSelectedItemId(R.id.nav_waiting);
 
         ImageButton returnButton = findViewById(R.id.return_button);
