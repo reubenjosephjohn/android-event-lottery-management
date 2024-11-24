@@ -116,37 +116,47 @@ public class ProfileActivity extends AppCompatActivity implements EditProfileFra
 
         gen.setOnClickListener(v -> generateProfilePicture());
 
-//        deleteButton.setOnClickListener(v -> {
-//            new AlertDialog.Builder(ProfileActivity.this)
-//                    .setTitle("Delete Profile Information")
-//                    .setMessage("Are you sure you want to delete this profile?")
-//                    .setPositiveButton("Delete", (dialog, which) -> {
-//                    // Withdraw from all the events
-//                        for (Event event : curUser.getEnrolledList()) {
-//                            event.getWaitingList().remove(curUser);
-//                            if (event.getChosenList().contains(curUser)){
-//                                event.getChosenList().remove(curUser);
-//                                event.getCancelledList().add(curUser);
-//                            }
-//                            if (event.getFinalList().contains(curUser)) {
-//                                event.getFinalList().remove(curUser);
-//                                event.getCancelledList().add(curUser);
-//                            }
-//                        }
-//                        curUser.getEnrolledList().clear();
-//                        curUser.setName("Default Name");
-//                        curUser.setEmail("user@example.com");
-//                        curUser.setContact("000-000-0000");
-//
-//                        nameTextView.setText(curUser.getName());
-//                        emailTextView.setText("Email: " + curUser.getEmail());
-//                        contactTextView.setText("Contact: " + curUser.getContact());
-//
-//                        FirestoreManager.getInstance().saveControl(Control.getInstance());
-//                    })
-//                    .setNegativeButton("Cancel", null)
-//                    .show();
-//        });
+        deleteButton.setOnClickListener(v -> {
+            new AlertDialog.Builder(ProfileActivity.this)
+                    .setTitle("Delete Profile Information")
+                    .setMessage("Are you sure you want to delete this profile? \n \nThis will withdraw you from all events. \n \nYour facility and managed events will not be removed. ")
+                    .setPositiveButton("Delete", (dialog, which) -> {
+                    // Withdraw from all the events
+                        for (Event event : Control.getInstance().getEventList()) {
+                            // waiting
+                            if (event.getWaitingUserRefs().contains(Integer.valueOf(curUser.getUserID()))) {
+                                event.getWaitingUserRefs().remove(Integer.valueOf(curUser.getUserID()));
+                                Control.getInstance().saveEvent(event);
+                            }
+
+                            // chosen
+                            if (event.getChosenUserRefs().contains(Integer.valueOf(curUser.getUserID()))) {
+                                event.getCancelledUserRefs().add(curUser.getUserID());
+                                event.getChosenUserRefs().remove(Integer.valueOf(curUser.getUserID()));
+                                Control.getInstance().saveEvent(event);
+                            }
+                            if (event.getFinalUserRefs().contains(Integer.valueOf(curUser.getUserID()))) {
+                                event.getCancelledUserRefs().add(curUser.getUserID());
+                                event.getFinalUserRefs().remove(Integer.valueOf(curUser.getUserID()));
+                                Control.getInstance().saveEvent(event);
+                            }
+                        }
+
+                        curUser.setName("Default Name");
+                        curUser.setEmail("user@example.com");
+                        curUser.setContact("000-000-0000");
+                        curUser.setPicture(null);
+
+                        nameTextView.setText(curUser.getName());
+                        emailTextView.setText("Email: " + curUser.getEmail());
+                        contactTextView.setText("Contact: " + curUser.getContact());
+                        profileImageView.setImageDrawable(null);
+
+                        Control.getInstance().saveUser(curUser);
+                    })
+                    .setNegativeButton("Cancel", null)
+                    .show();
+        });
 
     }
 
