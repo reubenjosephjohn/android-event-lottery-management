@@ -42,10 +42,10 @@
         <activity android:name=".facilityActivity" />
         <activity android:name=".ManageEventActivity" />
         <activity android:name=".SettingActivity" />
-<!--        <activity android:name=".WaitingListManageActivity" />-->
-<!--        <activity android:name=".ChosenListManageActivity" />-->
-<!--        <activity android:name=".CancelledListManageActivity" />-->
-<!--        <activity android:name=".FinalListManageActivity" />-->
+        <activity android:name=".WaitingListManageActivity" />
+        <activity android:name=".ChosenListManageActivity" />
+        <activity android:name=".CancelledListManageActivity" />
+        <activity android:name=".FinalListManageActivity" />
         <activity android:name=".ViewEventActivity" />
         <activity android:name=".ScanQRActivity" />
 
