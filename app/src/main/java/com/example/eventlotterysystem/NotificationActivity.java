@@ -78,21 +78,29 @@ public class NotificationActivity extends AppCompatActivity {
         AcceptButton.setOnClickListener(v -> {
             AcceptButton.setEnabled(false);
             DeclineButton.setEnabled(false);
-//            curUser.acceptInvitation(noti);
-
+            relatedEvent.getFinalUserRefs().add(curUser.getUserID());
+            relatedEvent.getChosenUserRefs().remove(Integer.valueOf(curUser.getUserID()));
+            Control.getInstance().saveEvent(relatedEvent);
+            noti.setAccepted(true);
+            Control.getInstance().updateNotification(noti);
         });
 
         // handle decline button
         DeclineButton.setOnClickListener(v -> {
             AcceptButton.setEnabled(false);
             DeclineButton.setEnabled(false);
-//            curUser.declineInvitation(noti);
+            relatedEvent.getCancelledUserRefs().add(curUser.getUserID());
+            relatedEvent.getChosenUserRefs().remove(Integer.valueOf(curUser.getUserID()));
+            Control.getInstance().saveEvent(relatedEvent);
+            noti.setDeclined(true);
+            Control.getInstance().updateNotification(noti);
         });
 
         // handle delete button
         DeleteButton.setOnClickListener(v -> {
             section.removeView(NotifiView);
-//            curUser.removeNotification(noti);
+            Control.getInstance().deleteNotification(noti);
+            Control.getInstance().getNotificationList().remove(noti);
         });
 
         section.addView(NotifiView);

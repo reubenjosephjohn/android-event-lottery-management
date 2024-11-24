@@ -2,7 +2,6 @@ package com.example.eventlotterysystem;
 
 import android.util.Log;
 
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -144,7 +143,7 @@ public class Control {
                 .addOnFailureListener(e -> Log.e("Firestore", "Event save failed", e));
     }
 
-    public void saveNotification(Notification notification) {
+    public void addNotification(Notification notification) {
         db.collection("notifications").add(notification)
                 .addOnSuccessListener(documentReference -> {
                     notification.setDocumentID(documentReference.getId());
@@ -158,6 +157,12 @@ public class Control {
         db.collection("notifications").document(notification.getDocumentID()).set(notification)
                 .addOnSuccessListener(aVoid -> Log.i("Firestore", "Notification updated"))
                 .addOnFailureListener(e -> Log.e("Firestore", "Notification update failed", e));
+    }
+
+    public void deleteNotification(Notification notification) {
+        db.collection("notifications").document(notification.getDocumentID()).delete()
+                .addOnSuccessListener(aVoid -> Log.i("Firestore", "Notification deleted"))
+                .addOnFailureListener(e -> Log.e("Firestore", "Notification delete failed", e));
     }
 
     // Getters and Setters

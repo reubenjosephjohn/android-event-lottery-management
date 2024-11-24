@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
         // Create notification
 //        Notification n1 = new Notification(1, 6, false, "Test message 2");
 //        control.getNotificationList().add(n1);
-//        control.saveNotification(n1);
+//        control.addNotification(n1);
 
 
         Toast.makeText(MainActivity.this, "Synchronizing data...", Toast.LENGTH_SHORT).show();
