@@ -1,6 +1,7 @@
 package com.example.eventlotterysystem;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,5 +21,20 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+
+        // Database test
+        Control control = Control.getInstance();
+        // Create users
+//        User tom = new User(Control.getInstance().getCurrentUserIDForUserCreation(), "Tom");
+//        control.getUserList().add(tom);
+//        control.saveUser(tom);
+//        User jerry = new User(Control.getInstance().getCurrentUserIDForUserCreation(), "Jerry");
+//        control.getUserList().add(jerry);
+//        control.saveUser(jerry);
+
+
+
+
     }
 }

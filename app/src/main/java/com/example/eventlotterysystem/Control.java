@@ -43,8 +43,6 @@ public class Control {
         return instance;
     }
 
-
-
     // Database operations
     private void setUpListeners() {
         // Listener for Control Data
@@ -174,6 +172,22 @@ public class Control {
         currentEventID++;
         db.collection("control").document("ControlData").update("currentEventID", currentEventID);
         return result;
+    }
+
+    public ArrayList<User> getUserList() {
+        return userList;
+    }
+
+    public ArrayList<Event> getEventList() {
+        return eventList;
+    }
+
+    public ArrayList<Facility> getFacilityList() {
+        return facilityList;
+    }
+
+    public ArrayList<Notification> getNotificationList() {
+        return notificationList;
     }
 
     // finder methods (use try-catch to handle errors)
