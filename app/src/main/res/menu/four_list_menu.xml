@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_waiting"
+        android:title="Waiting"
+        android:icon="@drawable/ic_wait" />
+
+    <item
+        android:id="@+id/nav_selected"
+        android:title="Selected"
+        android:icon="@drawable/ic_select" />
+
+    <item
+        android:id="@+id/nav_cancelled"
+        android:title="Cancelled"
+        android:icon="@drawable/ic_cancel" />
+
+    <item
+        android:id="@+id/nav_final"
+        android:title="Final"
+        android:icon="@drawable/ic_final" />
+
+</menu>
