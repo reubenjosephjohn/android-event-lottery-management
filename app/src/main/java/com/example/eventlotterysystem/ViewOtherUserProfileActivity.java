@@ -92,8 +92,10 @@ public class ViewOtherUserProfileActivity extends AppCompatActivity implements E
 
         // Set up return button listener
         ImageButton returnButton = findViewById(R.id.return_button);
-        returnButton.setOnClickListener(view -> finish());
-
+        returnButton.setOnClickListener(view -> {
+            finish();
+            overridePendingTransition(0,0);
+        });
     }
 
 
