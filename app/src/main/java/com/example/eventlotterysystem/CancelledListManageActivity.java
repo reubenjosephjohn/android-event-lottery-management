@@ -2,6 +2,7 @@ package com.example.eventlotterysystem;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -35,6 +36,7 @@ public class CancelledListManageActivity extends AppCompatActivity implements No
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        overridePendingTransition(0, 0);
         setContentView(R.layout.cancelledlist_manage);
 
         int eventId = getIntent().getIntExtra("eventId", -1);
@@ -62,6 +64,10 @@ public class CancelledListManageActivity extends AppCompatActivity implements No
         bottomNavigationView.setOnItemSelectedListener(new BottomNavigationView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                Menu menu = bottomNavigationView.getMenu();
+                for (int i = 0; i < menu.size(); i++) {
+                    menu.getItem(i).setChecked(false);
+                }
                 Intent intent;
                 int itemId = item.getItemId();
                 event = Control.getInstance().findEventByID(event.getEventID());
@@ -120,7 +126,14 @@ public class CancelledListManageActivity extends AppCompatActivity implements No
     @Override
     protected void onResume() {
         super.onResume();
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bot_nav_bar);
+        bottomNavigationView.setSelectedItemId(R.id.nav_cancelled);
         refreshCancelledList();
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        overridePendingTransition(0, 0);
     }
 
     private void refreshCancelledList() {

@@ -3,6 +3,7 @@ package com.example.eventlotterysystem;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -40,6 +41,7 @@ public class ChosenListManageActivity extends AppCompatActivity implements Notif
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        overridePendingTransition(0, 0);
         setContentView(R.layout.chosenlist_manage);
 
         int eventId = getIntent().getIntExtra("eventId", -1);
@@ -67,6 +69,10 @@ public class ChosenListManageActivity extends AppCompatActivity implements Notif
         bottomNavigationView.setOnItemSelectedListener(new BottomNavigationView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                Menu menu = bottomNavigationView.getMenu();
+                for (int i = 0; i < menu.size(); i++) {
+                    menu.getItem(i).setChecked(false);
+                }
                 Intent intent;
                 int itemId = item.getItemId();
                 event = Control.getInstance().findEventByID(event.getEventID());
@@ -178,7 +184,14 @@ public class ChosenListManageActivity extends AppCompatActivity implements Notif
     @Override
     protected void onResume() {
         super.onResume();
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bot_nav_bar);
+        bottomNavigationView.setSelectedItemId(R.id.nav_selected);
         refreshChosenList();
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        overridePendingTransition(0, 0);
     }
 
     private void refreshChosenList() {
