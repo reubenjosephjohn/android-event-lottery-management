@@ -80,18 +80,21 @@ public class WaitingListManageActivity extends AppCompatActivity implements Noti
                     intent.putExtra("eventId", event.getEventID());
                     intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                     startActivity(intent);
+                    overridePendingTransition(0,0);
                     return true;
                 } else if (itemId == R.id.nav_final) {
                     intent = new Intent(WaitingListManageActivity.this, FinalListManageActivity.class);
                     intent.putExtra("eventId", event.getEventID());
                     intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                     startActivity(intent);
+                    overridePendingTransition(0,0);
                     return true;
                 } else if (itemId == R.id.nav_cancelled) {
                     intent = new Intent(WaitingListManageActivity.this, CancelledListManageActivity.class);
                     intent.putExtra("eventId", event.getEventID());
                     intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                     startActivity(intent);
+                    overridePendingTransition(0,0);
                     return true;
                 }
                 return false;

@@ -82,6 +82,7 @@ public class ChosenListManageActivity extends AppCompatActivity implements Notif
                     intent.putExtra("eventId", event.getEventID());
                     intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                     startActivity(intent);
+                    overridePendingTransition(0,0);
                     return true;
                 } else if (itemId == R.id.nav_selected) {
                     refreshChosenList();
@@ -91,12 +92,14 @@ public class ChosenListManageActivity extends AppCompatActivity implements Notif
                     intent.putExtra("eventId", event.getEventID());
                     intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                     startActivity(intent);
+                    overridePendingTransition(0,0);
                     return true;
                 } else if (itemId == R.id.nav_cancelled) {
                     intent = new Intent(ChosenListManageActivity.this, CancelledListManageActivity.class);
                     intent.putExtra("eventId", event.getEventID());
                     intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                     startActivity(intent);
+                    overridePendingTransition(0,0);
                     return true;
                 }
                 return false;

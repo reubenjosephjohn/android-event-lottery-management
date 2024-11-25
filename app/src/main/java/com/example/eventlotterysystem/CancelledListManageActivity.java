@@ -77,18 +77,21 @@ public class CancelledListManageActivity extends AppCompatActivity implements No
                     intent.putExtra("eventId", event.getEventID());
                     intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                     startActivity(intent);
+                    overridePendingTransition(0,0);
                     return true;
                 } else if (itemId == R.id.nav_selected) {
                     intent = new Intent(CancelledListManageActivity.this, ChosenListManageActivity.class);
                     intent.putExtra("eventId", event.getEventID());
                     intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                     startActivity(intent);
+                    overridePendingTransition(0,0);
                     return true;
                 } else if (itemId == R.id.nav_final) {
                     intent = new Intent(CancelledListManageActivity.this, FinalListManageActivity.class);
                     intent.putExtra("eventId", event.getEventID());
                     intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                     startActivity(intent);
+                    overridePendingTransition(0,0);
                     return true;
                 } else if (itemId == R.id.nav_cancelled) {
                     refreshCancelledList();

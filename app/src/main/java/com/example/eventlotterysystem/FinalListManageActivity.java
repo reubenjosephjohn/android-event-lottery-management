@@ -77,12 +77,14 @@ public class FinalListManageActivity extends AppCompatActivity implements Notify
                     intent.putExtra("eventId", event.getEventID());
                     intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                     startActivity(intent);
+                    overridePendingTransition(0,0);
                     return true;
                 } else if (itemId == R.id.nav_selected) {
                     intent = new Intent(FinalListManageActivity.this, ChosenListManageActivity.class);
                     intent.putExtra("eventId", event.getEventID());
                     intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                     startActivity(intent);
+                    overridePendingTransition(0,0);
                     return true;
                 } else if (itemId == R.id.nav_final) {
                     refreshFinalList();
@@ -92,6 +94,7 @@ public class FinalListManageActivity extends AppCompatActivity implements Notify
                     intent.putExtra("eventId", event.getEventID());
                     intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                     startActivity(intent);
+                    overridePendingTransition(0,0);
                     return true;
                 }
                 return false;
