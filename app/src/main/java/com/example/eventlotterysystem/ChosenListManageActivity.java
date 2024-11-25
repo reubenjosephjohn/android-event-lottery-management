@@ -144,6 +144,7 @@ public class ChosenListManageActivity extends AppCompatActivity implements Notif
                     adapter.notifyDataSetChanged();
                     // Save user action
                     Control.getInstance().saveEvent(event);
+                    refreshChosenList();
                     Toast.makeText(this, "Replacement applicant(s) drawn", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(this, "No entrants added as Selected list is full", Toast.LENGTH_SHORT).show();
@@ -175,6 +176,10 @@ public class ChosenListManageActivity extends AppCompatActivity implements Notif
     @Override
     protected void onResume() {
         super.onResume();
+        refreshChosenList();
+    }
+
+    private void refreshChosenList() {
         ListView memberList = findViewById(R.id.member_list);
         ArrayList<User> chosenList = new ArrayList<>();
         for (int userID: event.getChosenUserRefs()) {
@@ -236,8 +241,9 @@ public class ChosenListManageActivity extends AppCompatActivity implements Notif
                     event.getChosenUserRefs().remove(Integer.valueOf(user.getUserID()));
                     event.getCancelledUserRefs().add(user.getUserID());
                     adapter.notifyDataSetChanged();
-                    Toast.makeText(this, "Entrant moved to cancelled list", Toast.LENGTH_SHORT).show();
                     Control.getInstance().saveEvent(event);
+                    refreshChosenList();
+                    Toast.makeText(this, "Entrant moved to cancelled list", Toast.LENGTH_SHORT).show();
                 })
                 .setNegativeButton(R.string.dialog_cancel, null)
                 .show();
