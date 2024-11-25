@@ -36,7 +36,6 @@ public class WaitingListManageActivity extends AppCompatActivity implements Noti
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        overridePendingTransition(0, 0);
         setContentView(R.layout.waitinglist_manage);
 
         int eventId = getIntent().getIntExtra("eventId", -1);

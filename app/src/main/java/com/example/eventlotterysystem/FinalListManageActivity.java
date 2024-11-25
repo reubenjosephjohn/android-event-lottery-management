@@ -36,7 +36,6 @@ public class FinalListManageActivity extends AppCompatActivity implements Notify
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        overridePendingTransition(0, 0);
         setContentView(R.layout.finallist_manage);
 
         int eventId = getIntent().getIntExtra("eventId", -1);

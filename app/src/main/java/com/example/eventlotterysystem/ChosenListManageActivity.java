@@ -41,7 +41,6 @@ public class ChosenListManageActivity extends AppCompatActivity implements Notif
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        overridePendingTransition(0, 0);
         setContentView(R.layout.chosenlist_manage);
 
         int eventId = getIntent().getIntExtra("eventId", -1);

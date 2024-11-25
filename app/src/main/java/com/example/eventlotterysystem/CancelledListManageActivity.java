@@ -36,7 +36,6 @@ public class CancelledListManageActivity extends AppCompatActivity implements No
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        overridePendingTransition(0, 0);
         setContentView(R.layout.cancelledlist_manage);
 
         int eventId = getIntent().getIntExtra("eventId", -1);
