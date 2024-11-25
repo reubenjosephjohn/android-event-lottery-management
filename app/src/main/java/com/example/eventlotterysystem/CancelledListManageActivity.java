@@ -58,11 +58,14 @@ public class CancelledListManageActivity extends AppCompatActivity implements No
         memberList.setAdapter(adapter);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bot_nav_bar);
+        bottomNavigationView.setSelectedItemId(R.id.nav_cancelled);
         bottomNavigationView.setOnItemSelectedListener(new BottomNavigationView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 Intent intent;
                 int itemId = item.getItemId();
+                event = Control.getInstance().findEventByID(event.getEventID());
+        
                 if (itemId == R.id.nav_waiting) {
                     intent = new Intent(CancelledListManageActivity.this, WaitingListManageActivity.class);
                     intent.putExtra("eventId", event.getEventID());
@@ -75,14 +78,14 @@ public class CancelledListManageActivity extends AppCompatActivity implements No
                     intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                     startActivity(intent);
                     return true;
-                } else if (itemId == R.id.nav_cancelled) {
-                    // Already in CancelledListManageActivity
-                    return true;
                 } else if (itemId == R.id.nav_final) {
                     intent = new Intent(CancelledListManageActivity.this, FinalListManageActivity.class);
                     intent.putExtra("eventId", event.getEventID());
                     intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                     startActivity(intent);
+                    return true;
+                } else if (itemId == R.id.nav_cancelled) {
+                    refreshCancelledList();
                     return true;
                 }
                 return false;
@@ -96,7 +99,6 @@ public class CancelledListManageActivity extends AppCompatActivity implements No
             startActivity(intent);
         });
 
-        bottomNavigationView.setSelectedItemId(R.id.nav_cancelled);
 
         ImageButton returnButton = findViewById(R.id.return_button);
         returnButton.setOnClickListener(v -> navigateBackToViewEvent());
@@ -118,6 +120,10 @@ public class CancelledListManageActivity extends AppCompatActivity implements No
     @Override
     protected void onResume() {
         super.onResume();
+        refreshCancelledList();
+    }
+
+    private void refreshCancelledList() {
         ListView memberList = findViewById(R.id.member_list);
         ArrayList<User> cancelledList = new ArrayList<>();
         for (int userID: event.getCancelledUserRefs()) {
@@ -129,8 +135,6 @@ public class CancelledListManageActivity extends AppCompatActivity implements No
         adapter = new UserAdapter(this, cancelledList);
         memberList.setAdapter(adapter);
         adapter.notifyDataSetChanged();
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bot_nav_bar);
-        bottomNavigationView.setSelectedItemId(R.id.nav_cancelled);
     }
 
     /**

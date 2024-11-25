@@ -63,28 +63,31 @@ public class ChosenListManageActivity extends AppCompatActivity implements Notif
         memberList.setAdapter(adapter);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bot_nav_bar);
+        bottomNavigationView.setSelectedItemId(R.id.nav_selected);
         bottomNavigationView.setOnItemSelectedListener(new BottomNavigationView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 Intent intent;
                 int itemId = item.getItemId();
+                event = Control.getInstance().findEventByID(event.getEventID());
+        
                 if (itemId == R.id.nav_waiting) {
                     intent = new Intent(ChosenListManageActivity.this, WaitingListManageActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                     intent.putExtra("eventId", event.getEventID());
+                    intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                     startActivity(intent);
                     return true;
                 } else if (itemId == R.id.nav_selected) {
-                    // Already in ChosenListManageActivity
-                    return true;
-                } else if (itemId == R.id.nav_cancelled) {
-                    intent = new Intent(ChosenListManageActivity.this, CancelledListManageActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                    intent.putExtra("eventId", event.getEventID());
-                    startActivity(intent);
+                    refreshChosenList();
                     return true;
                 } else if (itemId == R.id.nav_final) {
                     intent = new Intent(ChosenListManageActivity.this, FinalListManageActivity.class);
+                    intent.putExtra("eventId", event.getEventID());
+                    intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                    startActivity(intent);
+                    return true;
+                } else if (itemId == R.id.nav_cancelled) {
+                    intent = new Intent(ChosenListManageActivity.this, CancelledListManageActivity.class);
                     intent.putExtra("eventId", event.getEventID());
                     intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                     startActivity(intent);
@@ -120,7 +123,7 @@ public class ChosenListManageActivity extends AppCompatActivity implements Notif
                     if (remainingSpots >= event.getWaitingUserRefs().size()) {
                         event.getChosenUserRefs().addAll(event.getWaitingUserRefs());
                         for (int userID: event.getWaitingUserRefs()) {
-                            String automaticMessage = "[Auto] Congratulations! You have been chosen to attend " + event.getName() + "! Click 'Accept' below to accept the invitation!";;
+                            String automaticMessage = "[Auto] Congratulations! You have been chosen to attend " + event.getName() + "! Click 'Accept' below to accept the invitation!";
                             Notification notification = new Notification(event.getEventID(), userID, true, automaticMessage);
                             Control.getInstance().getNotificationList().add(notification);
                             Control.getInstance().addNotification(notification);
@@ -130,7 +133,7 @@ public class ChosenListManageActivity extends AppCompatActivity implements Notif
                         ArrayList<Integer> waitingListCopy = new ArrayList<>(event.getWaitingUserRefs());
                         Collections.shuffle(waitingListCopy);
                         for (int i = 0; i < remainingSpots; i++) {
-                            String automaticMessage = "[Auto] Congratulations! You have been chosen to attend " + event.getName() + "! Click 'Accept' below to accept the invitation!";;
+                            String automaticMessage = "[Auto] Congratulations! You have been chosen to attend " + event.getName() + "! Click 'Accept' below to accept the invitation!";
                             Notification notification = new Notification(event.getEventID(), waitingListCopy.get(i), true, automaticMessage);
                             Control.getInstance().getNotificationList().add(notification);
                             Control.getInstance().addNotification(notification);
@@ -154,7 +157,6 @@ public class ChosenListManageActivity extends AppCompatActivity implements Notif
             }
         });
 
-        bottomNavigationView.setSelectedItemId(R.id.nav_selected);
         ImageButton returnButton = findViewById(R.id.return_button);
         returnButton.setOnClickListener(v -> navigateBackToViewEvent());
 
@@ -191,8 +193,6 @@ public class ChosenListManageActivity extends AppCompatActivity implements Notif
         adapter = new UserAdapter(this, chosenList);
         memberList.setAdapter(adapter);
         adapter.notifyDataSetChanged();
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bot_nav_bar);
-        bottomNavigationView.setSelectedItemId(R.id.nav_selected);
     }
 
     /**

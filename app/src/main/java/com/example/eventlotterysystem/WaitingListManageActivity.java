@@ -58,13 +58,16 @@ public class WaitingListManageActivity extends AppCompatActivity implements Noti
         memberList.setAdapter(adapter);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bot_nav_bar);
+        bottomNavigationView.setSelectedItemId(R.id.nav_waiting);
         bottomNavigationView.setOnItemSelectedListener(new BottomNavigationView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 Intent intent;
                 int itemId = item.getItemId();
+                event = Control.getInstance().findEventByID(event.getEventID());
+        
                 if (itemId == R.id.nav_waiting) {
-                    // Already in WaitingListManageActivity
+                    refreshWaitingList();
                     return true;
                 } else if (itemId == R.id.nav_selected) {
                     intent = new Intent(WaitingListManageActivity.this, ChosenListManageActivity.class);
@@ -72,14 +75,14 @@ public class WaitingListManageActivity extends AppCompatActivity implements Noti
                     intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                     startActivity(intent);
                     return true;
-                } else if (itemId == R.id.nav_cancelled) {
-                    intent = new Intent(WaitingListManageActivity.this, CancelledListManageActivity.class);
+                } else if (itemId == R.id.nav_final) {
+                    intent = new Intent(WaitingListManageActivity.this, FinalListManageActivity.class);
                     intent.putExtra("eventId", event.getEventID());
                     intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                     startActivity(intent);
                     return true;
-                } else if (itemId == R.id.nav_final) {
-                    intent = new Intent(WaitingListManageActivity.this, FinalListManageActivity.class);
+                } else if (itemId == R.id.nav_cancelled) {
+                    intent = new Intent(WaitingListManageActivity.this, CancelledListManageActivity.class);
                     intent.putExtra("eventId", event.getEventID());
                     intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                     startActivity(intent);
@@ -96,7 +99,6 @@ public class WaitingListManageActivity extends AppCompatActivity implements Noti
             startActivity(intent);
         });
 
-        bottomNavigationView.setSelectedItemId(R.id.nav_waiting);
 
         ImageButton returnButton = findViewById(R.id.return_button);
         returnButton.setOnClickListener(v -> navigateBackToViewEvent());
@@ -121,6 +123,10 @@ public class WaitingListManageActivity extends AppCompatActivity implements Noti
     @Override
     protected void onResume() {
         super.onResume();
+        refreshWaitingList();
+    }
+
+    private void refreshWaitingList() {
         ListView memberList = findViewById(R.id.member_list);
         ArrayList<User> waitingList = new ArrayList<>();
         for (int userID: event.getWaitingUserRefs()) {
@@ -132,8 +138,6 @@ public class WaitingListManageActivity extends AppCompatActivity implements Noti
         adapter = new UserAdapter(this, waitingList);
         memberList.setAdapter(adapter);
         adapter.notifyDataSetChanged();
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bot_nav_bar);
-        bottomNavigationView.setSelectedItemId(R.id.nav_waiting);
     }
 
     /**

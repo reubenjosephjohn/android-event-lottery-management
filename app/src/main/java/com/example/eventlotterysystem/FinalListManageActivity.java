@@ -58,11 +58,14 @@ public class FinalListManageActivity extends AppCompatActivity implements Notify
         memberList.setAdapter(adapter);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bot_nav_bar);
+        bottomNavigationView.setSelectedItemId(R.id.nav_final);
         bottomNavigationView.setOnItemSelectedListener(new BottomNavigationView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 Intent intent;
                 int itemId = item.getItemId();
+                event = Control.getInstance().findEventByID(event.getEventID());
+        
                 if (itemId == R.id.nav_waiting) {
                     intent = new Intent(FinalListManageActivity.this, WaitingListManageActivity.class);
                     intent.putExtra("eventId", event.getEventID());
@@ -75,14 +78,14 @@ public class FinalListManageActivity extends AppCompatActivity implements Notify
                     intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                     startActivity(intent);
                     return true;
+                } else if (itemId == R.id.nav_final) {
+                    refreshFinalList();
+                    return true;
                 } else if (itemId == R.id.nav_cancelled) {
                     intent = new Intent(FinalListManageActivity.this, CancelledListManageActivity.class);
                     intent.putExtra("eventId", event.getEventID());
                     intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                     startActivity(intent);
-                    return true;
-                } else if (itemId == R.id.nav_final) {
-                    // Already in FinalListManageActivity
                     return true;
                 }
                 return false;
@@ -119,6 +122,10 @@ public class FinalListManageActivity extends AppCompatActivity implements Notify
     @Override
     protected void onResume() {
         super.onResume();
+        refreshFinalList();
+    }
+
+    private void refreshFinalList() {
         ListView memberList = findViewById(R.id.member_list);
         ArrayList<User> finalList = new ArrayList<>();
         for (int userID: event.getFinalUserRefs()) {
@@ -130,8 +137,6 @@ public class FinalListManageActivity extends AppCompatActivity implements Notify
         adapter = new UserAdapter(this, finalList);
         memberList.setAdapter(adapter);
         adapter.notifyDataSetChanged();
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bot_nav_bar);
-        bottomNavigationView.setSelectedItemId(R.id.nav_final);
     }
 
     /**
