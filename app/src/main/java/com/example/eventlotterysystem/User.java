@@ -8,9 +8,10 @@ import android.graphics.Typeface;
 import android.util.Base64;
 
 import java.io.ByteArrayOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class User {
+public class User implements Serializable {
     private int userID;
     private String name;
     private String email;
@@ -33,6 +34,13 @@ public class User {
         this.isAdmin = false;
         this.notificationSetting = true;
         this.FID = FID;
+    }
+
+    public Boolean isValid (){
+        if (name.equals("Default Name") || email.equals("user@example.com")) {
+            return false;
+        }
+        return true;
     }
 
     // Getters and Setters

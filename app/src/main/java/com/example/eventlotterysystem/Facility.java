@@ -1,6 +1,8 @@
 package com.example.eventlotterysystem;
 
-public class Facility {
+import java.io.Serializable;
+
+public class Facility implements Serializable {
     private String name;
     private String description;
     private int creatorRef;

@@ -159,7 +159,7 @@ public class ProfileActivity extends AppCompatActivity implements EditProfileFra
                                             nameTextView.setText(curUser.getName());
                                             emailTextView.setText("Email: " + curUser.getEmail());
                                             contactTextView.setText("Contact: " + curUser.getContact());
-                                            profileImageView.setImageDrawable(null);
+                                            profileImageView.setImageBitmap(null);
 
                                             Control.getInstance().saveUser(curUser);
                                         })
@@ -176,7 +176,7 @@ public class ProfileActivity extends AppCompatActivity implements EditProfileFra
                                         .setPositiveButton("Delete", (dialog1, which1) -> {
                                             curUser.setPicture(null);
                                             Control.getInstance().saveUser(curUser);
-                                            profileImageView.setImageDrawable(null);
+                                            profileImageView.setImageBitmap(null);
 
                                         })
                                         .setNegativeButton("Cancel", null)

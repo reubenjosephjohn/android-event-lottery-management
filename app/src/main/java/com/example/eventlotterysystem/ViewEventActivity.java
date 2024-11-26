@@ -2,6 +2,7 @@ package com.example.eventlotterysystem;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -131,6 +132,58 @@ public class ViewEventActivity extends AppCompatActivity {
         if (!curUser.isAdmin()) {
             deleteButton.setVisibility(View.GONE);
         }
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(ViewEventActivity.this);
+                builder.setTitle("Delete")
+                        .setMessage("Choose one of the following actions:")
+                        .setPositiveButton("QR code", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                curEvent.setHashCodeQR(null);
+                                Control.getInstance().saveEvent(curEvent);
+                            }
+                        })
+                        .setNegativeButton("Poster", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                curEvent.setPoster(null);
+                                Control.getInstance().saveEvent(curEvent);
+                                eventPoster.setImageBitmap(null);
+                            }
+                        })
+                        .setNeutralButton("Event", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                new AlertDialog.Builder(ViewEventActivity.this)
+                                        .setTitle("Delete Event")
+                                        .setMessage("Are you sure you want to delete your event?")
+                                        .setPositiveButton("Delete", (dialog1, which1) -> {
+                                            // Delete related Notifications
+                                            ArrayList<Notification> notificationsToDelete = new ArrayList<>();
+                                            for (Notification notification : Control.getInstance().getNotificationList()) {
+                                                if (notification.getEventRef() == curEvent.getEventID()) {
+                                                    Control.getInstance().deleteNotification(notification);
+                                                    notificationsToDelete.add(notification);
+                                                }
+                                            }
+                                            Control.getInstance().getNotificationList().removeAll(notificationsToDelete);
+                                            // Delete event from database and Control
+                                            Control.getInstance().deleteEvent(curEvent);
+                                            Control.getInstance().getEventList().remove(curEvent);
+                                            finish();
+                                        })
+                                        .setNegativeButton("Cancel", null)
+                                        .show();
+                            }
+                        })
+                        .setCancelable(true)
+                        .show();
+            }
+        });
+
+
 
         // Populate the UI with event data
         if (curEvent != null) {

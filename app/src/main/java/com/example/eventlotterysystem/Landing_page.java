@@ -84,6 +84,17 @@ public class Landing_page extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        profileIcon.setOnLongClickListener(v -> {
+            if (Control.getCurrentUser() != null && Control.getCurrentUser().isAdmin()) {
+                Intent intent = new Intent(Landing_page.this, UsersListActivity.class);
+                startActivity(intent);
+                return true;
+            } else {
+                Toast.makeText(Landing_page.this, "Only admins can view all users", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
+
 
         ImageView notificationIcon = findViewById(R.id.notificationsIcon);
         notificationIcon.setOnClickListener(new View.OnClickListener() {
@@ -100,6 +111,19 @@ public class Landing_page extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(Landing_page.this, facilityActivity.class);
                 startActivity(intent);
+            }
+        });
+        facilityIcon.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (Control.getCurrentUser() != null && Control.getCurrentUser().isAdmin()) {
+                    Intent intent = new Intent(Landing_page.this, FacilitiesListActivity.class);
+                    startActivity(intent);
+                    return true;
+                } else {
+                    Toast.makeText(Landing_page.this, "Only admins can view all facilities", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
             }
         });
 
