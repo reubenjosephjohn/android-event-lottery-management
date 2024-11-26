@@ -37,12 +37,21 @@ public class ScanQRActivity extends AppCompatActivity {
                     // Try to parse the event ID from the QR code contents
                     // Launch the event view activity
                     int eventID = Integer.parseInt(result.getContents());
-                    Intent intent = new Intent(this, ViewEventActivity.class);
-                    intent.putExtra("eventID", eventID);
-                    startActivity(intent);
+                    for (Event event : Control.getInstance().getEventList()) {
+                        if (event.getEventID() == eventID) {
+                            Intent intent = new Intent(this, ViewEventActivity.class);
+                            intent.putExtra("eventID", eventID);
+                            startActivity(intent);
+                            break;
+                        }
+                    }
+                    Toast.makeText(this, "Event not found", Toast.LENGTH_SHORT).show();
+                    finish();
+
                 } catch (NumberFormatException e) {
                     // Handle invalid format if the QR code does not contain a valid event ID
                     Toast.makeText(this, "Invalid QR code format", Toast.LENGTH_SHORT).show();
+                    finish();
                 }
             }
         } else {

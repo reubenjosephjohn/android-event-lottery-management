@@ -102,19 +102,6 @@ public class ViewEventActivity extends AppCompatActivity {
             }
         }
 
-        if (curEvent!=null){
-            new android.app.AlertDialog.Builder(ViewEventActivity.this)
-                    .setMessage("This event does not exist")
-                    .setPositiveButton("Confirm", (dialog, which) -> {
-                    })
-                    .setCancelable(false)
-                    .create()
-                    .show();
-            Intent intent = new Intent(ViewEventActivity.this, Landing_page.class);
-            startActivity(intent);
-        }
-
-
         String picture = curEvent.getPoster();  // Get the current picture from the user object
         if (picture != null) {
             // If a picture exists, decode the Base64 content and set it to the ImageView
