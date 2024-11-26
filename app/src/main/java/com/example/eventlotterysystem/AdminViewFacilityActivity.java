@@ -46,8 +46,14 @@ public class AdminViewFacilityActivity extends AppCompatActivity {
                     .setMessage("Are you sure you want to delete this facility?\n\nThis will delete all the events created by this user. " )
                     .setPositiveButton("Delete", (dialog, which) -> {
                         // Delete facility from database and Control
+                        Facility realFacility = null;
+                        for (Facility f : Control.getInstance().getFacilityList()) {
+                            if (f.getCreatorRef() == facility.getCreatorRef()) {
+                                realFacility = f;
+                            }
+                        }
+                        Control.getInstance().getFacilityList().remove(realFacility);
                         Control.getInstance().deleteFacility(facility);
-                        Control.getInstance().getFacilityList().remove(facility);
                         // Find all events created by the user
                         ArrayList<Event> eventsToDelete = new ArrayList<>();
                         for (Event event : Control.getInstance().getEventList()) {
