@@ -92,12 +92,6 @@ public class AdminViewUserActivity extends AppCompatActivity {
                                             user.setEmail("user@example.com");
                                             user.setContact("000-000-0000");
                                             user.setPicture(null);
-
-                                            nameTextView.setText(user.getName());
-                                            emailTextView.setText("Email: " + user.getEmail());
-                                            contactTextView.setText("Contact: " + user.getContact());
-                                            profileImageView.setImageBitmap(null);
-
                                             Control.getInstance().saveUser(user);
                                             finish();
                                         })

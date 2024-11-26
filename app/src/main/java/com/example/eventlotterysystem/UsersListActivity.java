@@ -118,7 +118,10 @@ public class UsersListActivity extends AppCompatActivity {
         }
         adapter.notifyDataSetChanged();
     }
-    private void refreshUsersList() {
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         users = Control.getInstance().getUserList(); // Get the latest list of users
         usersList.clear();
 
@@ -137,10 +140,4 @@ public class UsersListActivity extends AppCompatActivity {
         String currentQuery = searchView.getQuery().toString();
         filterUsers(currentQuery);
     }
-    @Override
-    protected void onResume() {
-        super.onResume();
-        refreshUsersList();
-    }
-
 }

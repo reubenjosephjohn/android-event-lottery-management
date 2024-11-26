@@ -120,8 +120,23 @@ public class FacilitiesListActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();
     }
 
-    protected void onRestart() {
-        super.onRestart();
-        adapter.notifyDataSetChanged();
+    @Override
+    protected void onResume() {
+        super.onResume();
+        facilities = Control.getInstance().getFacilityList(); // Get the latest list of users
+        facilitiesList.clear();
+
+        // Add valid users to the main list
+        for (Facility u : facilities) {
+            facilitiesList.add(u.getName());
+        }
+
+        // Sort the users alphabetically
+        Collections.sort(facilitiesList);
+
+        // Reapply the filter (if there's an active query)
+        SearchView searchView = findViewById(R.id.search_view);
+        String currentQuery = searchView.getQuery().toString();
+        filterFacilities(currentQuery);
     }
 }
