@@ -40,10 +40,10 @@ public class AdminViewFacilityActivity extends AppCompatActivity {
         // Set up back button listener
         ImageButton backButton = findViewById(R.id.back_button);
         backButton.setOnClickListener(view -> finish());
-        deleteButton.setOnClickListener(v -> {{
+        deleteButton.setOnClickListener(v -> {
             new AlertDialog.Builder(AdminViewFacilityActivity.this)
                     .setTitle("Delete Facility")
-                    .setMessage("Are you sure you want to delete your?\n\nThis will delete all managed events. " )
+                    .setMessage("Are you sure you want to delete this facility?\n\nThis will delete all the events created by this user. " )
                     .setPositiveButton("Delete", (dialog, which) -> {
                         // Delete facility from database and Control
                         Control.getInstance().deleteFacility(facility);
@@ -71,7 +71,7 @@ public class AdminViewFacilityActivity extends AppCompatActivity {
                     })
                     .setNegativeButton("Cancel", null)
                     .show();
-            }
+
         });
     }
 }
