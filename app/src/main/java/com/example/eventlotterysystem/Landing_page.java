@@ -158,14 +158,6 @@ public class Landing_page extends AppCompatActivity {
             Control.getInstance().saveUser(me);
         }
     }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-
-        Toast.makeText(Landing_page.this, "Synchronizing data...", Toast.LENGTH_SHORT).show();
-
-    }
 }
 
 

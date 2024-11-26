@@ -80,7 +80,7 @@ public class EditProfileFragment extends DialogFragment {
             emailEditText.setText(getArguments().getString("email"));
             contactEditText.setText(getArguments().getString("contact"));
         }
-        if ("000-000-0000".equals(getArguments().getString("contact"))){
+        if ("Default Name".equals(getArguments().getString("contact")) || "user@example.com".equals(getArguments().getString("email"))){
             nameEditText.setText(getArguments().getString(""));
             emailEditText.setText(getArguments().getString(""));
             contactEditText.setText(getArguments().getString(""));

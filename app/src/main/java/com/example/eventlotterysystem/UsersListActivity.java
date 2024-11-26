@@ -118,4 +118,29 @@ public class UsersListActivity extends AppCompatActivity {
         }
         adapter.notifyDataSetChanged();
     }
+    private void refreshUsersList() {
+        users = Control.getInstance().getUserList(); // Get the latest list of users
+        usersList.clear();
+
+        // Add valid users to the main list
+        for (User u : users) {
+            if (u.isValid()) {
+                usersList.add(u.getName());
+            }
+        }
+
+        // Sort the users alphabetically
+        Collections.sort(usersList);
+
+        // Reapply the filter (if there's an active query)
+        SearchView searchView = findViewById(R.id.search_view);
+        String currentQuery = searchView.getQuery().toString();
+        filterUsers(currentQuery);
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        refreshUsersList();
+    }
+
 }

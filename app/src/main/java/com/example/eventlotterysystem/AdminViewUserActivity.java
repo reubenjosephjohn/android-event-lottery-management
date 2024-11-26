@@ -99,6 +99,7 @@ public class AdminViewUserActivity extends AppCompatActivity {
                                             profileImageView.setImageBitmap(null);
 
                                             Control.getInstance().saveUser(user);
+                                            finish();
                                         })
                                         .setNegativeButton("Cancel", null)
                                         .show();

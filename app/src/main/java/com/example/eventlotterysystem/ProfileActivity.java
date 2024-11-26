@@ -53,7 +53,14 @@ public class ProfileActivity extends AppCompatActivity implements EditProfileFra
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_profile);
 
-        curUser = Control.getCurrentUser();
+//        curUser = Control.getCurrentUser();
+        for (User u : Control.getInstance().getUserList()){
+            if (u.getUserID() == 11){
+                curUser = u;
+                break;
+            }
+        }
+
 
         nameTextView = findViewById(R.id.name);
         emailTextView = findViewById(R.id.email);
@@ -88,12 +95,11 @@ public class ProfileActivity extends AppCompatActivity implements EditProfileFra
 
         deleteButton = findViewById(R.id.del_button);
 
-        String picture = curUser.getPicture();  // Get the current picture from the user object
-        if (picture != null) {
-            // If a picture exists, decode the Base64 content and set it to the ImageView
-            Bitmap pictureBitmap = decodeBitmap(picture);  // Assuming decodeBitmap method to convert String to Bitmap
-            profileImageView.setImageBitmap(pictureBitmap);  // Set the generated bitmap as the ImageView source
-            gen.setText("Replace Image");
+        if (curUser.getPicture() != null){
+            profileImageView.setImageBitmap(decodeBitmap(curUser.getPicture()));
+        }
+        else{
+            profileImageView.setImageBitmap(null);
         }
 
         // Set initial profile information
@@ -102,7 +108,7 @@ public class ProfileActivity extends AppCompatActivity implements EditProfileFra
         contactTextView.setText("Contact: " +curUser.getContact());
 
 //         If contact is default, prompt user to edit profile
-        if ("000-000-0000".equals(curUser.getContact())) {
+        if (!curUser.isValid()) {
             openEditProfileFragment("", "", "");
         }
 
@@ -329,5 +335,9 @@ public class ProfileActivity extends AppCompatActivity implements EditProfileFra
 
         // Resize the bitmap
         return Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);
+    }
+
+    protected void onDestroy(){
+        super.onDestroy();
     }
 }

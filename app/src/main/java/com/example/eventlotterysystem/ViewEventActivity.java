@@ -209,7 +209,7 @@ public class ViewEventActivity extends AppCompatActivity {
         // Join or cancel participation in the event based on current status
         joinbutton.setOnClickListener(v -> {
             if (joinbutton.getText().equals("Join Event")) {
-                if ("000-000-0000".equals(curUser.getContact())) {
+                if (!(curUser.isValid())) {
                     AlertDialog dialog = new AlertDialog.Builder(this)
                             .setTitle("Cannot Join")
                             .setMessage("You need a valid profile to join")
