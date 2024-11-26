@@ -103,6 +103,13 @@ public class ViewEventActivity extends AppCompatActivity {
         }
 
         if (curEvent!=null){
+            new android.app.AlertDialog.Builder(ViewEventActivity.this)
+                    .setMessage("This event does not exist")
+                    .setPositiveButton("Confirm", (dialog, which) -> {
+                    })
+                    .setCancelable(false)
+                    .create()
+                    .show();
             Intent intent = new Intent(ViewEventActivity.this, Landing_page.class);
             startActivity(intent);
         }
