@@ -92,6 +92,7 @@ public class ViewEventActivity extends AppCompatActivity {
         declinebutton = findViewById(R.id.decline);
         textView10 = findViewById(R.id.textView10);
 
+        curEvent = null;
         // Retrieve the Event object passed via intent
         int id = (int) getIntent().getSerializableExtra("eventID");
         for (Event event : Control.getInstance().getEventList()) {
@@ -100,6 +101,12 @@ public class ViewEventActivity extends AppCompatActivity {
                 break;
             }
         }
+
+        if (curEvent!=null){
+            Intent intent = new Intent(ViewEventActivity.this, Landing_page.class);
+            startActivity(intent);
+        }
+
 
         String picture = curEvent.getPoster();  // Get the current picture from the user object
         if (picture != null) {
