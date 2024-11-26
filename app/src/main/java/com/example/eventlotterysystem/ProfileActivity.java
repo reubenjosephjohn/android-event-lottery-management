@@ -1,6 +1,7 @@
 package com.example.eventlotterysystem;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Picture;
@@ -116,47 +117,118 @@ public class ProfileActivity extends AppCompatActivity implements EditProfileFra
 
         gen.setOnClickListener(v -> generateProfilePicture());
 
-        deleteButton.setOnClickListener(v -> {
-            new AlertDialog.Builder(ProfileActivity.this)
-                    .setTitle("Delete Profile Information")
-                    .setMessage("Are you sure you want to delete this profile? \n \nThis will withdraw you from all events. \n \nYour facility and managed events will not be removed. ")
-                    .setPositiveButton("Delete", (dialog, which) -> {
-                    // Withdraw from all the events
-                        for (Event event : Control.getInstance().getEventList()) {
-                            // waiting
-                            if (event.getWaitingUserRefs().contains(Integer.valueOf(curUser.getUserID()))) {
-                                event.getWaitingUserRefs().remove(Integer.valueOf(curUser.getUserID()));
-                                Control.getInstance().saveEvent(event);
-                            }
-                            // chosen
-                            if (event.getChosenUserRefs().contains(Integer.valueOf(curUser.getUserID()))) {
-                                event.getCancelledUserRefs().add(curUser.getUserID());
-                                event.getChosenUserRefs().remove(Integer.valueOf(curUser.getUserID()));
-                                Control.getInstance().saveEvent(event);
-                            }
-                            // final
-                            if (event.getFinalUserRefs().contains(Integer.valueOf(curUser.getUserID()))) {
-                                event.getCancelledUserRefs().add(curUser.getUserID());
-                                event.getFinalUserRefs().remove(Integer.valueOf(curUser.getUserID()));
-                                Control.getInstance().saveEvent(event);
-                            }
-                        }
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(ProfileActivity.this);
+                builder.setTitle("Delete")
+                        .setMessage("Select one of the options below:")
+                        .setPositiveButton("Profile", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                new AlertDialog.Builder(ProfileActivity.this)
+                                        .setTitle("Delete Profile Information")
+                                        .setMessage("Are you sure you want to delete this profile? \n \nThis will withdraw you from all events. \n \nYour facility and managed events will not be removed. ")
+                                        .setPositiveButton("Delete", (dialog1, which1) -> {
+                                            // Withdraw from all the events
+                                            for (Event event : Control.getInstance().getEventList()) {
+                                                // waiting
+                                                if (event.getWaitingUserRefs().contains(Integer.valueOf(curUser.getUserID()))) {
+                                                    event.getWaitingUserRefs().remove(Integer.valueOf(curUser.getUserID()));
+                                                    Control.getInstance().saveEvent(event);
+                                                }
+                                                // chosen
+                                                if (event.getChosenUserRefs().contains(Integer.valueOf(curUser.getUserID()))) {
+                                                    event.getCancelledUserRefs().add(curUser.getUserID());
+                                                    event.getChosenUserRefs().remove(Integer.valueOf(curUser.getUserID()));
+                                                    Control.getInstance().saveEvent(event);
+                                                }
+                                                // final
+                                                if (event.getFinalUserRefs().contains(Integer.valueOf(curUser.getUserID()))) {
+                                                    event.getCancelledUserRefs().add(curUser.getUserID());
+                                                    event.getFinalUserRefs().remove(Integer.valueOf(curUser.getUserID()));
+                                                    Control.getInstance().saveEvent(event);
+                                                }
+                                            }
 
-                        curUser.setName("Default Name");
-                        curUser.setEmail("user@example.com");
-                        curUser.setContact("000-000-0000");
-                        curUser.setPicture(null);
+                                            curUser.setName("Default Name");
+                                            curUser.setEmail("user@example.com");
+                                            curUser.setContact("000-000-0000");
+                                            curUser.setPicture(null);
 
-                        nameTextView.setText(curUser.getName());
-                        emailTextView.setText("Email: " + curUser.getEmail());
-                        contactTextView.setText("Contact: " + curUser.getContact());
-                        profileImageView.setImageDrawable(null);
+                                            nameTextView.setText(curUser.getName());
+                                            emailTextView.setText("Email: " + curUser.getEmail());
+                                            contactTextView.setText("Contact: " + curUser.getContact());
+                                            profileImageView.setImageDrawable(null);
 
-                        Control.getInstance().saveUser(curUser);
-                    })
-                    .setNegativeButton("Cancel", null)
-                    .show();
+                                            Control.getInstance().saveUser(curUser);
+                                        })
+                                        .setNegativeButton("Cancel", null)
+                                        .show();
+                            }
+                        })
+                        .setNegativeButton("Picture", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                new AlertDialog.Builder(ProfileActivity.this)
+                                        .setTitle("Delete Profile Information")
+                                        .setMessage("Are you sure you want to delete this Picture?")
+                                        .setPositiveButton("Delete", (dialog1, which1) -> {
+                                            curUser.setPicture(null);
+                                            Control.getInstance().saveUser(curUser);
+                                            profileImageView.setImageDrawable(null);
+
+                                        })
+                                        .setNegativeButton("Cancel", null)
+                                        .show();
+                            }
+                        })
+                        .setCancelable(true)
+                        .show();
+            }
         });
+
+//        deleteButton.setOnClickListener(v -> {
+//            new AlertDialog.Builder(ProfileActivity.this)
+//                    .setTitle("Delete Profile Information")
+//                    .setMessage("Are you sure you want to delete this profile? \n \nThis will withdraw you from all events. \n \nYour facility and managed events will not be removed. ")
+//                    .setPositiveButton("Delete", (dialog, which) -> {
+//                    // Withdraw from all the events
+//                        for (Event event : Control.getInstance().getEventList()) {
+//                            // waiting
+//                            if (event.getWaitingUserRefs().contains(Integer.valueOf(curUser.getUserID()))) {
+//                                event.getWaitingUserRefs().remove(Integer.valueOf(curUser.getUserID()));
+//                                Control.getInstance().saveEvent(event);
+//                            }
+//                            // chosen
+//                            if (event.getChosenUserRefs().contains(Integer.valueOf(curUser.getUserID()))) {
+//                                event.getCancelledUserRefs().add(curUser.getUserID());
+//                                event.getChosenUserRefs().remove(Integer.valueOf(curUser.getUserID()));
+//                                Control.getInstance().saveEvent(event);
+//                            }
+//                            // final
+//                            if (event.getFinalUserRefs().contains(Integer.valueOf(curUser.getUserID()))) {
+//                                event.getCancelledUserRefs().add(curUser.getUserID());
+//                                event.getFinalUserRefs().remove(Integer.valueOf(curUser.getUserID()));
+//                                Control.getInstance().saveEvent(event);
+//                            }
+//                        }
+//
+//                        curUser.setName("Default Name");
+//                        curUser.setEmail("user@example.com");
+//                        curUser.setContact("000-000-0000");
+//                        curUser.setPicture(null);
+//
+//                        nameTextView.setText(curUser.getName());
+//                        emailTextView.setText("Email: " + curUser.getEmail());
+//                        contactTextView.setText("Contact: " + curUser.getContact());
+//                        profileImageView.setImageDrawable(null);
+//
+//                        Control.getInstance().saveUser(curUser);
+//                    })
+//                    .setNegativeButton("Cancel", null)
+//                    .show();
+//        });
 
     }
 

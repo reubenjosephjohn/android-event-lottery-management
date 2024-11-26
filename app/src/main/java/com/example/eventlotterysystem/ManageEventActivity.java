@@ -1,5 +1,6 @@
 package com.example.eventlotterysystem;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -7,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -106,11 +108,25 @@ public class ManageEventActivity extends AppCompatActivity {
 
         buttonQRCode.setOnClickListener(v -> {
             if (curEvent.getHashCodeQR() == null){
-                curEvent.generateQR();
-                Control.getInstance().saveEvent(curEvent);
+                new AlertDialog.Builder(ManageEventActivity.this)
+                        .setTitle("No QR available")
+                        .setMessage("No QR code was detected. Do you want to generate a new one")
+                        .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                curEvent.generateQR();
+                                Control.getInstance().saveEvent(curEvent);
+                                QRCodeDialogFragment dialog1 = QRCodeDialogFragment.newInstance(curEvent.getHashCodeQR());
+                                dialog1.show(getSupportFragmentManager(), "QRCodeDialogFragment");
+                            }
+                        })
+                        .setNegativeButton("Cancel", null)
+                        .show();
             }
-            QRCodeDialogFragment dialog = QRCodeDialogFragment.newInstance(curEvent.getHashCodeQR());
-            dialog.show(getSupportFragmentManager(), "QRCodeDialogFragment");
+            else{
+                QRCodeDialogFragment dialog = QRCodeDialogFragment.newInstance(curEvent.getHashCodeQR());
+                dialog.show(getSupportFragmentManager(), "QRCodeDialogFragment");
+            }
         });
         buttonMap.setOnClickListener(v -> {
 //            curEvent.getLatitudeList().add(53.5461);
@@ -121,29 +137,80 @@ public class ManageEventActivity extends AppCompatActivity {
             mapDialogFragment.show(getSupportFragmentManager(), "MapDialogFragment");
         });
 
-        deleteButton.setOnClickListener(v -> {
-            new AlertDialog.Builder(ManageEventActivity.this)
-                    .setTitle("Delete Event")
-                    .setMessage("Are you sure you want to delete your event?")
-                    .setPositiveButton("Delete", (dialog, which) -> {
-                        User currentUser = Control.getCurrentUser();
-                        // Delete related Notifications
-                        ArrayList<Notification> notificationsToDelete = new ArrayList<>();
-                        for (Notification notification : Control.getInstance().getNotificationList()) {
-                            if (notification.getEventRef() == curEvent.getEventID()) {
-                                Control.getInstance().deleteNotification(notification);
-                                notificationsToDelete.add(notification);
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(ManageEventActivity.this);
+                builder.setTitle("Delete")
+                        .setMessage("Choose one of the following actions:")
+                        .setPositiveButton("QR code", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                curEvent.setHashCodeQR(null);
+                                Control.getInstance().saveEvent(curEvent);
                             }
-                        }
-                        Control.getInstance().getNotificationList().removeAll(notificationsToDelete);
-                        // Delete event from database and Control
-                        Control.getInstance().deleteEvent(curEvent);
-                        Control.getInstance().getEventList().remove(curEvent);
-                        finish();
-                    })
-                    .setNegativeButton("Cancel", null)
-                    .show();
+                        })
+                        .setNegativeButton("Poster", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                curEvent.setPoster(null);
+                                Control.getInstance().saveEvent(curEvent);
+                                eventPoster.setImageBitmap(null);
+                            }
+                        })
+                        .setNeutralButton("Event", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                new AlertDialog.Builder(ManageEventActivity.this)
+                                    .setTitle("Delete Event")
+                                    .setMessage("Are you sure you want to delete your event?")
+                                    .setPositiveButton("Delete", (dialog1, which1) -> {
+                                        User currentUser = Control.getCurrentUser();
+                                        // Delete related Notifications
+                                        ArrayList<Notification> notificationsToDelete = new ArrayList<>();
+                                        for (Notification notification : Control.getInstance().getNotificationList()) {
+                                            if (notification.getEventRef() == curEvent.getEventID()) {
+                                                Control.getInstance().deleteNotification(notification);
+                                                notificationsToDelete.add(notification);
+                                            }
+                                        }
+                                        Control.getInstance().getNotificationList().removeAll(notificationsToDelete);
+                                        // Delete event from database and Control
+                                        Control.getInstance().deleteEvent(curEvent);
+                                        Control.getInstance().getEventList().remove(curEvent);
+                                        finish();
+                                    })
+                                    .setNegativeButton("Cancel", null)
+                                    .show();
+                            }
+                        })
+                        .setCancelable(true)
+                        .show();
+            }
         });
+//        deleteButton.setOnClickListener(v -> {
+//            new AlertDialog.Builder(ManageEventActivity.this)
+//                    .setTitle("Delete Event")
+//                    .setMessage("Are you sure you want to delete your event?")
+//                    .setPositiveButton("Delete", (dialog, which) -> {
+//                        User currentUser = Control.getCurrentUser();
+//                        // Delete related Notifications
+//                        ArrayList<Notification> notificationsToDelete = new ArrayList<>();
+//                        for (Notification notification : Control.getInstance().getNotificationList()) {
+//                            if (notification.getEventRef() == curEvent.getEventID()) {
+//                                Control.getInstance().deleteNotification(notification);
+//                                notificationsToDelete.add(notification);
+//                            }
+//                        }
+//                        Control.getInstance().getNotificationList().removeAll(notificationsToDelete);
+//                        // Delete event from database and Control
+//                        Control.getInstance().deleteEvent(curEvent);
+//                        Control.getInstance().getEventList().remove(curEvent);
+//                        finish();
+//                    })
+//                    .setNegativeButton("Cancel", null)
+//                    .show();
+//        });
 
 
 
