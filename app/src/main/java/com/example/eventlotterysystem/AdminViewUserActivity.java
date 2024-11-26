@@ -36,7 +36,11 @@ public class AdminViewUserActivity extends AppCompatActivity {
 
         // Get user details from Intent
         user = (User) getIntent().getSerializableExtra("user");
-
+        for (User u : Control.getInstance().getUserList()) {
+            if (u.getUserID() == user.getUserID()) {
+                user = u;
+            }
+        }
         // Display user details
         if (user != null) {
             nameTextView.setText("Name: " + user.getName());
