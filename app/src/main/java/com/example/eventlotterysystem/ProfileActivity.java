@@ -53,14 +53,7 @@ public class ProfileActivity extends AppCompatActivity implements EditProfileFra
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_profile);
 
-//        curUser = Control.getCurrentUser();
-        for (User u : Control.getInstance().getUserList()){
-            if (u.getUserID() == 11){
-                curUser = u;
-                break;
-            }
-        }
-
+        curUser = Control.getCurrentUser();
 
         nameTextView = findViewById(R.id.name);
         emailTextView = findViewById(R.id.email);
