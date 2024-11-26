@@ -157,6 +157,12 @@ public class ProfileActivity extends AppCompatActivity implements EditProfileFra
                                                 }
                                             }
 
+                                            for (Notification notification : Control.getInstance().getNotificationList()) {
+                                                if (notification.getUserRef() == curUser.getUserID()) {
+                                                    Control.getInstance().deleteNotification(notification);
+                                                }
+                                            }
+
                                             curUser.setName("Default Name");
                                             curUser.setEmail("user@example.com");
                                             curUser.setContact("000-000-0000");
