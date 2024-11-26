@@ -145,16 +145,16 @@ public class Landing_page extends AppCompatActivity {
     }
 
     protected void checkDevice(Control control){
-        for (User user : Control.getInstance().getUserList()) {
-            if (user.getFID().equals(Control.getLocalFID())) {
-                Control.setCurrentUser(user);
-                return;
-            }
-        }
+//        for (User user : Control.getInstance().getUserList()) {
+//            if (user.getFID().equals(Control.getLocalFID())) {
+//                Control.setCurrentUser(user);
+//                return;
+//            }
+//        }
         if (Control.getCurrentUser() == null){
             User me = new User(Control.getInstance().getCurrentUserIDForUserCreation(), Control.getLocalFID());
             Control.getInstance().getUserList().add(me);
-            Control.setCurrentUser(me);
+//            Control.setCurrentUser(me);
             Control.getInstance().saveUser(me);
         }
     }

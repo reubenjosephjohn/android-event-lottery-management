@@ -16,7 +16,7 @@ public class Control {
     private ArrayList<Notification> notificationList;
     // runtime attributes
     private static Control instance;
-    private static User currentUser = null; // current logged in user
+//    private static User currentUser = null; // current logged in user
     private static String localFID = "";
     // Database
     private FirebaseFirestore db;
@@ -202,12 +202,19 @@ public class Control {
     }
 
     public static User getCurrentUser() {
-        return currentUser;
+        User u;
+        for (User user : Control.getInstance().getUserList()) {
+            if (user.getFID().equals(Control.getLocalFID())){
+                u = user;
+                return u;
+            }
+        }
+        return null;
     }
 
-    public static void setCurrentUser(User currentUser) {
-        Control.currentUser = currentUser;
-    }
+//    public static void setCurrentUser(User currentUser) {
+//        Control.currentUser = currentUser;
+//    }
 
     public ArrayList<User> getUserList() {
         return userList;
