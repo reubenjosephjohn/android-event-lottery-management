@@ -62,6 +62,11 @@ public class ProfileActivity extends AppCompatActivity implements EditProfileFra
         gen = findViewById(R.id.generate_button);
         uploadImageButton = findViewById(R.id.upload_button);
 
+        if (curUser.getPicture() != null) {
+            uploadImageButton.setText("Replace Image");
+            gen.setVisibility(View.GONE);
+        }
+
         // Initialize ActivityResultLauncher
         pickImageLauncher = registerForActivityResult(
                 new ActivityResultContracts.GetContent(),
@@ -71,7 +76,8 @@ public class ProfileActivity extends AppCompatActivity implements EditProfileFra
                         Bitmap bmURI = getBitmapFromUri(uri);
                         bmURI = resizeBitmapToResolution(bmURI, 400);
                         curUser.setPicture(encodeBitmap(bmURI));
-                        gen.setText("Replace Image");
+                        gen.setVisibility(View.GONE);
+                        uploadImageButton.setText("Replace Image");
                         Glide.with(this)
                                 .load(uri)
                                 .into(profileImageView);
@@ -114,7 +120,11 @@ public class ProfileActivity extends AppCompatActivity implements EditProfileFra
         ImageButton returnButton = findViewById(R.id.return_button);
         returnButton.setOnClickListener(view -> finish());
 
-        gen.setOnClickListener(v -> generateProfilePicture());
+        gen.setOnClickListener(v -> {
+            generateProfilePicture();
+            uploadImageButton.setText("Replace Image");
+            gen.setVisibility(View.GONE);
+        });
 
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -180,6 +190,8 @@ public class ProfileActivity extends AppCompatActivity implements EditProfileFra
                                         .setMessage("Are you sure you want to delete this Picture?")
                                         .setPositiveButton("Delete", (dialog1, which1) -> {
                                             curUser.setPicture(null);
+                                            gen.setVisibility(View.VISIBLE);
+                                            uploadImageButton.setText("Upload Image");
                                             Control.getInstance().saveUser(curUser);
                                             profileImageView.setImageBitmap(null);
 
@@ -286,7 +298,6 @@ public class ProfileActivity extends AppCompatActivity implements EditProfileFra
         if (generatedPicture != null) {
             Bitmap pictureBitmap = decodeBitmap(generatedPicture);  // Assuming decodeBitmap method to convert String to Bitmap
             profileImageView.setImageBitmap(pictureBitmap);  // Set the generated bitmap as the ImageView source
-            gen.setText("Replace Image");
         } else {
             Log.e("ProfileActivity", "Failed to generate profile picture.");
         }

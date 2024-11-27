@@ -140,7 +140,7 @@
             <Button
                 android:id="@+id/upload_button"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="Upload Image"
                 android:textAppearance="@style/TextAppearance.Material3.LabelLarge" />
@@ -148,7 +148,7 @@
             <Button
                 android:id="@+id/generate_button"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="Generate Image"
                 android:textAppearance="@style/TextAppearance.Material3.LabelLarge" />
