@@ -94,6 +94,10 @@ public class EditEventDialogFragment extends DialogFragment {
         limitChosenEdit.setVisibility(View.GONE);
         limitWaitingEdit.setVisibility(View.GONE);
 
+        if (curEvent.getPoster() != null) {
+            uploadImageButton.setText("Replace Poster");
+        }
+
         // Populate fields with current event data
         nameEditText.setText(curEvent.getName());
         descriptionEditText.setText(curEvent.getDescription());
