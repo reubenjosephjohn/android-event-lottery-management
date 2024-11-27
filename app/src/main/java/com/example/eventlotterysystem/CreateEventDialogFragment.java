@@ -80,7 +80,7 @@ public class CreateEventDialogFragment extends DialogFragment {
                     if (uri != null) {
                         selectedImageUri = uri;
                         Bitmap bmURI = getBitmapFromUri(uri);
-                        bmURI = resizeBitmapToResolution(bmURI, 300);
+                        bmURI = resizeBitmapToResolution(bmURI, 400);
                         pos = encodeBitmap(bmURI);
                         imagePreview.setVisibility(View.VISIBLE);
                         removeImageButton.setVisibility(View.VISIBLE);
@@ -93,7 +93,6 @@ public class CreateEventDialogFragment extends DialogFragment {
 
         // Set Upload Image Button Listener
         uploadImageButton.setOnClickListener(v -> {
-            // Launch the image picker
             pickImageLauncher.launch("image/*");
         });
 

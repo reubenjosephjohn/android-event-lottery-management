@@ -69,7 +69,7 @@ public class ProfileActivity extends AppCompatActivity implements EditProfileFra
                     if (uri != null) {
                         selectedImageUri = uri;
                         Bitmap bmURI = getBitmapFromUri(uri);
-                        bmURI = resizeBitmapToResolution(bmURI, 300);
+                        bmURI = resizeBitmapToResolution(bmURI, 400);
                         curUser.setPicture(encodeBitmap(bmURI));
                         gen.setText("Replace Image");
                         Glide.with(this)

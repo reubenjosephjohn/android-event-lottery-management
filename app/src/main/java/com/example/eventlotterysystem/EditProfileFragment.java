@@ -113,12 +113,9 @@ public class EditProfileFragment extends DialogFragment {
                 emailEditText.setError(null);
             }
 
+            // Contact is optional; assign default value if empty
             if (user_contact.isEmpty()) {
-                contactEditText.setError("Contact is required");
-                missingFields.add("Contact");
-                hasError = true;
-            } else {
-                contactEditText.setError(null);
+                user_contact = "000-000-0000";
             }
 
             if (hasError) {

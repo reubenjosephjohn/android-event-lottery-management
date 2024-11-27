@@ -28,7 +28,7 @@ import java.util.ArrayList;
  *
  * Problem: delete event has not been implemented yet.
  */
-public class ManageEventActivity extends AppCompatActivity {
+public class ManageEventActivity extends AppCompatActivity implements EditEventDialogFragment.EditEventListener {
 
     private TextView eventTitle;
     private TextView eventDetail;
@@ -40,6 +40,13 @@ public class ManageEventActivity extends AppCompatActivity {
     private ImageView deleteButton;
     private ImageView returnButton;
     private Event curEvent;
+
+    @Override
+    public void onEventEdited(Event updatedEvent) {
+        curEvent = updatedEvent;
+        updateUI(curEvent);
+        Toast.makeText(this, "Event updated successfully!", Toast.LENGTH_SHORT).show();
+    }
 
     /**
      * Called when the activity is first created. Initializes the view elements, retrieves the
@@ -103,6 +110,7 @@ public class ManageEventActivity extends AppCompatActivity {
         });
         buttonEdit.setOnClickListener(v -> {
             EditEventDialogFragment dialog = new EditEventDialogFragment(curEvent);
+            dialog.setEditEventListener(this);
             dialog.show(getSupportFragmentManager(), "EditEventDialogFragment");
         });
 
@@ -216,15 +224,15 @@ public class ManageEventActivity extends AppCompatActivity {
 
     }
 
-    public void onEventUpdated() {
-        if (curEvent != null) {
-            eventTitle.setText(curEvent.getName());
-            eventDetail.setText("Description: " + curEvent.getDescription() + "\n"
-                    + "Capacity of Event: (" + (curEvent.getChosenUserRefs().size() + curEvent.getFinalUserRefs().size()) + "/" + curEvent.getLimitChosenList() + ")\n"
-                    + "Capacity of Waiting List: (" + curEvent.getWaitingUserRefs().size() + "/" + curEvent.getLimitWaitingList() + ")");
-        }
-        Control.getInstance().saveEvent(curEvent);
-    }
+//    public void onEventUpdated() {
+//        if (curEvent != null) {
+//            eventTitle.setText(curEvent.getName());
+//            eventDetail.setText("Description: " + curEvent.getDescription() + "\n"
+//                    + "Capacity of Event: (" + (curEvent.getChosenUserRefs().size() + curEvent.getFinalUserRefs().size()) + "/" + curEvent.getLimitChosenList() + ")\n"
+//                    + "Capacity of Waiting List: (" + curEvent.getWaitingUserRefs().size() + "/" + curEvent.getLimitWaitingList() + ")");
+//        }
+//        Control.getInstance().saveEvent(curEvent);
+//    }
 
     /**
      * Decodes a Base64 encoded string back to a Bitmap.
@@ -251,5 +259,22 @@ public class ManageEventActivity extends AppCompatActivity {
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
         byte[] byteArray = baos.toByteArray();
         return Base64.encodeToString(byteArray, Base64.DEFAULT);
+    }
+
+    /**
+     * Updates the UI elements with the event details.
+     *
+     * @param event The Event object containing updated details.
+     */
+    private void updateUI(Event event) {
+        eventTitle.setText(event.getName());
+        eventDetail.setText("Description: " + event.getDescription() + "\n"
+                + "Capacity of Event: (" + (event.getChosenUserRefs().size() + event.getFinalUserRefs().size()) + "/" + event.getLimitChosenList() + ")\n"
+                + "Capacity of Waiting List: (" + event.getWaitingUserRefs().size() + "/" + event.getLimitWaitingList() + ")");
+        String picture = event.getPoster();
+        if (picture != null) {
+            Bitmap pictureBitmap = decodeBitmap(picture);
+            eventPoster.setImageBitmap(pictureBitmap);
+        }
     }
 }
