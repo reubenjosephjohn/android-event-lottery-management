@@ -34,27 +34,6 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.check_device);
 
-        FirebaseApp.initializeApp(this);
-
-        FirebaseMessaging.getInstance().getToken()
-                .addOnCompleteListener(new OnCompleteListener<String>() {
-                    @Override
-                    public void onComplete(@NonNull Task<String> task) {
-                        if (!task.isSuccessful()) {
-                            Log.w("Firebase Messaging Service", "Fetching FCM registration token failed", task.getException());
-                            return;
-                        }
-
-                        // Get new FCM registration token
-                        String token = task.getResult();
-
-                        // Log and toast
-                        String msg = "Your Messaging Token is " + token;
-                        Log.i("Messaging Token", token);
-                        Log.d("Firebase Messaging Service", msg);
-                        Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
-                    }
-                });
 
         Control control = Control.getInstance();
         // get Firebase installation ID
@@ -68,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
 
         // Create users
 //        User tom = new User(2, "Tom");

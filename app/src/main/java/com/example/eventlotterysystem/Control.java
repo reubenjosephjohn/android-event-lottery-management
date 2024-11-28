@@ -18,6 +18,9 @@ public class Control {
     private static Control instance;
 //    private static User currentUser = null; // current logged in user
     private static String localFID = "";
+    // Notification token
+    public static String notificationToken = "";
+
     // Database
     private FirebaseFirestore db;
 
