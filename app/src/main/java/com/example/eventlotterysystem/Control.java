@@ -1,9 +1,22 @@
 package com.example.eventlotterysystem;
 
-import android.util.Log;
+import static androidx.core.content.ContextCompat.getSystemService;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.util.Log;
+import android.Manifest;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
+
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+
 
 import java.util.ArrayList;
 
@@ -116,6 +129,7 @@ public class Control {
                         Log.e("Firestore", "Notification listener failed", e);
                         return;
                     }
+                    // Read data from data base
                     if (queryDocumentSnapshots != null) {
                         notificationList.clear();
                         for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
@@ -123,6 +137,35 @@ public class Control {
                             notificationList.add(notification);
                         }
                         Log.i("Firestore", "Notification list updated");
+
+                        // Don't push notifications if user's notification setting is off
+                        Boolean userNotificationSetting = false;
+                        for (User user : userList) {
+                            if (user.getFID().equals(localFID)){
+                                userNotificationSetting = user.getNotificationSetting();
+                                break;
+                            }
+                        }
+                        if (userNotificationSetting){
+                            // Document add listener
+                            for (DocumentChange change : queryDocumentSnapshots.getDocumentChanges()) {
+                                if (change.getType() == DocumentChange.Type.ADDED) {
+                                    DocumentSnapshot doc = change.getDocument();
+                                    Notification notification = doc.toObject(Notification.class);
+                                    for (User user : Control.getInstance().getUserList()) {
+                                        if (user.getFID().equals(localFID)){ // find myself
+                                            if (user.getUserID() == notification.getUserRef()) {
+                                                String eventName = Control.getInstance().findEventByID(notification.getEventRef()).getName();
+                                                sendNotification(eventName, notification.getCustomMessage());
+                                                Log.i("Notification", "Notification: Event:" + eventName +", Message: " + notification.getCustomMessage() + "; it will be sent to android notification system");
+                                            }
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
                     }
                 });
     }
@@ -260,6 +303,11 @@ public class Control {
             }
         }
         return null;
+    }
+
+    public void sendNotification(String eventName, String message) {
+        // build notification for self
+
     }
 
 }
