@@ -142,6 +142,8 @@ public class EventslistActivity extends AppCompatActivity {
                 dialog.setCreateEventListener(newEvent -> {
                     Control.getInstance().getEventList().add(newEvent);
                     addEventToSection(newEvent, orglist);
+                    ownedEvents.setVisibility(View.VISIBLE);
+                    orglist.setVisibility(View.VISIBLE);
                     Control.getInstance().saveEvent(newEvent);
                 });
                 dialog.show(getSupportFragmentManager(), "CreateEventDialogFragment");
