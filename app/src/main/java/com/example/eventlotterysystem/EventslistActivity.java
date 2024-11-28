@@ -21,23 +21,19 @@ import java.util.ArrayList;
  */
 public class EventslistActivity extends AppCompatActivity {
 
-    /** Layout for displaying organized events */
+    /** Layout for displaying events */
     private LinearLayout orglist;
-
-    /** Layout for displaying events the user is on the waiting list for */
     private LinearLayout waitlist;
-
-    /** Layout for displaying events the user has canceled */
     private LinearLayout cancellist;
-
-    /** Layout for displaying events the user is chosen for */
     private LinearLayout chosenlist;
-
-    /** Layout for displaying events the user is in the final list for */
     private LinearLayout finallist;
-
-    /** Layout for displaying other events */
     private LinearLayout otherlist;
+    private TextView ownedEvents;
+    private TextView pendingEvents;
+    private TextView selectedEvents;
+    private TextView approvedEvents;
+    private TextView rejectedEvents;
+    private TextView otherEvents;
 
     /** Currently logged-in user */
     private User curUser;
@@ -67,27 +63,63 @@ public class EventslistActivity extends AppCompatActivity {
 
         orglist = findViewById(R.id.org);
         waitlist = findViewById(R.id.wait);
-        cancellist = findViewById(R.id.cancel);
         chosenlist = findViewById(R.id.chosen);
         finallist = findViewById(R.id.finall);
+        cancellist = findViewById(R.id.cancel);
         otherlist = findViewById(R.id.other);
+        ownedEvents = findViewById(R.id.ownedEvents);
+        pendingEvents = findViewById(R.id.pendingEvents);
+        selectedEvents = findViewById(R.id.selectedEvents);
+        approvedEvents = findViewById(R.id.approvedEvents);
+        rejectedEvents = findViewById(R.id.rejectedEvents);
+        otherEvents = findViewById(R.id.otherEvents);
+
+        // Set all lists and titles to GONE initially
+        ownedEvents.setVisibility(View.GONE);
+        orglist.setVisibility(View.GONE);
+        pendingEvents.setVisibility(View.GONE);
+        waitlist.setVisibility(View.GONE);
+        selectedEvents.setVisibility(View.GONE);
+        chosenlist.setVisibility(View.GONE);
+        approvedEvents.setVisibility(View.GONE);
+        finallist.setVisibility(View.GONE);
+        rejectedEvents.setVisibility(View.GONE);
+        cancellist.setVisibility(View.GONE);
+        otherEvents.setVisibility(View.GONE);
+        otherlist.setVisibility(View.GONE);
+
+// Repeat for additional lists
 
         // Repopulate each section with the updated event list
         for (Event event : Control.getInstance().getEventList()) {
             if (event.getCreatorRef() == curUser.getUserID()) {
                 addEventToSection(event, orglist);
+                ownedEvents.setVisibility(View.VISIBLE);
+                orglist.setVisibility(View.VISIBLE);
             } else if (inList(event.getWaitingUserRefs(), curUser.getUserID())) {
                 addEventToSection(event, waitlist);
+                pendingEvents.setVisibility(View.VISIBLE);
+                waitlist.setVisibility(View.VISIBLE);
             } else if (inList(event.getCancelledUserRefs(), curUser.getUserID())) {
                 addEventToSection(event, cancellist);
+                rejectedEvents.setVisibility(View.VISIBLE);
+                cancellist.setVisibility(View.VISIBLE);
             } else if (inList(event.getChosenUserRefs(), curUser.getUserID())) {
                 addEventToSection(event, chosenlist);
+                selectedEvents.setVisibility(View.VISIBLE);
+                chosenlist.setVisibility(View.VISIBLE);
             } else if (inList(event.getFinalUserRefs(), curUser.getUserID())) {
                 addEventToSection(event, finallist);
+                approvedEvents.setVisibility(View.VISIBLE);
+                finallist.setVisibility(View.VISIBLE);
             } else {
                 addEventToSection(event, otherlist);
+                otherEvents.setVisibility(View.VISIBLE);
+                otherlist.setVisibility(View.VISIBLE);
             }
         }
+
+
         curFac = null;
         for (Facility facility : Control.getInstance().getFacilityList()) {
             if (facility.getCreatorRef()==curUser.getUserID()) {
@@ -179,21 +211,44 @@ public class EventslistActivity extends AppCompatActivity {
         chosenlist.removeAllViews();
         finallist.removeAllViews();
         otherlist.removeAllViews();
+        ownedEvents.setVisibility(View.GONE);
+        orglist.setVisibility(View.GONE);
+        pendingEvents.setVisibility(View.GONE);
+        waitlist.setVisibility(View.GONE);
+        selectedEvents.setVisibility(View.GONE);
+        chosenlist.setVisibility(View.GONE);
+        approvedEvents.setVisibility(View.GONE);
+        finallist.setVisibility(View.GONE);
+        rejectedEvents.setVisibility(View.GONE);
+        cancellist.setVisibility(View.GONE);
+        otherEvents.setVisibility(View.GONE);
 
         // Repopulate each section with the updated event list
         for (Event event : Control.getInstance().getEventList()) {
             if (event.getCreatorRef() == curUser.getUserID()) {
                 addEventToSection(event, orglist);
+                ownedEvents.setVisibility(View.VISIBLE);
+                orglist.setVisibility(View.VISIBLE);
             } else if (inList(event.getWaitingUserRefs(), curUser.getUserID())) {
                 addEventToSection(event, waitlist);
+                pendingEvents.setVisibility(View.VISIBLE);
+                waitlist.setVisibility(View.VISIBLE);
             } else if (inList(event.getCancelledUserRefs(), curUser.getUserID())) {
                 addEventToSection(event, cancellist);
+                rejectedEvents.setVisibility(View.VISIBLE);
+                cancellist.setVisibility(View.VISIBLE);
             } else if (inList(event.getChosenUserRefs(), curUser.getUserID())) {
                 addEventToSection(event, chosenlist);
+                selectedEvents.setVisibility(View.VISIBLE);
+                chosenlist.setVisibility(View.VISIBLE);
             } else if (inList(event.getFinalUserRefs(), curUser.getUserID())) {
                 addEventToSection(event, finallist);
+                approvedEvents.setVisibility(View.VISIBLE);
+                finallist.setVisibility(View.VISIBLE);
             } else {
                 addEventToSection(event, otherlist);
+                otherEvents.setVisibility(View.VISIBLE);
+                otherlist.setVisibility(View.VISIBLE);
             }
         }
     }
