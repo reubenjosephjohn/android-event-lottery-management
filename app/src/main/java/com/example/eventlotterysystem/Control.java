@@ -16,6 +16,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
 import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -155,18 +156,27 @@ public class Control {
                                 if (change.getType() == DocumentChange.Type.ADDED) {
                                     DocumentSnapshot doc = change.getDocument();
                                     Notification notification = doc.toObject(Notification.class);
-                                    for (User user : Control.getInstance().getUserList()) {
-                                        if (user.getFID().equals(localFID)){ // find myself
-                                            if (user.getUserID() == notification.getUserRef()) {
-                                                String eventName = Control.getInstance().findEventByID(notification.getEventRef()).getName();
-                                                Control.getInstance().sendNotification(
-                                                        MyApplication.getAppContext(), // Retrieve context from a custom Application class
-                                                        eventName,
-                                                        notification.getCustomMessage()
-                                                );
-                                                Log.i("Notification", "Notification: Event:" + eventName +", Message: " + notification.getCustomMessage() + "; it will be sent to android notification system");
+                                    if (notification.getDeclined()){
+                                        notification.setDeclined(false);
+                                        FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                        DocumentReference notificationRef = doc.getReference();
+                                        notificationRef.update("declined", false)
+                                                .addOnSuccessListener(aVoid -> Log.i("Firestore", "Notification declined field updated to false"))
+                                                .addOnFailureListener(ee -> Log.e("Firestore", "Failed to update declined field", e));
+                                        ;
+                                        for (User user : Control.getInstance().getUserList()) {
+                                            if (user.getFID().equals(localFID)){ // find myself
+                                                if (user.getUserID() == notification.getUserRef()) {
+                                                    String eventName = Control.getInstance().findEventByID(notification.getEventRef()).getName();
+                                                    Control.getInstance().sendNotification(
+                                                            MyApplication.getAppContext(), // Retrieve context from a custom Application class
+                                                            eventName,
+                                                            notification.getCustomMessage()
+                                                    );
+                                                    Log.i("Notification", "Notification: Event:" + eventName +", Message: " + notification.getCustomMessage() + "; it will be sent to android notification system");
+                                                }
+                                                break;
                                             }
-                                            break;
                                         }
                                     }
                                 }

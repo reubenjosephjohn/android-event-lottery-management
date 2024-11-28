@@ -18,7 +18,7 @@ public class Notification {
         this.userRef = userRef;
         this.needAccept = needAccept;
         this.isAccepted = false;
-        this.isDeclined = false;
+        this.isDeclined = true;
         this.customMessage = customMessage;
         this.documentID = "";
     }
