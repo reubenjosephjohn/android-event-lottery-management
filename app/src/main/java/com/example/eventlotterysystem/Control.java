@@ -157,13 +157,13 @@ public class Control {
                                     DocumentSnapshot doc = change.getDocument();
                                     Notification notification = doc.toObject(Notification.class);
                                     if (notification.getDeclined()){
-                                        notification.setDeclined(false);
-                                        FirebaseFirestore db = FirebaseFirestore.getInstance();
-                                        DocumentReference notificationRef = doc.getReference();
-                                        notificationRef.update("declined", false)
-                                                .addOnSuccessListener(aVoid -> Log.i("Firestore", "Notification declined field updated to false"))
-                                                .addOnFailureListener(ee -> Log.e("Firestore", "Failed to update declined field", e));
-                                        ;
+//                                        notification.setDeclined(false);
+//                                        DocumentReference notificationRef = doc.getReference();
+
+//                                        notificationRef.update("declined", false)
+//                                                .addOnSuccessListener(aVoid -> Log.i("Firestore", "Notification declined field successfully updated to false"))
+//                                                .addOnFailureListener(ee -> Log.e("Firestore", "Failed to update declined field", ee));
+
                                         for (User user : Control.getInstance().getUserList()) {
                                             if (user.getFID().equals(localFID)){ // find myself
                                                 if (user.getUserID() == notification.getUserRef()) {

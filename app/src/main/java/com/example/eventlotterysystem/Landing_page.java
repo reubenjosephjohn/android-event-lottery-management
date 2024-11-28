@@ -49,6 +49,13 @@ public class Landing_page extends AppCompatActivity {
             checkDevice(Control.getInstance());
         }
 
+        for (Notification noti: Control.getInstance().getNotificationList()) {
+            if (noti.getUserRef() == Control.getInstance().getCurrentUser().getUserID()) {
+                noti.setDeclined(false);
+                Control.getInstance().updateNotification(noti);
+            }
+        }
+
         if (Control.notificationToken.isEmpty()) {
             // Get and save user's Firebase Messaging Token
             FirebaseMessaging.getInstance().getToken()
@@ -66,7 +73,7 @@ public class Landing_page extends AppCompatActivity {
                             String msg = "Your Messaging Token is " + token;
                             Log.i("Messaging Token", token);
                             Log.d("Firebase Messaging Service", msg);
-                            Toast.makeText(Landing_page.this, msg, Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(Landing_page.this, msg, Toast.LENGTH_SHORT).show();
                             for (User user : Control.getInstance().getUserList()) {
                                 if (user.getFID().equals(Control.getLocalFID())) {
                                     user.setNotificationToken(token);
