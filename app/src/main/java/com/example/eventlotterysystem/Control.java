@@ -4,6 +4,9 @@ import static androidx.core.content.ContextCompat.getSystemService;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.util.Log;
@@ -156,7 +159,11 @@ public class Control {
                                         if (user.getFID().equals(localFID)){ // find myself
                                             if (user.getUserID() == notification.getUserRef()) {
                                                 String eventName = Control.getInstance().findEventByID(notification.getEventRef()).getName();
-                                                sendNotification(eventName, notification.getCustomMessage());
+                                                Control.getInstance().sendNotification(
+                                                        MyApplication.getAppContext(), // Retrieve context from a custom Application class
+                                                        eventName,
+                                                        notification.getCustomMessage()
+                                                );
                                                 Log.i("Notification", "Notification: Event:" + eventName +", Message: " + notification.getCustomMessage() + "; it will be sent to android notification system");
                                             }
                                             break;
@@ -305,9 +312,50 @@ public class Control {
         return null;
     }
 
-    public void sendNotification(String eventName, String message) {
-        // build notification for self
+    public void sendNotification(Context context, String eventName, String message) {
+        NotificationManager notificationManager =
+                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
+        String CHANNEL_ID = "eventlotterysystem_notifications";
+
+        // Create a notification channel for Android O and above
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    CHANNEL_ID,
+                    "Event Lottery Notifications",
+                    NotificationManager.IMPORTANCE_HIGH
+            );
+            channel.setDescription("Notifications for the Event Lottery System app");
+            if (notificationManager != null) {
+                notificationManager.createNotificationChannel(channel);
+            }
+        }
+
+        // Intent to open the app when notification is clicked
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                context,
+                0,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+        );
+
+        // Build the notification
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
+                .setContentTitle("Event: " + eventName)
+                .setSmallIcon(R.drawable.ic_letter_icon)
+                .setContentText(message)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setAutoCancel(true)
+                .setContentIntent(pendingIntent);
+
+        // Show the notification
+        if (notificationManager != null) {
+            notificationManager.notify((int) System.currentTimeMillis(), builder.build());
+        }
     }
+
 
 }
