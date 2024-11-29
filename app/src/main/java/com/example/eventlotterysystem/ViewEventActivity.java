@@ -32,6 +32,7 @@ import com.google.android.gms.tasks.Task;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 /**
@@ -109,6 +110,14 @@ public class ViewEventActivity extends AppCompatActivity {
             eventPoster.setImageBitmap(pictureBitmap);  // Set the generated bitmap as the ImageView source
         }
 
+//        String eventDesc = curEvent.getDescription();
+//        String regStart = extractDate(eventDesc, 0);
+//        String regEnd = extractDate(eventDesc, 1);
+//        String eventStart = extractDate(eventDesc, 2);
+//        String eventEnd = extractDate(eventDesc, 3);
+//
+//        LocalDate curDate = LocalDate.now();
+//        String dateString = curDate.toString();
 
         if(inList(curEvent.getWaitingUserRefs(), curUser.getUserID())){
             joinbutton.setText("Cancel Event");
@@ -123,7 +132,12 @@ public class ViewEventActivity extends AppCompatActivity {
         }else if(inList(curEvent.getCancelledUserRefs(), curUser.getUserID())){
             joinbutton.setVisibility(View.GONE);
             declinebutton.setVisibility(View.GONE);
-        }else {
+        }
+//        else if (!validPeriod(dateString,eventEnd)) {
+//            joinbutton.setVisibility(View.GONE);
+//            declinebutton.setVisibility(View.GONE);
+//        }
+        else {
             joinbutton.setText("Join Event");
             declinebutton.setVisibility(View.GONE);
         }
@@ -220,6 +234,10 @@ public class ViewEventActivity extends AppCompatActivity {
                             .create();
                     dialog.show();
                 }
+//                if (!validPeriod(dateString, regEnd)) {
+//                    Toast.makeText(this, "Registration Period has ended", Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
                 else{
                     if (curEvent.getGeoSetting()) {
                         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
@@ -356,6 +374,48 @@ public class ViewEventActivity extends AppCompatActivity {
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
         byte[] byteArray = baos.toByteArray();
         return Base64.encodeToString(byteArray, Base64.DEFAULT);
+    }
+
+    private String extractDate(String eventDesc, int dateType) {
+        String regStart = "";
+        String regEnd = "";
+        String eventStart = "";
+        String eventEnd = "";
+
+        String[] lines = eventDesc.split("\n");
+        for (String line : lines) {
+            if (line.contains("Registration Period:")) {
+                String regPeriod = line.replace("Registration Period: ", "").trim();
+                String[] regDates = regPeriod.split(" to ");
+                regStart = regDates[0];
+                regEnd = regDates[1];
+            }
+            if (line.contains("Event Period: ")) {
+                String regPeriod = line.replace("Registration Period:", "").trim();
+                String[] eventDates = regPeriod.split(" to ");
+                eventStart = eventDates[0];
+                eventEnd = eventDates[1];
+            }
+        }
+
+        switch(dateType) {
+            case 0:
+                return regStart;
+            case 1:
+                return regEnd;
+            case 2:
+                return eventStart;
+            case 3:
+                return eventEnd;
+            default:
+                return "";
+        }
+
+    }
+    protected boolean validPeriod(String start, String end) {
+        LocalDate date1 = LocalDate.parse(start);
+        LocalDate date2 = LocalDate.parse(end);
+        return date1.isBefore(date2) || date1.isEqual(date2);
     }
 
 }

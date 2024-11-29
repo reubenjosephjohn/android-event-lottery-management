@@ -70,6 +70,6 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, Landing_page.class);
                 startActivity(intent);
             }
-        }, 10000);
+        }, 11000);
     }
 }
