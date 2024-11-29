@@ -55,6 +55,7 @@
                 android:layout_height="wrap_content"
                 android:paddingBottom="8dp"
                 android:text="Owned Events"
+                android:textColor="#673AB7"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -72,6 +73,7 @@
                 android:layout_height="wrap_content"
                 android:paddingBottom="8dp"
                 android:text="Pending Events"
+                android:textColor="#673AB7"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -89,8 +91,9 @@
                 android:layout_height="wrap_content"
                 android:paddingBottom="8dp"
                 android:text="Selected Events"
+                android:textColor="#673AB7"
                 android:textSize="18sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:id="@+id/chosen"
@@ -107,6 +110,7 @@
                 android:layout_height="wrap_content"
                 android:paddingBottom="8dp"
                 android:text="Approved Events"
+                android:textColor="#673AB7"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -124,8 +128,9 @@
                 android:layout_height="wrap_content"
                 android:paddingBottom="8dp"
                 android:text="Rejected Events"
+                android:textColor="#673AB7"
                 android:textSize="18sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:id="@+id/cancel"
@@ -142,8 +147,9 @@
                 android:layout_height="wrap_content"
                 android:paddingBottom="8dp"
                 android:text="Other Available Events"
+                android:textColor="#673AB7"
                 android:textSize="18sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:id="@+id/other"
