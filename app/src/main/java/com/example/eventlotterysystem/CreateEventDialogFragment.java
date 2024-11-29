@@ -26,6 +26,7 @@ import com.bumptech.glide.Glide;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,6 +74,11 @@ public class CreateEventDialogFragment extends DialogFragment {
         Button finishButton = view.findViewById(R.id.finish_button);
         Button cancelButton = view.findViewById(R.id.cancel_button);
 
+//        EditText registrationStartEdit = view.findViewById(R.id.registration_start);
+//        EditText registrationEndEdit = view.findViewById(R.id.registration_end);
+//        EditText eventStartEdit = view.findViewById(R.id.event_start);
+//        EditText eventEndEdit = view.findViewById(R.id.event_end);
+
         // Initialize ActivityResultLauncher
         pickImageLauncher = registerForActivityResult(
                 new ActivityResultContracts.GetContent(),
@@ -111,6 +117,11 @@ public class CreateEventDialogFragment extends DialogFragment {
             String eventDescription = descriptionEdit.getText().toString().trim();
             String limitChosenString = limitChosenEdit.getText().toString().trim();
             String limitWaitingString = limitWaitingEdit.getText().toString().trim();
+
+//            String regStart = registrationStartEdit.getText().toString().trim();
+//            String regEnd = registrationEndEdit.getText().toString().trim();
+//            String eventStart = eventStartEdit.getText().toString().trim();
+//            String eventEnd = eventEndEdit.getText().toString().trim();
 
             boolean hasError = false;
             List<String> missingFields = new ArrayList<>();
@@ -177,6 +188,10 @@ public class CreateEventDialogFragment extends DialogFragment {
                 // If the waiting limit is optional and left empty, remove any previous errors
                 limitWaitingEdit.setError(null);
             }
+
+//            if(!validDates(regStart, regEnd, eventStart, eventEnd)){
+//                return;
+//            }
 
             // If there are any validation errors, show a Toast and halt the process
             if (hasError) {
@@ -260,5 +275,36 @@ public class CreateEventDialogFragment extends DialogFragment {
         // Resize the bitmap
         return Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);
     }
+
+    protected boolean validDate(String date) {
+        String regex = "^\\d{0,4}(-\\d{0,2})?(-\\d{0,2})?$";
+        return date.length() == 10 && date.matches(regex);
+    }
+
+    protected boolean validPeriod(String start, String end) {
+        LocalDate date1 = LocalDate.parse(start);
+        LocalDate date2 = LocalDate.parse(end);
+        return date1.isBefore(date2);
+    }
+
+//    protected boolean validDates(String regStart, String regEnd, String eventStart, String eventEnd) {
+//        if (!validDate(regStart) || !validDate(regEnd) || !validDate(eventStart) || !validDate(eventEnd)) {
+//            Toast.makeText(getContext(), "Use date format: YYYY-MM-DD", Toast.LENGTH_SHORT).show();
+//            return false;
+//        }
+//        if (!validPeriod(regStart, regEnd)) {
+//            Toast.makeText(getContext(), "Registration Start must precede Registration End", Toast.LENGTH_SHORT).show();
+//            return false;
+//        }
+//        if ( !validPeriod(eventStart, eventEnd)) {
+//            Toast.makeText(getContext(), "Event Start must precede Event End", Toast.LENGTH_SHORT).show();
+//            return false;
+//        }
+//        if (!validPeriod(regEnd, eventStart)) {
+//            Toast.makeText(getContext(), "Registration End must precede Event Start", Toast.LENGTH_SHORT).show();
+//            return false;
+//        }
+//        return true;
+//    }
 
 }

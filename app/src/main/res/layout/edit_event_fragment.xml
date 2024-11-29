@@ -14,40 +14,42 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Event"
+            android:text="Create Event"
             android:textSize="24sp" />
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Event Title" />
+<!--        <TextView-->
+<!--            android:id="@+id/textView"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Event Title" />-->
 
         <EditText
             android:id="@+id/firstName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
+            android:hint ="Event Title"
             android:textSize="18sp" />
 
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Description" />
+<!--        <TextView-->
+<!--            android:id="@+id/textView3"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Description" />-->
 
         <EditText
             android:id="@+id/title_edit5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
+            android:hint = "Event Description"
             android:textSize="18sp" />
 
-        <TextView
-            android:id="@+id/textView7"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="People Limit for Waiting List(Optional)" />
+<!--        <TextView-->
+<!--            android:id="@+id/textView7"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="People Limit for Waiting List(Optional)" />-->
 
         <EditText
             android:id="@+id/editTextNumber"
@@ -55,13 +57,14 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="number"
+            android:hint = "Waiting List Size (optional)"
             android:maxLength="9"/>
 
-        <TextView
-            android:id="@+id/textView6"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="People Limit for Event" />
+<!--        <TextView-->
+<!--            android:id="@+id/textView6"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="People Limit for Event" />-->
 
         <EditText
             android:id="@+id/editTextNumber2"
@@ -69,7 +72,70 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="number"
+            android:hint = "Event Size"
             android:maxLength="9"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/registration_start"
+                android:layout_width="165dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:hint="Registration Start"
+                android:textSize="18sp"
+                android:inputType="date"/>
+
+            <TextView
+                android:id="@+id/to"
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="to" />
+
+            <EditText
+                android:id="@+id/registration_end"
+                android:layout_width="165dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:hint="Registration End"
+                android:textSize="18sp"
+                android:inputType="date"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/event_start"
+                android:layout_width="165dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:hint="Event Start"
+                android:textSize="18sp"
+                android:inputType="date"/>
+
+            <TextView
+                android:id="@+id/to2"
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="to" />
+
+            <EditText
+                android:id="@+id/event_end"
+                android:layout_width="165dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:hint="Event End"
+                android:textSize="18sp"
+                android:inputType="date"/>
+        </LinearLayout>
 
         <Switch
             android:id="@+id/location_loc"

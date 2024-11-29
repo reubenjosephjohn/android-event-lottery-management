@@ -79,8 +79,8 @@ public class EditEventDialogFragment extends DialogFragment {
         descriptionEditText = view.findViewById(R.id.title_edit5);
         limitChosenEdit = view.findViewById(R.id.editTextNumber2);
         limitWaitingEdit = view.findViewById(R.id.editTextNumber);
-        chosenLimitText = view.findViewById(R.id.textView6);
-        waitingLimitText = view.findViewById(R.id.textView7);
+//        chosenLimitText = view.findViewById(R.id.textView6);
+//        waitingLimitText = view.findViewById(R.id.textView7);
         geolocationSwitch = view.findViewById(R.id.location_loc);
         imagePreview = view.findViewById(R.id.imagePreview);
         removeImageButton = view.findViewById(R.id.removeImageButton);
