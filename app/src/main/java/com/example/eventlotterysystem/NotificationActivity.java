@@ -69,7 +69,12 @@ public class NotificationActivity extends AppCompatActivity {
         Button DeleteButton = NotifiView.findViewById(R.id.btnRemove);
 
         // if no need to accept/decline, disable buttons
-        if (!noti.getNeedAccept() || noti.getAccepted() || noti.getDeclined()) {
+        if (!noti.getNeedAccept()){
+            AcceptButton.setVisibility(View.GONE);
+            DeclineButton.setVisibility(View.GONE);
+        }
+
+        if (noti.getAccepted()) {
             AcceptButton.setEnabled(false);
             DeclineButton.setEnabled(false);
         }
@@ -92,7 +97,7 @@ public class NotificationActivity extends AppCompatActivity {
             relatedEvent.getCancelledUserRefs().add(curUser.getUserID());
             relatedEvent.getChosenUserRefs().remove(Integer.valueOf(curUser.getUserID()));
             Control.getInstance().saveEvent(relatedEvent);
-            noti.setDeclined(true);
+            noti.setAccepted(true);
             Control.getInstance().updateNotification(noti);
         });
 

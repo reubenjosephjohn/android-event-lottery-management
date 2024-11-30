@@ -20,6 +20,7 @@ public class User implements Serializable {
     private boolean isAdmin;
     private Boolean notificationSetting;
     private String FID;
+    private String notificationToken;
 
     // Default no-argument constructor (required for Firestore)
     public User() {}
@@ -103,6 +104,10 @@ public class User implements Serializable {
     public void setFID(String FID) {
         this.FID = FID;
     }
+
+    public String getNotificationToken() {return notificationToken;}
+
+    public void setNotificationToken(String notificationToken) {this.notificationToken = notificationToken; }
 
     public void generate_picture() {
         if (name != null && !name.isEmpty()) {
