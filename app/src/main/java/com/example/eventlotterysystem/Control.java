@@ -23,7 +23,9 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 
 import java.util.ArrayList;
-
+/**
+ * Singleton control class for managing users, facilities, events, and notifications in the Event Lottery System.
+ */
 public class Control {
     private int currentUserID;
     private int currentEventID;
@@ -42,7 +44,9 @@ public class Control {
     private FirebaseFirestore db;
 
 
-
+    /**
+     * Private constructor for the singleton Control instance.
+     */
     private Control() {
         this.currentUserID = 0;
         this.currentEventID = 0;
@@ -54,14 +58,20 @@ public class Control {
         setUpListeners();
     }
 
-
+    /**
+     * Retrieves the singleton instance of the Control class.
+     *
+     * @return the single instance of Control.
+     */
     public static synchronized Control getInstance() {
         if (instance == null) {
             instance = new Control();
         }
         return instance;
     }
-
+    /**
+     * Sets up Firestore listeners to track changes in the database.
+     */
     // Database operations
     private void setUpListeners() {
         // Listener for Control Data
@@ -186,38 +196,62 @@ public class Control {
                     }
                 });
     }
-
+    /**
+     * Saves a user to the Firestore database.
+     *
+     * @param user the User object to save.
+     */
     public void saveUser(User user) {
         db.collection("users").document(String.valueOf(user.getUserID())).set(user)
                 .addOnSuccessListener(aVoid -> Log.i("Firestore", "User saved"))
                 .addOnFailureListener(e -> Log.e("Firestore", "User save failed", e));
     }
-
+    /**
+     * Saves a facility to the Firestore database.
+     *
+     * @param facility the Facility object to save.
+     */
     public void saveFacility(Facility facility) {
         int facilityID = findUserByID(facility.getCreatorRef()).getUserID();
         db.collection("facilities").document(String.valueOf(facilityID)).set(facility)
                 .addOnSuccessListener(aVoid -> Log.i("Firestore", "Facility saved"))
                 .addOnFailureListener(e -> Log.e("Firestore", "Facility save failed", e));
     }
-
+    /**
+     * Deletes the specified facility from the Firestore database.
+     *
+     * @param facility The Facility object to be deleted.
+     */
     public void deleteFacility(Facility facility) {
         db.collection("facilities").document(String.valueOf(facility.getCreatorRef())).delete()
                 .addOnSuccessListener(aVoid -> Log.i("Firestore", "Facility deleted"))
                 .addOnFailureListener(e -> Log.e("Firestore", "Facility delete failed", e));
     }
-
+    /**
+     * Saves the specified event to the Firestore database.
+     *
+     * @param event The Event object to be saved.
+     */
     public void saveEvent(Event event) {
         db.collection("events").document(String.valueOf(event.getEventID())).set(event)
                 .addOnSuccessListener(aVoid -> Log.i("Firestore", "Event saved"))
                 .addOnFailureListener(e -> Log.e("Firestore", "Event save failed", e));
     }
-
+    /**
+     * Deletes the specified event from the Firestore database.
+     *
+     * @param event The Event object to be deleted.
+     */
     public void deleteEvent(Event event) {
         db.collection("events").document(String.valueOf(event.getEventID())).delete()
                 .addOnSuccessListener(aVoid -> Log.i("Firestore", "Event deleted"))
                 .addOnFailureListener(e -> Log.e("Firestore", "Event delete failed", e));
     }
-
+    /**
+     * Adds a new notification to the Firestore database.
+     *
+     * @param notification The Notification object to be added.
+     */
     public void addNotification(Notification notification) {
         db.collection("notifications").add(notification)
                 .addOnSuccessListener(documentReference -> {
@@ -227,43 +261,71 @@ public class Control {
                 })
                 .addOnFailureListener(e -> Log.e("Firestore", "Notification save failed", e));
     }
-
+    /**
+     * Updates the specified notification in the Firestore database.
+     *
+     * @param notification The Notification object to be updated.
+     */
     public void updateNotification(Notification notification) {
         db.collection("notifications").document(notification.getDocumentID()).set(notification)
                 .addOnSuccessListener(aVoid -> Log.i("Firestore", "Notification updated"))
                 .addOnFailureListener(e -> Log.e("Firestore", "Notification update failed", e));
     }
-
+    /**
+     * Deletes the specified notification from the Firestore database.
+     *
+     * @param notification The Notification object to be deleted.
+     */
     public void deleteNotification(Notification notification) {
         db.collection("notifications").document(notification.getDocumentID()).delete()
                 .addOnSuccessListener(aVoid -> Log.i("Firestore", "Notification deleted"))
                 .addOnFailureListener(e -> Log.e("Firestore", "Notification delete failed", e));
     }
-
+    /**
+     * Retrieves the current user ID.
+     *
+     * @return The current user ID.
+     */
     // Getters and Setters
     public int getCurrentUserID() {
         return currentUserID;
     }
 
-
+    /**
+     * Retrieves the current user ID for user creation, increments the ID, and updates Firestore.
+     *
+     * @return The user ID to be used for user creation.
+     */
     public int getCurrentUserIDForUserCreation() {
         int result = currentUserID;
         currentUserID++;
         db.collection("control").document("ControlData").update("currentUserID", currentUserID);
         return result;
     }
-
+    /**
+     * Retrieves the current event ID.
+     *
+     * @return The current event ID.
+     */
     public int getCurrentEventID() {
         return currentEventID;
     }
-
+    /**
+     * Retrieves the current event ID for event creation, increments the ID, and updates Firestore.
+     *
+     * @return The event ID to be used for event creation.
+     */
     public int getCurrentEventIDForEventCreation() {
         int result = currentEventID;
         currentEventID++;
         db.collection("control").document("ControlData").update("currentEventID", currentEventID);
         return result;
     }
-
+    /**
+     * Retrieves the current user based on the local FID.
+     *
+     * @return The User object of the current user, or null if not found.
+     */
     public static User getCurrentUser() {
         User u;
         for (User user : Control.getInstance().getUserList()) {
@@ -278,32 +340,66 @@ public class Control {
 //    public static void setCurrentUser(User currentUser) {
 //        Control.currentUser = currentUser;
 //    }
-
+    /**
+     * Retrieves the list of users.
+     *
+     * @return The list of User objects.
+     */
     public ArrayList<User> getUserList() {
         return userList;
     }
 
+    /**
+     * Retrieves the list of events.
+     *
+     * @return The list of Event objects.
+     */
     public ArrayList<Event> getEventList() {
         return eventList;
     }
 
+    /**
+     * Retrieves the list of facilities.
+     *
+     * @return The list of Facility objects.
+     */
     public ArrayList<Facility> getFacilityList() {
         return facilityList;
     }
 
+    /**
+     * Retrieves the list of notifications.
+     *
+     * @return The list of Notification objects.
+     */
     public ArrayList<Notification> getNotificationList() {
         return notificationList;
     }
 
+    /**
+     * Retrieves the local FID.
+     *
+     * @return The local FID as a string.
+     */
     public static String getLocalFID() {
         return localFID;
     }
 
+    /**
+     * Sets the local FID.
+     *
+     * @param localFID The local FID to set.
+     */
     public static void setLocalFID(String localFID) {
         Control.localFID = localFID;
     }
 
-    // finder methods (use try-catch to handle errors)
+    /**
+     * Finds a user by their ID.
+     *
+     * @param userID The ID of the user to find.
+     * @return The User object if found, or null if not found.
+     */
     public User findUserByID(int userID) {
         for (User user : userList) {
             if (user.getUserID() == userID) {
@@ -313,6 +409,12 @@ public class Control {
         return null;
     }
 
+    /**
+     * Finds an event by its ID.
+     *
+     * @param eventID The ID of the event to find.
+     * @return The Event object if found, or null if not found.
+     */
     public Event findEventByID(int eventID) {
         for (Event event : eventList) {
             if (event.getEventID() == eventID) {
@@ -322,6 +424,13 @@ public class Control {
         return null;
     }
 
+    /**
+     * Sends a notification with the specified event name and message.
+     *
+     * @param context   The application context.
+     * @param eventName The name of the event.
+     * @param message   The notification message.
+     */
     public void sendNotification(Context context, String eventName, String message) {
         NotificationManager notificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);

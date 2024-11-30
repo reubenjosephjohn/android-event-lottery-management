@@ -25,39 +25,61 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
 
+/**
+ * Represents the landing page of the event lottery system.
+ *
+ * <p>This activity serves as the main entry point after login, providing navigation
+ * to various sections such as events, settings, profiles, notifications, facilities,
+ * and a QR code scanner.</p>
+ *
+ * @author Dingjingmu (Steven) Yang
+ * @version 1.0
+ * @since 2024-11-29
+ */
 public class Landing_page extends AppCompatActivity {
 
-    private static final int DOUBLE_BACK_TIME = 2000; // Time in milliseconds
-    private long lastBackPressedTime = 0;
-    private Handler handler = new Handler();
+    /**
+     * Time threshold for double back press to exit the app, in milliseconds.
+     */
+    private static final int DOUBLE_BACK_TIME = 2000;
 
+    /**
+     * Stores the timestamp of the last back press.
+     */
+    private long lastBackPressedTime = 0;
+
+    /**
+     * Handler to manage delayed tasks, such as resetting back press flags.
+     */
+    private Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.landing_page);
 
-        // request notification permission
+        // Request notification permission for Android TIRAMISU and later
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1);
             }
         }
 
-        // Control.setCurrentUser(Control.getInstance().getUserList().get(1));
-        if (Control.getCurrentUser() == null){
+        // Check or initialize the current user
+        if (Control.getCurrentUser() == null) {
             checkDevice(Control.getInstance());
         }
 
-        for (Notification noti: Control.getInstance().getNotificationList()) {
+        // Update notifications for the current user
+        for (Notification noti : Control.getInstance().getNotificationList()) {
             if (noti.getUserRef() == Control.getInstance().getCurrentUser().getUserID()) {
                 noti.setDeclined(false);
                 Control.getInstance().updateNotification(noti);
             }
         }
 
+        // Get and save Firebase Messaging Token if not already retrieved
         if (Control.notificationToken.isEmpty()) {
-            // Get and save user's Firebase Messaging Token
             FirebaseMessaging.getInstance().getToken()
                     .addOnCompleteListener(new OnCompleteListener<String>() {
                         @Override
@@ -67,13 +89,8 @@ public class Landing_page extends AppCompatActivity {
                                 return;
                             }
 
-                            // Get new FCM registration token
                             String token = task.getResult();
-                            // Log and toast
-                            String msg = "Your Messaging Token is " + token;
                             Log.i("Messaging Token", token);
-                            Log.d("Firebase Messaging Service", msg);
-//                            Toast.makeText(Landing_page.this, msg, Toast.LENGTH_SHORT).show();
                             for (User user : Control.getInstance().getUserList()) {
                                 if (user.getFID().equals(Control.getLocalFID())) {
                                     user.setNotificationToken(token);
@@ -85,112 +102,30 @@ public class Landing_page extends AppCompatActivity {
                     });
         }
 
-
-        // Set up the OnBackPressedCallback
+        // Configure back press handling
         OnBackPressedDispatcher dispatcher = this.getOnBackPressedDispatcher();
         dispatcher.addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
                 if (lastBackPressedTime + DOUBLE_BACK_TIME > System.currentTimeMillis()) {
-                    finishAffinity(); // Exit the app
+                    finishAffinity();
                 } else {
                     Toast.makeText(Landing_page.this, "Press back again to exit", Toast.LENGTH_SHORT).show();
                     lastBackPressedTime = System.currentTimeMillis();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {setEnabled(true);}
-                    }, DOUBLE_BACK_TIME);
+                    handler.postDelayed(() -> setEnabled(true), DOUBLE_BACK_TIME);
                 }
             }
         });
 
-
-
+        // Adjust layout padding to account for system insets
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.landing_page), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        // Set OnClickListener on eventsIcon
-        ImageView eventsIcon = findViewById(R.id.eventsIcon);
-        eventsIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Landing_page.this, EventslistActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        ImageView SettingIcon = findViewById(R.id.settingsIcon);
-        SettingIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Landing_page.this, SettingActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        ImageView profileIcon = findViewById(R.id.profileIcon);
-        profileIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Landing_page.this, ProfileActivity.class);
-                startActivity(intent);
-            }
-        });
-        profileIcon.setOnLongClickListener(v -> {
-            if (Control.getCurrentUser() != null && Control.getCurrentUser().isAdmin()) {
-                Intent intent = new Intent(Landing_page.this, UsersListActivity.class);
-                startActivity(intent);
-                return true;
-            } else {
-                Toast.makeText(Landing_page.this, "Only admins can view all users", Toast.LENGTH_SHORT).show();
-                return false;
-            }
-        });
-
-
-        ImageView notificationIcon = findViewById(R.id.notificationsIcon);
-        notificationIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Landing_page.this, NotificationActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        ImageView facilityIcon = findViewById(R.id.facilitiesIcon);
-        facilityIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Landing_page.this, facilityActivity.class);
-                startActivity(intent);
-            }
-        });
-        facilityIcon.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                if (Control.getCurrentUser() != null && Control.getCurrentUser().isAdmin()) {
-                    Intent intent = new Intent(Landing_page.this, FacilitiesListActivity.class);
-                    startActivity(intent);
-                    return true;
-                } else {
-                    Toast.makeText(Landing_page.this, "Only admins can view all facilities", Toast.LENGTH_SHORT).show();
-                    return false;
-                }
-            }
-        });
-
-        ImageView qrIcon = findViewById(R.id.scanQRIcon);
-        qrIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Landing_page.this, ScanQRActivity.class);
-                startActivity(intent);
-            }
-        });
-
+        // Set up click listeners for various icons
+        setupIconClickListeners();
     }
 
     @Override
@@ -199,23 +134,57 @@ public class Landing_page extends AppCompatActivity {
         super.onDestroy();
     }
 
-    protected void checkDevice(Control control){
-//        for (User user : Control.getInstance().getUserList()) {
-//            if (user.getFID().equals(Control.getLocalFID())) {
-//                Control.setCurrentUser(user);
-//                return;
-//            }
-//        }
-        if (Control.getCurrentUser() == null){
+    /**
+     * Checks the current device for a user and initializes one if necessary.
+     *
+     * @param control the control instance managing the application state
+     */
+    protected void checkDevice(Control control) {
+        if (Control.getCurrentUser() == null) {
             User me = new User(Control.getInstance().getCurrentUserIDForUserCreation(), Control.getLocalFID());
             Control.getInstance().getUserList().add(me);
-//            Control.setCurrentUser(me);
             Control.getInstance().saveUser(me);
         }
     }
+
+    /**
+     * Sets up click and long-click listeners for various icons on the landing page.
+     */
+    private void setupIconClickListeners() {
+        ImageView eventsIcon = findViewById(R.id.eventsIcon);
+        eventsIcon.setOnClickListener(v -> startActivity(new Intent(Landing_page.this, EventslistActivity.class)));
+
+        ImageView settingsIcon = findViewById(R.id.settingsIcon);
+        settingsIcon.setOnClickListener(v -> startActivity(new Intent(Landing_page.this, SettingActivity.class)));
+
+        ImageView profileIcon = findViewById(R.id.profileIcon);
+        profileIcon.setOnClickListener(v -> startActivity(new Intent(Landing_page.this, ProfileActivity.class)));
+        profileIcon.setOnLongClickListener(v -> {
+            if (Control.getCurrentUser() != null && Control.getCurrentUser().isAdmin()) {
+                startActivity(new Intent(Landing_page.this, UsersListActivity.class));
+                return true;
+            } else {
+                Toast.makeText(Landing_page.this, "Only admins can view all users", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
+
+        ImageView notificationIcon = findViewById(R.id.notificationsIcon);
+        notificationIcon.setOnClickListener(v -> startActivity(new Intent(Landing_page.this, NotificationActivity.class)));
+
+        ImageView facilityIcon = findViewById(R.id.facilitiesIcon);
+        facilityIcon.setOnClickListener(v -> startActivity(new Intent(Landing_page.this, facilityActivity.class)));
+        facilityIcon.setOnLongClickListener(v -> {
+            if (Control.getCurrentUser() != null && Control.getCurrentUser().isAdmin()) {
+                startActivity(new Intent(Landing_page.this, FacilitiesListActivity.class));
+                return true;
+            } else {
+                Toast.makeText(Landing_page.this, "Only admins can view all facilities", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
+
+        ImageView qrIcon = findViewById(R.id.scanQRIcon);
+        qrIcon.setOnClickListener(v -> startActivity(new Intent(Landing_page.this, ScanQRActivity.class)));
+    }
 }
-
-
-
-
-

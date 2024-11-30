@@ -22,6 +22,7 @@ import java.util.List;
  * A DialogFragment that allows users to edit facility details such as name and description.
  */
 public class EditFacilityFragment extends DialogFragment {
+
     private EditText nameEditText, descriptionEditText;
     private OnFacilityUpdatedListener facilityUpdatedListener;
 
@@ -63,6 +64,15 @@ public class EditFacilityFragment extends DialogFragment {
         return fragment;
     }
 
+    /**
+     * Inflates the layout for the fragment, initializes the UI elements, and sets up click listeners.
+     * Handles the form validation and triggers the facility updated listener.
+     *
+     * @param inflater           The LayoutInflater used to inflate the fragment's view.
+     * @param container          The parent container to attach the fragment's view.
+     * @param savedInstanceState A saved instance state bundle (optional).
+     * @return The view for the fragment.
+     */
     @SuppressLint({"WrongViewCast", "MissingInflatedId"})
     @Nullable
     @Override
@@ -87,6 +97,7 @@ public class EditFacilityFragment extends DialogFragment {
             List<String> missingFields = new ArrayList<>();
             boolean hasError = false;
 
+            // Validate facility name
             if (name.isEmpty()) {
                 nameEditText.setError("Facility Name is required");
                 missingFields.add("Facility Name");
@@ -95,6 +106,7 @@ public class EditFacilityFragment extends DialogFragment {
                 nameEditText.setError(null);
             }
 
+            // Validate facility description
             if (description.isEmpty()) {
                 descriptionEditText.setError("Facility Description is required");
                 missingFields.add("Facility Description");
@@ -103,6 +115,7 @@ public class EditFacilityFragment extends DialogFragment {
                 descriptionEditText.setError(null);
             }
 
+            // Show a Toast message if validation failed
             if (hasError) {
                 String message;
                 if (missingFields.size() == 1) {
@@ -115,22 +128,27 @@ public class EditFacilityFragment extends DialogFragment {
                 return;
             }
 
+            // Notify the listener with the updated facility details
             if (facilityUpdatedListener != null) {
-                facilityUpdatedListener.onFacilityUpdated(
-                        name,
-                        description
-                );
+                facilityUpdatedListener.onFacilityUpdated(name, description);
             }
+
+            // Dismiss the dialog
             dismiss();
         });
+
+        // Cancel button action
         cancelButton.setOnClickListener(v -> dismiss());
+
         return view;
     }
 
+    /**
+     * Adjusts the size of the dialog window to 99% of the screen width and wrap content for height.
+     */
     @Override
     public void onResume() {
         super.onResume();
-        // Set dialog size to 99% of screen width and wrap content for height
         int width = (int) (getResources().getDisplayMetrics().widthPixels * 0.99);
         int height = WindowManager.LayoutParams.WRAP_CONTENT;
         getDialog().getWindow().setLayout(width, height);

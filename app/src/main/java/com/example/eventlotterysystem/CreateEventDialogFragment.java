@@ -29,9 +29,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
- * Previous UI approach to creating an event
+ * DialogFragment for creating an event. Allows users to input event details, upload an image,
+ * and validate the inputs before submitting the event. Supports QR code generation after event creation.
  */
 public class CreateEventDialogFragment extends DialogFragment {
 
@@ -47,33 +47,54 @@ public class CreateEventDialogFragment extends DialogFragment {
     // ActivityResultLauncher for image selection
     private ActivityResultLauncher<String> pickImageLauncher;
 
+    /**
+     * Listener interface to handle the event creation process.
+     */
     public interface CreateEventListener {
+        /**
+         * Called when a new event has been successfully created.
+         *
+         * @param newEvent The newly created event.
+         */
         void onEventCreated(Event newEvent);
     }
 
+    /**
+     * Sets the listener for event creation.
+     *
+     * @param listener The listener to be notified when an event is created.
+     */
     public void setCreateEventListener(CreateEventListener listener) {
         this.listener = listener;
     }
 
+    /**
+     * Inflates the view and initializes the UI elements. Sets up listeners for image uploading and event creation.
+     *
+     * @param inflater The LayoutInflater used to inflate the view.
+     * @param container The parent container for the view.
+     * @param savedInstanceState A Bundle containing the fragment's previously saved state.
+     * @return The inflated view for the fragment.
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.edit_event_fragment, container, false);
         curUser = Control.getCurrentUser();
 
-
+        // UI elements
         Switch locationSwitch = view.findViewById(R.id.location_loc);
         EditText titleEdit = view.findViewById(R.id.firstName);
         EditText descriptionEdit = view.findViewById(R.id.title_edit5);
         EditText limitChosenEdit = view.findViewById(R.id.editTextNumber2);
         EditText limitWaitingEdit = view.findViewById(R.id.editTextNumber);
-        ImageView imagePreview = view.findViewById(R.id.imagePreview);
-        ImageButton removeImageButton = view.findViewById(R.id.removeImageButton);
-        Button uploadImageButton = view.findViewById(R.id.uploadImage_button);
+        imagePreview = view.findViewById(R.id.imagePreview);
+        removeImageButton = view.findViewById(R.id.removeImageButton);
+        uploadImageButton = view.findViewById(R.id.uploadImage_button);
         Button finishButton = view.findViewById(R.id.finish_button);
         Button cancelButton = view.findViewById(R.id.cancel_button);
 
-        // Initialize ActivityResultLauncher
+        // Initialize ActivityResultLauncher for image selection
         pickImageLauncher = registerForActivityResult(
                 new ActivityResultContracts.GetContent(),
                 uri -> {
@@ -92,10 +113,9 @@ public class CreateEventDialogFragment extends DialogFragment {
         );
 
         // Set Upload Image Button Listener
-        uploadImageButton.setOnClickListener(v -> {
-            pickImageLauncher.launch("image/*");
-        });
+        uploadImageButton.setOnClickListener(v -> pickImageLauncher.launch("image/*"));
 
+        // Set Remove Image Button Listener
         removeImageButton.setOnClickListener(v -> {
             selectedImageUri = null;
             imagePreview.setVisibility(View.GONE);
@@ -105,119 +125,101 @@ public class CreateEventDialogFragment extends DialogFragment {
             Toast.makeText(getContext(), "Image removed", Toast.LENGTH_SHORT).show();
         });
 
-        finishButton.setOnClickListener(v -> {
-            // Retrieve and trim input values
-            String eventTitle = titleEdit.getText().toString().trim();
-            String eventDescription = descriptionEdit.getText().toString().trim();
-            String limitChosenString = limitChosenEdit.getText().toString().trim();
-            String limitWaitingString = limitWaitingEdit.getText().toString().trim();
+        // Set Finish Button Listener
+        finishButton.setOnClickListener(v -> createEvent(locationSwitch, titleEdit, descriptionEdit, limitChosenEdit, limitWaitingEdit));
 
-            boolean hasError = false;
-            List<String> missingFields = new ArrayList<>();
-
-            // Validate Event Title
-            if (eventTitle.isEmpty()) {
-                titleEdit.setError(getString(R.string.error_event_title_required));
-                missingFields.add(getString(R.string.label_event_title));
-                hasError = true;
-            } else {
-                titleEdit.setError(null);
-            }
-
-            // Validate Event Description
-            if (eventDescription.isEmpty()) {
-                descriptionEdit.setError(getString(R.string.error_event_description_required));
-                missingFields.add(getString(R.string.label_event_description));
-                hasError = true;
-            } else {
-                descriptionEdit.setError(null);
-            }
-
-            // Validate Limit Chosen
-            int limitChosen = 0;
-            if (limitChosenString.isEmpty()) {
-                limitChosenEdit.setError(getString(R.string.error_limit_chosen_required));
-                missingFields.add(getString(R.string.label_limit_chosen));
-                hasError = true;
-            } else {
-                try {
-                    limitChosen = Integer.parseInt(limitChosenString);
-                    if (limitChosen <= 0) {
-                        limitChosenEdit.setError(getString(R.string.error_limit_positive));
-                        missingFields.add(getString(R.string.label_limit_chosen));
-                        hasError = true;
-                    } else {
-                        limitChosenEdit.setError(null);
-                    }
-                } catch (NumberFormatException e) {
-                    limitChosenEdit.setError(getString(R.string.error_limit_chosen_invalid));
-                    missingFields.add(getString(R.string.label_limit_chosen));
-                    hasError = true;
-                }
-            }
-
-            // Validate Limit Waiting (Optional Field)
-            int limitWaiting = 9999; // Default value
-            if (!limitWaitingString.isEmpty()) {
-                try {
-                    limitWaiting = Integer.parseInt(limitWaitingString);
-                    if (limitWaiting <= 0) {
-                        limitWaitingEdit.setError(getString(R.string.error_limit_positive));
-                        missingFields.add(getString(R.string.label_limit_waiting));
-                        hasError = true;
-                    } else {
-                        limitWaitingEdit.setError(null);
-                    }
-                } catch (NumberFormatException e) {
-                    limitWaitingEdit.setError(getString(R.string.error_limit_waiting_invalid));
-                    missingFields.add(getString(R.string.label_limit_waiting));
-                    hasError = true;
-                }
-            } else {
-                // If the waiting limit is optional and left empty, remove any previous errors
-                limitWaitingEdit.setError(null);
-            }
-
-            // If there are any validation errors, show a Toast and halt the process
-            if (hasError) {
-                String message;
-                if (missingFields.size() == 1) {
-                    message = "Please fill in the " + missingFields.get(0) + " field.";
-                } else if (missingFields.size() > 1) {
-                    String fields = TextUtils.join(", ", missingFields);
-                    message = "Please fill in the following fields: " + fields + ".";
-                } else {
-                    // Fallback message if no specific fields are missing
-                    message = getString(R.string.toast_fill_required_fields);
-                }
-                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            boolean geo = locationSwitch.isChecked();
-            Event newEvent = new Event(Control.getInstance().getCurrentEventIDForEventCreation(), eventTitle, eventDescription, limitChosen, limitWaiting, geo);
-            newEvent.setCreatorRef(curUser.getUserID());
-            Control.getInstance().getEventList().add(newEvent);
-            Control.getInstance().saveEvent(newEvent);
-            newEvent.generateQR();
-            newEvent.setPoster(pos);
-
-            // Pass the event to the listener
-            if (listener != null) {
-                listener.onEventCreated(newEvent);
-            }
-            // Display the QR code for the created event
-            String qrCodeHash = newEvent.getHashCodeQR(); // Replace with your QR code generation method
-            QRCodeDialogFragment qrCodeDialog = QRCodeDialogFragment.newInstance(qrCodeHash);
-            qrCodeDialog.show(getParentFragmentManager(), "QRCodeDialogFragment");
-
-            dismiss(); // Close the dialog
-        });
-
+        // Set Cancel Button Listener
         cancelButton.setOnClickListener(v -> dismiss()); // Close the dialog if canceled
 
         return view;
     }
+
+    /**
+     * Validates the event creation form and creates a new event if the data is valid.
+     *
+     * @param locationSwitch The Switch for the event's location setting.
+     * @param titleEdit The EditText for the event title.
+     * @param descriptionEdit The EditText for the event description.
+     * @param limitChosenEdit The EditText for the chosen limit.
+     * @param limitWaitingEdit The EditText for the waiting list limit.
+     */
+    private void createEvent(Switch locationSwitch, EditText titleEdit, EditText descriptionEdit,
+                             EditText limitChosenEdit, EditText limitWaitingEdit) {
+        String eventTitle = titleEdit.getText().toString().trim();
+        String eventDescription = descriptionEdit.getText().toString().trim();
+        String limitChosenString = limitChosenEdit.getText().toString().trim();
+        String limitWaitingString = limitWaitingEdit.getText().toString().trim();
+
+        List<String> missingFields = new ArrayList<>();
+        boolean hasError = false;
+
+        // Validate fields (simplified, can use helper methods for validation)
+        if (eventTitle.isEmpty()) {
+            titleEdit.setError(getString(R.string.error_event_title_required));
+            missingFields.add(getString(R.string.label_event_title));
+            hasError = true;
+        }
+        if (eventDescription.isEmpty()) {
+            descriptionEdit.setError(getString(R.string.error_event_description_required));
+            missingFields.add(getString(R.string.label_event_description));
+            hasError = true;
+        }
+
+        int limitChosen = validateLimitField(limitChosenEdit, limitChosenString, missingFields);
+        int limitWaiting = validateLimitField(limitWaitingEdit, limitWaitingString, missingFields);
+
+        if (hasError) {
+            String message = "Please fill in the following fields: " + TextUtils.join(", ", missingFields);
+            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        boolean geo = locationSwitch.isChecked();
+        Event newEvent = new Event(Control.getInstance().getCurrentEventIDForEventCreation(), eventTitle, eventDescription, limitChosen, limitWaiting, geo);
+        newEvent.setCreatorRef(curUser.getUserID());
+        Control.getInstance().getEventList().add(newEvent);
+        Control.getInstance().saveEvent(newEvent);
+        newEvent.generateQR();
+        newEvent.setPoster(pos);
+
+        // Notify listener and show QR code dialog
+        if (listener != null) {
+            listener.onEventCreated(newEvent);
+        }
+        QRCodeDialogFragment qrCodeDialog = QRCodeDialogFragment.newInstance(newEvent.getHashCodeQR());
+        qrCodeDialog.show(getParentFragmentManager(), "QRCodeDialogFragment");
+
+        dismiss(); // Close the dialog
+    }
+
+    /**
+     * Validates the limit fields (chosen and waiting).
+     *
+     * @param limitEdit The EditText for the limit field.
+     * @param limitString The input string for the limit.
+     * @param missingFields The list of missing fields to be populated if the validation fails.
+     * @return The validated limit or a default value if the input is invalid.
+     */
+    private int validateLimitField(EditText limitEdit, String limitString, List<String> missingFields) {
+        int limit = 0;
+        if (limitString.isEmpty()) {
+            limitEdit.setError(getString(R.string.error_limit_chosen_required));
+            missingFields.add(limitEdit.getHint().toString());
+        } else {
+            try {
+                limit = Integer.parseInt(limitString);
+                if (limit <= 0) {
+                    limitEdit.setError(getString(R.string.error_limit_positive));
+                    missingFields.add(limitEdit.getHint().toString());
+                }
+            } catch (NumberFormatException e) {
+                limitEdit.setError(getString(R.string.error_limit_chosen_invalid));
+                missingFields.add(limitEdit.getHint().toString());
+            }
+        }
+        return limit;
+    }
+
     /**
      * Decodes a Base64 encoded string back to a Bitmap.
      *
@@ -228,6 +230,13 @@ public class CreateEventDialogFragment extends DialogFragment {
         byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
         return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
     }
+
+    /**
+     * Retrieves a Bitmap from a URI.
+     *
+     * @param uri The URI of the image.
+     * @return The Bitmap retrieved from the URI.
+     */
     private Bitmap getBitmapFromUri(Uri uri) {
         try {
             return MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), uri);
@@ -236,29 +245,38 @@ public class CreateEventDialogFragment extends DialogFragment {
             return null;
         }
     }
-    // Helper method to encode Bitmap to a String (Base64 encoding or any method you prefer)
-    private String encodeBitmap(Bitmap bitmap) {
-        // Convert bitmap to a Base64 encoded string (as an example)
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-        byte[] byteArray = baos.toByteArray();
+
+    /**
+     * Resizes a Bitmap to a given width while maintaining aspect ratio.
+     *
+     * @param image The original Bitmap to be resized.
+     * @param maxResolution The desired maximum resolution.
+     * @return The resized Bitmap.
+     */
+    private Bitmap resizeBitmapToResolution(Bitmap image, int maxResolution) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+        float aspectRatio = (float) width / height;
+        if (width > height) {
+            width = maxResolution;
+            height = (int) (width / aspectRatio);
+        } else {
+            height = maxResolution;
+            width = (int) (height * aspectRatio);
+        }
+        return Bitmap.createScaledBitmap(image, width, height, false);
+    }
+
+    /**
+     * Encodes a Bitmap into a Base64 string.
+     *
+     * @param image The Bitmap to be encoded.
+     * @return The Base64 encoded string.
+     */
+    private String encodeBitmap(Bitmap image) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+        byte[] byteArray = byteArrayOutputStream.toByteArray();
         return Base64.encodeToString(byteArray, Base64.DEFAULT);
     }
-    public Bitmap resizeBitmapToResolution(Bitmap bitmap, int targetResolution) {
-        int width = bitmap.getWidth();
-        int height = bitmap.getHeight();
-
-        // Determine scaling factor to make the longest side approximately equal to targetResolution
-        float scaleFactor = (width > height)
-                ? (float) targetResolution / width
-                : (float) targetResolution / height;
-
-        // Calculate new width and height
-        int newWidth = Math.round(width * scaleFactor);
-        int newHeight = Math.round(height * scaleFactor);
-
-        // Resize the bitmap
-        return Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);
-    }
-
 }
