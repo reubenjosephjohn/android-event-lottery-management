@@ -90,58 +90,70 @@ public class AdminViewUserActivity extends AppCompatActivity {
         backButton.setOnClickListener(view -> finish());
 
         // Set up delete button listener
-        deleteButton.setOnClickListener(view -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(AdminViewUserActivity.this);
-            builder.setTitle("Delete")
-                    .setMessage("Select one of the options below:")
-                    .setPositiveButton("Profile", (dialog, which) -> {
-                        new AlertDialog.Builder(AdminViewUserActivity.this)
-                                .setTitle("Delete Profile Information")
-                                .setMessage("Are you sure you want to delete this profile? \n\nThis will withdraw you from all events. \n\nYour facility and managed events will not be removed.")
-                                .setPositiveButton("Delete", (dialog1, which1) -> {
-                                    // Withdraw user from all events
-                                    for (Event event : Control.getInstance().getEventList()) {
-                                        if (event.getWaitingUserRefs().contains(user.getUserID())) {
-                                            event.getWaitingUserRefs().remove(Integer.valueOf(user.getUserID()));
-                                            Control.getInstance().saveEvent(event);
-                                        }
-                                        if (event.getChosenUserRefs().contains(user.getUserID())) {
-                                            event.getCancelledUserRefs().add(user.getUserID());
-                                            event.getChosenUserRefs().remove(Integer.valueOf(user.getUserID()));
-                                            Control.getInstance().saveEvent(event);
-                                        }
-                                        if (event.getFinalUserRefs().contains(user.getUserID())) {
-                                            event.getCancelledUserRefs().add(user.getUserID());
-                                            event.getFinalUserRefs().remove(Integer.valueOf(user.getUserID()));
-                                            Control.getInstance().saveEvent(event);
-                                        }
-                                    }
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(AdminViewUserActivity.this);
+                builder.setTitle("Delete")
+                        .setMessage("Select one of the options below:")
+                        .setPositiveButton("Profile", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                new android.app.AlertDialog.Builder(AdminViewUserActivity.this)
+                                        .setTitle("Delete Profile Information")
+                                        .setMessage("Are you sure you want to delete this profile? \n \nThis will withdraw you from all events. \n \nYour facility and managed events will not be removed. ")
+                                        .setPositiveButton("Delete", (dialog1, which1) -> {
+                                            // Withdraw from all the events
+                                            for (Event event : Control.getInstance().getEventList()) {
+                                                // waiting
+                                                if (event.getWaitingUserRefs().contains(Integer.valueOf(user.getUserID()))) {
+                                                    event.getWaitingUserRefs().remove(Integer.valueOf(user.getUserID()));
+                                                    Control.getInstance().saveEvent(event);
+                                                }
+                                                // chosen
+                                                if (event.getChosenUserRefs().contains(Integer.valueOf(user.getUserID()))) {
+                                                    event.getCancelledUserRefs().add(user.getUserID());
+                                                    event.getChosenUserRefs().remove(Integer.valueOf(user.getUserID()));
+                                                    Control.getInstance().saveEvent(event);
+                                                }
+                                                // final
+                                                if (event.getFinalUserRefs().contains(Integer.valueOf(user.getUserID()))) {
+                                                    event.getCancelledUserRefs().add(user.getUserID());
+                                                    event.getFinalUserRefs().remove(Integer.valueOf(user.getUserID()));
+                                                    Control.getInstance().saveEvent(event);
+                                                }
+                                            }
 
-                                    // Reset user details
-                                    user.setName("Default Name");
-                                    user.setEmail("user@example.com");
-                                    user.setContact("000-000-0000");
-                                    user.setPicture(null);
-                                    Control.getInstance().saveUser(user);
-                                    finish();
-                                })
-                                .setNegativeButton("Cancel", null)
-                                .show();
-                    })
-                    .setNegativeButton("Picture", (dialog, which) -> {
-                        new AlertDialog.Builder(AdminViewUserActivity.this)
-                                .setTitle("Delete Profile Information")
-                                .setMessage("Are you sure you want to delete this Picture?")
-                                .setPositiveButton("Delete", (dialog1, which1) -> {
-                                    user.setPicture(null);
-                                    Control.getInstance().saveUser(user);
-                                    profileImageView.setImageBitmap(null);
-                                })
-                                .setNegativeButton("Cancel", null)
-                                .show();
-                    })
-                    .setCancelable(true)
-                    .show();
+                                            user.setName("Default Name");
+                                            user.setEmail("user@example.com");
+                                            user.setContact("000-000-0000");
+                                            user.setPicture(null);
+                                            Control.getInstance().saveUser(user);
+                                            finish();
+                                        })
+                                        .setNegativeButton("Cancel", null)
+                                        .show();
+                            }
+                        })
+                        .setNegativeButton("Picture", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                new AlertDialog.Builder(AdminViewUserActivity.this)
+                                        .setTitle("Delete Profile Information")
+                                        .setMessage("Are you sure you want to delete this Picture?")
+                                        .setPositiveButton("Delete", (dialog1, which1) -> {
+                                            user.setPicture(null);
+                                            Control.getInstance().saveUser(user);
+                                            profileImageView.setImageBitmap(null);
+
+                                        })
+                                        .setNegativeButton("Cancel", null)
+                                        .show();
+                            }
+                        })
+                        .setCancelable(true)
+                        .show();
+            }
         });
     }
 

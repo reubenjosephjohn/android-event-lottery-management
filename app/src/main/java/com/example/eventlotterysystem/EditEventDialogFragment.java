@@ -284,20 +284,29 @@ public class EditEventDialogFragment extends DialogFragment {
      * Resizes a Bitmap to a target resolution while maintaining aspect ratio.
      *
      * @param bitmap   The Bitmap to resize.
-     * @param maxSize The maximum resolution (width or height).
+     * @param targetResolution The target resolution.
      * @return The resized Bitmap.
      */
-    private Bitmap resizeBitmapToResolution(Bitmap bitmap, int maxSize) {
+    public Bitmap resizeBitmapToResolution(Bitmap bitmap, int targetResolution) {
+        if (bitmap == null || targetResolution <= 0) {
+            throw new IllegalArgumentException("Bitmap must not be null and target resolution must be positive.");
+        }
+
         int width = bitmap.getWidth();
         int height = bitmap.getHeight();
-        float ratio = (float) width / height;
-        if (width > height) {
-            width = maxSize;
-            height = (int) (width / ratio);
-        } else {
-            height = maxSize;
-            width = (int) (height * ratio);
+
+        float scaleFactor = (width > height)
+                ? (float) targetResolution / width
+                : (float) targetResolution / height;
+
+        // Avoid upscaling
+        if (scaleFactor >= 1.0f) {
+            return bitmap;
         }
-        return Bitmap.createScaledBitmap(bitmap, width, height, false);
+
+        int newWidth = Math.round(width * scaleFactor);
+        int newHeight = Math.round(height * scaleFactor);
+
+        return Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);
     }
 }

@@ -130,7 +130,10 @@ public class EditFacilityFragment extends DialogFragment {
 
             // Notify the listener with the updated facility details
             if (facilityUpdatedListener != null) {
-                facilityUpdatedListener.onFacilityUpdated(name, description);
+                facilityUpdatedListener.onFacilityUpdated(
+                        name,
+                        description
+                );
             }
 
             // Dismiss the dialog

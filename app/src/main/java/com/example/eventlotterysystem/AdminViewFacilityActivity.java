@@ -85,7 +85,7 @@ public class AdminViewFacilityActivity extends AppCompatActivity {
                             if (event.getCreatorRef() == facility.getCreatorRef()) {
                                 // Delete notifications related to this event
                                 ArrayList<Notification> notificationsToDelete = new ArrayList<>();
-                                for (Notification notification : Control.getInstance().getNotificationList()) {
+                                for (Notification notification: Control.getInstance().getNotificationList()) {
                                     if (notification.getEventRef() == event.getEventID()) {
                                         Control.getInstance().deleteNotification(notification);
                                         notificationsToDelete.add(notification);

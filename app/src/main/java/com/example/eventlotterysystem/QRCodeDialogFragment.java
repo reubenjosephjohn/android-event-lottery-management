@@ -76,9 +76,6 @@ public class QRCodeDialogFragment extends DialogFragment {
      * @return A Bitmap representation of the QR code, or null if decoding fails.
      */
     private Bitmap decodeBitmap(String encodedImage) {
-        if (encodedImage == null || encodedImage.isEmpty()) {
-            return null;
-        }
         byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
         return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
     }

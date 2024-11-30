@@ -15,7 +15,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
-
 /**
  * Activity to display the list of facilities in the system.
  * Allows users to search, view details, and manage facilities.
@@ -46,7 +45,7 @@ public class FacilitiesListActivity extends AppCompatActivity {
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, filteredFacilitiesList);
         facilitiesListView.setAdapter(adapter);
 
-        // Populate the list with facility names and sort them alphabetically
+
         facilitiesList.clear();
         for (Facility facility : facilities) {
             facilitiesList.add(facility.getName());
@@ -54,7 +53,7 @@ public class FacilitiesListActivity extends AppCompatActivity {
         Collections.sort(facilitiesList); // Sort facilities list alphabetically
         filterFacilities(""); // Initialize the filtered list with all facilities
 
-        // Handle item click to view details of the selected facility
+
         facilitiesListView.setOnItemClickListener((parent, view, position, id) -> {
             String selectedFacilityName = filteredFacilitiesList.get(position);
             Facility selectedFacility = null;
@@ -66,16 +65,42 @@ public class FacilitiesListActivity extends AppCompatActivity {
             }
             if (selectedFacility != null) {
                 Intent intent = new Intent(FacilitiesListActivity.this, AdminViewFacilityActivity.class);
-                intent.putExtra("facility", selectedFacility); // Pass facility object to next activity
+                intent.putExtra("facility", selectedFacility);
                 startActivity(intent);
             }
         });
 
-        // Set up back button listener to finish the activity
+//        facilitiesListView.setOnItemLongClickListener((parent, view, position, id) -> {
+//            String selectedFacilityName = filteredFacilitiesList.get(position);
+//            Facility selectedFacility = facilities.stream().filter(facility -> facility.getName()
+//                    .equals(selectedFacilityName)).findFirst().orElse(null);
+//
+//            if (selectedFacility != null) {
+//                new AlertDialog.Builder(FacilitiesListActivity.this)
+//                        .setTitle("Delete Facility")
+//                        .setMessage("Are you sure you want to delete this facility?")
+//                        .setPositiveButton("Delete", (dialog, which) -> {
+//                            User currentUser = Control.getCurrentUser();
+//                            if (currentUser != null) {
+//                                currentUser.adminDeleteFacility(Control.getInstance(), selectedFacility);
+//                                FirestoreManager.getInstance().saveControl(Control.getInstance());
+//                                filteredFacilitiesList.remove(position);
+//                                adapter.notifyDataSetChanged();
+//                                Toast.makeText(FacilitiesListActivity.this, "Facility deleted successfully", Toast.LENGTH_SHORT).show();
+//                            }
+//                        })
+//                        .setNegativeButton("Cancel", null)
+//                        .show();
+//            }
+//            return true;
+//        });
+
+
+        // Set up back button listener
         ImageButton backButton = findViewById(R.id.back_button);
         backButton.setOnClickListener(view -> finish());
 
-        // Set up search functionality to filter facilities by name
+        // Set up search functionality
         SearchView searchView = findViewById(R.id.search_view);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -92,6 +117,7 @@ public class FacilitiesListActivity extends AppCompatActivity {
         });
     }
 
+
     /**
      * Filters the facilities list based on the query.
      * Updates the displayed list with matching facility names.
@@ -105,9 +131,8 @@ public class FacilitiesListActivity extends AppCompatActivity {
                 filteredFacilitiesList.add(facilityName);
             }
         }
-        adapter.notifyDataSetChanged(); // Notify adapter to refresh the list
+        adapter.notifyDataSetChanged();
     }
-
     /**
      * Resumes the activity and updates the facilities list.
      * Re-applies the filter based on the current search query.
@@ -115,15 +140,15 @@ public class FacilitiesListActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        facilities = Control.getInstance().getFacilityList(); // Get the latest list of facilities
+        facilities = Control.getInstance().getFacilityList(); // Get the latest list of users
         facilitiesList.clear();
 
-        // Add facility names to the main list
+        // Add valid users to the main list
         for (Facility u : facilities) {
             facilitiesList.add(u.getName());
         }
 
-        // Sort the facilities alphabetically
+        // Sort the users alphabetically
         Collections.sort(facilitiesList);
 
         // Reapply the filter (if there's an active query)

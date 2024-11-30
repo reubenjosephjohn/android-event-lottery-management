@@ -9,9 +9,6 @@ import java.io.Serializable;
  * and an optional poster image. This class is designed to be compatible with Firestore
  * serialization and deserialization.</p>
  *
- * @author Dingjingmu (Steven) Yang
- * @version 1.0
- * @since 2024-11-29
  */
 public class Facility implements Serializable {
 
