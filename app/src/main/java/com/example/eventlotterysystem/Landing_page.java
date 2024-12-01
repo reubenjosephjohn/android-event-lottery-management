@@ -1,18 +1,29 @@
 package com.example.eventlotterysystem;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.activity.OnBackPressedDispatcher;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class Landing_page extends AppCompatActivity {
 
@@ -26,10 +37,54 @@ public class Landing_page extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.landing_page);
 
+        // request notification permission
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1);
+            }
+        }
+
         // Control.setCurrentUser(Control.getInstance().getUserList().get(1));
         if (Control.getCurrentUser() == null){
             checkDevice(Control.getInstance());
         }
+
+        for (Notification noti: Control.getInstance().getNotificationList()) {
+            if (noti.getUserRef() == Control.getInstance().getCurrentUser().getUserID()) {
+                noti.setDeclined(false);
+                Control.getInstance().updateNotification(noti);
+            }
+        }
+
+        if (Control.notificationToken.isEmpty()) {
+            // Get and save user's Firebase Messaging Token
+            FirebaseMessaging.getInstance().getToken()
+                    .addOnCompleteListener(new OnCompleteListener<String>() {
+                        @Override
+                        public void onComplete(@NonNull Task<String> task) {
+                            if (!task.isSuccessful()) {
+                                Log.w("Firebase Messaging Service", "Fetching FCM registration token failed", task.getException());
+                                return;
+                            }
+
+                            // Get new FCM registration token
+                            String token = task.getResult();
+                            // Log and toast
+                            String msg = "Your Messaging Token is " + token;
+                            Log.i("Messaging Token", token);
+                            Log.d("Firebase Messaging Service", msg);
+//                            Toast.makeText(Landing_page.this, msg, Toast.LENGTH_SHORT).show();
+                            for (User user : Control.getInstance().getUserList()) {
+                                if (user.getFID().equals(Control.getLocalFID())) {
+                                    user.setNotificationToken(token);
+                                    Control.getInstance().saveUser(user);
+                                    break;
+                                }
+                            }
+                        }
+                    });
+        }
+
 
         // Set up the OnBackPressedCallback
         OnBackPressedDispatcher dispatcher = this.getOnBackPressedDispatcher();

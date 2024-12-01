@@ -63,11 +63,17 @@ dependencies {
     implementation(libs.play.services.location)
 
     // firestore
-    implementation(libs.firebase.firestore)
     implementation(platform("com.google.firebase:firebase-bom:33.6.0"))
+    implementation(libs.firebase.firestore)
     implementation(libs.firebase.installations)
+
 
     implementation ("com.github.bumptech.glide:glide:4.15.1") // Replace with the latest version
     annotationProcessor ("com.github.bumptech.glide:compiler:4.15.1")
+    
+    // notifications
+    implementation("com.google.firebase:firebase-messaging")
+    implementation("com.google.firebase:firebase-analytics")
+
 
 }

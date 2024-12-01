@@ -32,27 +32,14 @@
 
     </LinearLayout>
 
-    <androidx.appcompat.widget.SearchView
-        android:id="@+id/searchView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:queryHint="Search"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/header" />
-
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@id/create_button"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/searchView"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintTop_toBottomOf="@id/header">
 
         <LinearLayout
             android:id="@+id/linearLayout"
@@ -60,16 +47,15 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="8dp"
-            android:layout_marginHorizontal="16dp"
+            android:layout_marginHorizontal="16dp">
 
-            >
-
-            <!-- Enrolled Section -->
             <TextView
-                android:layout_width="wrap_content"
+                android:id="@+id/ownedEvents"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="8dp"
                 android:text="Owned Events"
+                android:textColor="#673AB7"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -79,15 +65,15 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:paddingBottom="16dp">
-                <!-- Enrolled items will be added programmatically -->
             </LinearLayout>
 
-            <!-- Owned Section -->
             <TextView
-                android:layout_width="wrap_content"
+                android:id="@+id/pendingEvents"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="8dp"
                 android:text="Pending Events"
+                android:textColor="#673AB7"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -97,18 +83,17 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:paddingBottom="16dp">
-                <!-- Owned items will be added programmatically -->
             </LinearLayout>
 
-            <!-- All Section -->
-
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/selectedEvents"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingBottom="8dp"
                 android:text="Selected Events"
+                android:textColor="#673AB7"
                 android:textSize="18sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:id="@+id/chosen"
@@ -120,10 +105,12 @@
             </LinearLayout>
 
             <TextView
-                android:layout_width="wrap_content"
+                android:id="@+id/approvedEvents"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="8dp"
                 android:text="Approved Events"
+                android:textColor="#673AB7"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -133,16 +120,17 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:paddingBottom="16dp">
-                <!-- All items will be added programmatically -->
             </LinearLayout>
 
             <TextView
-                android:id="@+id/textView8"
+                android:id="@+id/rejectedEvents"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingBottom="8dp"
                 android:text="Rejected Events"
+                android:textColor="#673AB7"
                 android:textSize="18sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:id="@+id/cancel"
@@ -154,12 +142,14 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/textView9"
+                android:id="@+id/otherEvents"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingBottom="8dp"
                 android:text="Other Available Events"
+                android:textColor="#673AB7"
                 android:textSize="18sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:id="@+id/other"

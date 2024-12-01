@@ -1,9 +1,26 @@
 package com.example.eventlotterysystem;
 
-import android.util.Log;
+import static androidx.core.content.ContextCompat.getSystemService;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.util.Log;
+import android.Manifest;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
+
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+
 
 import java.util.ArrayList;
 
@@ -18,6 +35,9 @@ public class Control {
     private static Control instance;
 //    private static User currentUser = null; // current logged in user
     private static String localFID = "";
+    // Notification token
+    public static String notificationToken = "";
+
     // Database
     private FirebaseFirestore db;
 
@@ -113,6 +133,7 @@ public class Control {
                         Log.e("Firestore", "Notification listener failed", e);
                         return;
                     }
+                    // Read data from data base
                     if (queryDocumentSnapshots != null) {
                         notificationList.clear();
                         for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
@@ -120,6 +141,48 @@ public class Control {
                             notificationList.add(notification);
                         }
                         Log.i("Firestore", "Notification list updated");
+
+                        // Don't push notifications if user's notification setting is off
+                        Boolean userNotificationSetting = false;
+                        for (User user : userList) {
+                            if (user.getFID().equals(localFID)){
+                                userNotificationSetting = user.getNotificationSetting();
+                                break;
+                            }
+                        }
+                        if (userNotificationSetting){
+                            // Document add listener
+                            for (DocumentChange change : queryDocumentSnapshots.getDocumentChanges()) {
+                                if (change.getType() == DocumentChange.Type.ADDED) {
+                                    DocumentSnapshot doc = change.getDocument();
+                                    Notification notification = doc.toObject(Notification.class);
+                                    if (notification.getDeclined()){
+//                                        notification.setDeclined(false);
+//                                        DocumentReference notificationRef = doc.getReference();
+
+//                                        notificationRef.update("declined", false)
+//                                                .addOnSuccessListener(aVoid -> Log.i("Firestore", "Notification declined field successfully updated to false"))
+//                                                .addOnFailureListener(ee -> Log.e("Firestore", "Failed to update declined field", ee));
+
+                                        for (User user : Control.getInstance().getUserList()) {
+                                            if (user.getFID().equals(localFID)){ // find myself
+                                                if (user.getUserID() == notification.getUserRef()) {
+                                                    String eventName = Control.getInstance().findEventByID(notification.getEventRef()).getName();
+                                                    Control.getInstance().sendNotification(
+                                                            MyApplication.getAppContext(), // Retrieve context from a custom Application class
+                                                            eventName,
+                                                            notification.getCustomMessage()
+                                                    );
+                                                    Log.i("Notification", "Notification: Event:" + eventName +", Message: " + notification.getCustomMessage() + "; it will be sent to android notification system");
+                                                }
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
                     }
                 });
     }
@@ -258,5 +321,51 @@ public class Control {
         }
         return null;
     }
+
+    public void sendNotification(Context context, String eventName, String message) {
+        NotificationManager notificationManager =
+                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        String CHANNEL_ID = "eventlotterysystem_notifications";
+
+        // Create a notification channel for Android O and above
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    CHANNEL_ID,
+                    "Event Lottery Notifications",
+                    NotificationManager.IMPORTANCE_HIGH
+            );
+            channel.setDescription("Notifications for the Event Lottery System app");
+            if (notificationManager != null) {
+                notificationManager.createNotificationChannel(channel);
+            }
+        }
+
+        // Intent to open the app when notification is clicked
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                context,
+                0,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+        );
+
+        // Build the notification
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
+                .setContentTitle("Event: " + eventName)
+                .setSmallIcon(R.drawable.ic_letter_icon)
+                .setContentText(message)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setAutoCancel(true)
+                .setContentIntent(pendingIntent);
+
+        // Show the notification
+        if (notificationManager != null) {
+            notificationManager.notify((int) System.currentTimeMillis(), builder.build());
+        }
+    }
+
 
 }

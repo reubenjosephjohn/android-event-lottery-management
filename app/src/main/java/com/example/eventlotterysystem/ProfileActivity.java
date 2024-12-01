@@ -65,6 +65,8 @@ public class ProfileActivity extends AppCompatActivity implements EditProfileFra
         if (curUser.getPicture() != null) {
             uploadImageButton.setText("Replace Image");
             gen.setVisibility(View.GONE);
+        } else {
+            profileImageView.setVisibility(View.GONE);
         }
 
         // Initialize ActivityResultLauncher
@@ -77,6 +79,7 @@ public class ProfileActivity extends AppCompatActivity implements EditProfileFra
                         bmURI = resizeBitmapToResolution(bmURI, 400);
                         curUser.setPicture(encodeBitmap(bmURI));
                         gen.setVisibility(View.GONE);
+                        profileImageView.setVisibility(View.VISIBLE);
                         uploadImageButton.setText("Replace Image");
                         Glide.with(this)
                                 .load(uri)
@@ -124,6 +127,7 @@ public class ProfileActivity extends AppCompatActivity implements EditProfileFra
             generateProfilePicture();
             uploadImageButton.setText("Replace Image");
             gen.setVisibility(View.GONE);
+            profileImageView.setVisibility(View.VISIBLE);
         });
 
         deleteButton.setOnClickListener(new View.OnClickListener() {
@@ -170,6 +174,9 @@ public class ProfileActivity extends AppCompatActivity implements EditProfileFra
                                             curUser.setEmail("user@example.com");
                                             curUser.setContact("000-000-0000");
                                             curUser.setPicture(null);
+                                            gen.setVisibility(View.VISIBLE);
+                                            profileImageView.setVisibility(View.GONE);
+                                            uploadImageButton.setText("Upload Image");
 
                                             nameTextView.setText(curUser.getName());
                                             emailTextView.setText("Email: " + curUser.getEmail());
@@ -191,6 +198,7 @@ public class ProfileActivity extends AppCompatActivity implements EditProfileFra
                                         .setPositiveButton("Delete", (dialog1, which1) -> {
                                             curUser.setPicture(null);
                                             gen.setVisibility(View.VISIBLE);
+                                            profileImageView.setVisibility(View.GONE);
                                             uploadImageButton.setText("Upload Image");
                                             Control.getInstance().saveUser(curUser);
                                             profileImageView.setImageBitmap(null);
