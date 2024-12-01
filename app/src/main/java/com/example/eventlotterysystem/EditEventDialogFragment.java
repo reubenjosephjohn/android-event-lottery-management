@@ -38,6 +38,7 @@ public class EditEventDialogFragment extends DialogFragment {
 
     private EditEventListener listener;
 
+    private TextView eventTitle;
     private ImageView imagePreview;
     private ImageButton removeImageButton;
     private Button uploadImageButton;
@@ -78,6 +79,7 @@ public class EditEventDialogFragment extends DialogFragment {
         View view = inflater.inflate(R.layout.edit_event_fragment, container, false);
 
         // Initialize fields
+        eventTitle = view.findViewById(R.id.textView4);
         nameEditText = view.findViewById(R.id.firstName);
         descriptionEditText = view.findViewById(R.id.title_edit5);
         limitChosenEdit = view.findViewById(R.id.editTextNumber2);
@@ -101,6 +103,8 @@ public class EditEventDialogFragment extends DialogFragment {
 //        waitingLimitText.setVisibility(View.GONE);
         limitChosenEdit.setVisibility(View.GONE);
         limitWaitingEdit.setVisibility(View.GONE);
+
+        eventTitle.setText(curEvent.getName());
 
         if (curEvent.getPoster() != null) {
             uploadImageButton.setText("Replace Poster");
