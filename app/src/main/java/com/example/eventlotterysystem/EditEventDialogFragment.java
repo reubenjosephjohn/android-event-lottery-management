@@ -30,6 +30,7 @@ import com.bumptech.glide.Glide;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +42,7 @@ public class EditEventDialogFragment extends DialogFragment {
 
     private EditEventListener listener;
 
+    private TextView eventTitle;
     private ImageView imagePreview;
     private ImageButton removeImageButton;
     private Button uploadImageButton;
@@ -54,15 +56,18 @@ public class EditEventDialogFragment extends DialogFragment {
     private EditText descriptionEditText;
     private EditText limitChosenEdit;
     private EditText limitWaitingEdit;
-    private TextView chosenLimitText;
-    private TextView waitingLimitText;
+//    private TextView chosenLimitText;
+//    private TextView waitingLimitText;
     private Switch geolocationSwitch;
 
     private Event curEvent;
 
+    private EditText registrationStartEdit, registrationEndEdit, eventStartEdit, eventEndEdit;
+
     /**
      * Listener interface to notify when the event is edited.
      */
+
     public interface EditEventListener {
         /**
          * Callback when an event is successfully edited.
@@ -105,12 +110,13 @@ public class EditEventDialogFragment extends DialogFragment {
         View view = inflater.inflate(R.layout.edit_event_fragment, container, false);
 
         // Initialize fields
+        eventTitle = view.findViewById(R.id.textView4);
         nameEditText = view.findViewById(R.id.firstName);
         descriptionEditText = view.findViewById(R.id.title_edit5);
         limitChosenEdit = view.findViewById(R.id.editTextNumber2);
         limitWaitingEdit = view.findViewById(R.id.editTextNumber);
-        chosenLimitText = view.findViewById(R.id.textView6);
-        waitingLimitText = view.findViewById(R.id.textView7);
+//        chosenLimitText = view.findViewById(R.id.textView6);
+//        waitingLimitText = view.findViewById(R.id.textView7);
         geolocationSwitch = view.findViewById(R.id.location_loc);
         imagePreview = view.findViewById(R.id.imagePreview);
         removeImageButton = view.findViewById(R.id.removeImageButton);
@@ -118,20 +124,40 @@ public class EditEventDialogFragment extends DialogFragment {
         Button finishButton = view.findViewById(R.id.finish_button);
         Button cancelButton = view.findViewById(R.id.cancel_button);
 
+        registrationStartEdit= view.findViewById(R.id.registration_start);
+        registrationEndEdit = view.findViewById(R.id.registration_end);
+        eventStartEdit = view.findViewById(R.id.event_start);
+        eventEndEdit = view.findViewById(R.id.event_end);
+
         // Hide limit fields
-        chosenLimitText.setVisibility(View.GONE);
-        waitingLimitText.setVisibility(View.GONE);
+//        chosenLimitText.setVisibility(View.GONE);
+//        waitingLimitText.setVisibility(View.GONE);
         limitChosenEdit.setVisibility(View.GONE);
         limitWaitingEdit.setVisibility(View.GONE);
+
+        eventTitle.setText(curEvent.getName());
 
         if (curEvent.getPoster() != null) {
             uploadImageButton.setText("Replace Poster");
         }
 
+        String eventDesc = curEvent.getDescription();
+        String regStart = extractDate(eventDesc, 0);
+        String regEnd = extractDate(eventDesc, 1);
+        String eventStart = extractDate(eventDesc, 2);
+        String eventEnd = extractDate(eventDesc, 3);
+
+        String shortEventDesc = shorten(eventDesc);
+
         // Populate fields with current event data
         nameEditText.setText(curEvent.getName());
-        descriptionEditText.setText(curEvent.getDescription());
+        descriptionEditText.setText(shortEventDesc);
         geolocationSwitch.setChecked(curEvent.getGeoSetting());
+
+        registrationStartEdit.setText(regStart);
+        registrationEndEdit.setText(regEnd);
+        eventStartEdit.setText(eventStart);
+        eventEndEdit.setText(eventEnd);
 
         // Initialize ActivityResultLauncher for image picking
         pickImageLauncher = registerForActivityResult(
@@ -172,6 +198,11 @@ public class EditEventDialogFragment extends DialogFragment {
             String eventTitle = nameEditText.getText().toString().trim();
             String eventDescription = descriptionEditText.getText().toString().trim();
 
+            String newRegStart = registrationStartEdit.getText().toString().trim();
+            String newRegEnd = registrationEndEdit.getText().toString().trim();
+            String newEventStart = eventStartEdit.getText().toString().trim();
+            String newEventEnd = eventEndEdit.getText().toString().trim();
+
             boolean hasError = false;
             List<String> missingFields = new ArrayList<>();
 
@@ -191,6 +222,16 @@ public class EditEventDialogFragment extends DialogFragment {
                 hasError = true;
             } else {
                 descriptionEditText.setError(null);
+            }
+
+            // Validate Registration and Event Dates
+            if (!validDates(newRegStart, newRegEnd, newEventStart, newEventEnd)) {
+                return;
+            }
+            else {
+                eventDescription = eventDescription + "\n"
+                        + "Registration Period: " + newRegStart + " to " + newRegEnd + "\n"
+                        + "Event Period: " + newEventStart + " to " + newEventEnd;
             }
 
             // If there are validation errors, show a Toast message and halt the process
@@ -308,5 +349,84 @@ public class EditEventDialogFragment extends DialogFragment {
         int newHeight = Math.round(height * scaleFactor);
 
         return Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);
+    }
+
+    public static String shorten(String input) {
+        if (input == null) {
+            return null;
+        }
+
+        int newlineIndex = input.indexOf('\n');
+        if (newlineIndex == -1) {
+            return input;
+        }
+
+        return input.substring(0, newlineIndex);
+    }
+    protected boolean validDate(String date) {
+        String regex = "^\\d{0,4}(-\\d{0,2})?(-\\d{0,2})?$";
+        return date.length() == 10 && date.matches(regex);
+    }
+
+    protected boolean validPeriod(String start, String end) {
+        LocalDate date1 = LocalDate.parse(start);
+        LocalDate date2 = LocalDate.parse(end);
+        return date1.isBefore(date2);
+    }
+
+    protected boolean validDates(String regStart, String regEnd, String eventStart, String eventEnd) {
+        if (!validDate(regStart) || !validDate(regEnd) || !validDate(eventStart) || !validDate(eventEnd)) {
+            Toast.makeText(getContext(), "Use date format: YYYY-MM-DD", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (!validPeriod(regStart, regEnd)) {
+            Toast.makeText(getContext(), "Registration Start must precede Registration End", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if ( !validPeriod(eventStart, eventEnd)) {
+            Toast.makeText(getContext(), "Event Start must precede Event End", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (!validPeriod(regEnd, eventStart)) {
+            Toast.makeText(getContext(), "Registration End must precede Event Start", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
+    private String extractDate(String eventDesc, int dateType) {
+        String regStart = "";
+        String regEnd = "";
+        String eventStart = "";
+        String eventEnd = "";
+
+        String[] lines = eventDesc.split("\n");
+        for (String line : lines) {
+            if (line.contains("Registration Period:")) {
+                String regPeriod = line.replace("Registration Period: ", "").trim();
+                String[] regDates = regPeriod.split(" to ");
+                regStart = regDates[0];
+                regEnd = regDates[1];
+            }
+            if (line.contains("Event Period: ")) {
+                String regPeriod = line.replace("Event Period: ", "").trim();
+                String[] eventDates = regPeriod.split(" to ");
+                eventStart = eventDates[0];
+                eventEnd = eventDates[1];
+            }
+        }
+
+        switch (dateType) {
+            case 0:
+                return regStart;
+            case 1:
+                return regEnd;
+            case 2:
+                return eventStart;
+            case 3:
+                return eventEnd;
+            default:
+                return "";
+        }
     }
 }

@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.eventlotterysystem"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -69,8 +69,13 @@ dependencies {
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.installations)
 
+
+    implementation ("com.github.bumptech.glide:glide:4.15.1") // Replace with the latest version
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.15.1")
+    
     // notifications
     implementation("com.google.firebase:firebase-messaging")
     implementation("com.google.firebase:firebase-analytics")
+
 
 }
