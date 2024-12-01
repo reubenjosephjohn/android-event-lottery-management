@@ -10,15 +10,37 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 
+/**
+ * Activity that displays the details of a specific facility for the admin and allows the admin
+ * to delete the facility along with all associated events and notifications.
+ */
 public class AdminViewFacilityActivity extends AppCompatActivity {
 
+    /**
+     * TextView to display the name of the facility.
+     */
     private TextView nameTextView;
+
+    /**
+     * TextView to display the description of the facility.
+     */
     private TextView descriptionTextView;
+
+    /**
+     * The facility object containing details about the current facility being viewed.
+     */
     private Facility facility;
 
+    /**
+     * Button to delete the facility and all associated data.
+     */
     private ImageView deleteButton;
 
-
+    /**
+     * Called when the activity is created. Initializes the UI elements and handles facility data display.
+     *
+     * @param savedInstanceState A Bundle object containing the activity's previously saved state.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,10 +62,12 @@ public class AdminViewFacilityActivity extends AppCompatActivity {
         // Set up back button listener
         ImageButton backButton = findViewById(R.id.back_button);
         backButton.setOnClickListener(view -> finish());
+
+        // Set up delete button listener
         deleteButton.setOnClickListener(v -> {
             new AlertDialog.Builder(AdminViewFacilityActivity.this)
                     .setTitle("Delete Facility")
-                    .setMessage("Are you sure you want to delete this facility?\n\nThis will delete all the events created by this user. " )
+                    .setMessage("Are you sure you want to delete this facility?\n\nThis will delete all the events created by this user.")
                     .setPositiveButton("Delete", (dialog, which) -> {
                         // Delete facility from database and Control
                         Facility realFacility = null;
@@ -54,6 +78,7 @@ public class AdminViewFacilityActivity extends AppCompatActivity {
                         }
                         Control.getInstance().getFacilityList().remove(realFacility);
                         Control.getInstance().deleteFacility(facility);
+
                         // Find all events created by the user
                         ArrayList<Event> eventsToDelete = new ArrayList<>();
                         for (Event event : Control.getInstance().getEventList()) {
@@ -67,6 +92,7 @@ public class AdminViewFacilityActivity extends AppCompatActivity {
                                     }
                                 }
                                 Control.getInstance().getNotificationList().removeAll(notificationsToDelete);
+
                                 // Delete event from database and Control
                                 Control.getInstance().deleteEvent(event);
                                 eventsToDelete.add(event);
@@ -77,7 +103,6 @@ public class AdminViewFacilityActivity extends AppCompatActivity {
                     })
                     .setNegativeButton("Cancel", null)
                     .show();
-
         });
     }
 }

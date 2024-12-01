@@ -13,16 +13,47 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+/**
+ * Activity that displays the details of a specific user for the admin. It provides options
+ * to delete the user's profile or profile picture and withdraw the user from all events.
+ */
 public class AdminViewUserActivity extends AppCompatActivity {
 
+    /**
+     * TextView to display the name of the user.
+     */
     private TextView nameTextView;
+
+    /**
+     * TextView to display the contact information of the user.
+     */
     private TextView contactTextView;
+
+    /**
+     * TextView to display the email address of the user.
+     */
     private TextView emailTextView;
+
+    /**
+     * The user object containing details about the current user being viewed.
+     */
     private User user;
+
+    /**
+     * ImageView to display the user's profile picture.
+     */
     private ImageView profileImageView;
 
+    /**
+     * Button to delete the user's profile or profile picture.
+     */
     private ImageView deleteButton;
 
+    /**
+     * Called when the activity is created. Initializes the UI elements and displays user details.
+     *
+     * @param savedInstanceState A Bundle object containing the activity's previously saved state.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,15 +72,15 @@ public class AdminViewUserActivity extends AppCompatActivity {
                 user = u;
             }
         }
+
         // Display user details
         if (user != null) {
             nameTextView.setText("Name: " + user.getName());
             contactTextView.setText("Contact: " + user.getContact());
             emailTextView.setText("Email: " + user.getEmail());
-            if (user.getPicture() != null){
+            if (user.getPicture() != null) {
                 profileImageView.setImageBitmap(decodeBitmap(user.getPicture()));
-            }
-            else{
+            } else {
                 profileImageView.setImageBitmap(null);
             }
         }
@@ -58,6 +89,7 @@ public class AdminViewUserActivity extends AppCompatActivity {
         ImageButton backButton = findViewById(R.id.back_button);
         backButton.setOnClickListener(view -> finish());
 
+        // Set up delete button listener
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -124,6 +156,13 @@ public class AdminViewUserActivity extends AppCompatActivity {
             }
         });
     }
+
+    /**
+     * Decodes a Base64 encoded image string into a Bitmap.
+     *
+     * @param encodedImage The Base64 encoded image string.
+     * @return The decoded Bitmap.
+     */
     private Bitmap decodeBitmap(String encodedImage) {
         byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
         return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);

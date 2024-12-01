@@ -15,7 +15,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
-
+/**
+ * Activity to display the list of facilities in the system.
+ * Allows users to search, view details, and manage facilities.
+ */
 public class FacilitiesListActivity extends AppCompatActivity {
 
     private ListView facilitiesListView;
@@ -24,6 +27,12 @@ public class FacilitiesListActivity extends AppCompatActivity {
     private ArrayList<Facility> facilities;
     private ArrayList<String> filteredFacilitiesList;
 
+    /**
+     * Initializes the activity and sets up the views, adapters, and event listeners.
+     * Loads the facilities list, applies filtering, and handles item clicks.
+     *
+     * @param savedInstanceState The saved state of the activity.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,7 +118,12 @@ public class FacilitiesListActivity extends AppCompatActivity {
     }
 
 
-
+    /**
+     * Filters the facilities list based on the query.
+     * Updates the displayed list with matching facility names.
+     *
+     * @param query The search query.
+     */
     private void filterFacilities(String query) {
         filteredFacilitiesList.clear();
         for (String facilityName : facilitiesList) {
@@ -119,7 +133,10 @@ public class FacilitiesListActivity extends AppCompatActivity {
         }
         adapter.notifyDataSetChanged();
     }
-
+    /**
+     * Resumes the activity and updates the facilities list.
+     * Re-applies the filter based on the current search query.
+     */
     @Override
     protected void onResume() {
         super.onResume();

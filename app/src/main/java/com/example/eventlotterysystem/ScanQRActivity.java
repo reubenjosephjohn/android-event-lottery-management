@@ -6,9 +6,16 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
-
+/**
+ * An activity that initiates a QR code scan and handles the scanned results.
+ * The QR code is expected to contain an event ID, which is used to navigate to the corresponding event details.
+ */
 public class ScanQRActivity extends AppCompatActivity {
-
+    /**
+     * Called when the activity is first created. Initiates a QR code scan using the ZXing library.
+     *
+     * @param savedInstanceState If the activity is being reinitialized after previously being shut down, this contains the data most recently supplied in {@link #onSaveInstanceState}.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,7 +29,14 @@ public class ScanQRActivity extends AppCompatActivity {
         integrator.setBarcodeImageEnabled(false);
         integrator.initiateScan();
     }
-
+    /**
+     * Handles the result of the QR code scan. Parses the QR code contents to find an event ID,
+     * and navigates to the event details if the event is found.
+     *
+     * @param requestCode The integer request code originally supplied to startActivityForResult(), allowing you to identify who this result came from.
+     * @param resultCode  The integer result code returned by the child activity through its setResult().
+     * @param data        An Intent, which can return result data to the caller.
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

@@ -46,6 +46,8 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
 
+//    implementation(files("C:\\Users\\16923\\AppData\\Local\\Android\\Sdk\\platforms\\android-34\\android.jar"))
+
 
     implementation("com.google.mlkit:barcode-scanning:17.3.0")
     implementation("androidx.camera:camera-camera2:1.4.0")
