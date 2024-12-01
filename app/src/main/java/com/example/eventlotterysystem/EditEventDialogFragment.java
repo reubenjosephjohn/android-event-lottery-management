@@ -34,6 +34,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Fragment for editing an existing event. Provides a user interface to update event details,
+ * such as the event's name, description, geolocation setting, and poster image.
+ */
 public class EditEventDialogFragment extends DialogFragment {
 
     private EditEventListener listener;
@@ -60,18 +64,45 @@ public class EditEventDialogFragment extends DialogFragment {
 
     private EditText registrationStartEdit, registrationEndEdit, eventStartEdit, eventEndEdit;
 
+    /**
+     * Listener interface to notify when the event is edited.
+     */
+
     public interface EditEventListener {
+        /**
+         * Callback when an event is successfully edited.
+         *
+         * @param updatedEvent The updated event object.
+         */
         void onEventEdited(Event updatedEvent);
     }
 
+    /**
+     * Sets the listener for event editing callback.
+     *
+     * @param listener The listener to be notified when the event is edited.
+     */
     public void setEditEventListener(EditEventListener listener) {
         this.listener = listener;
     }
 
+    /**
+     * Constructor for creating the dialog fragment with an existing event to edit.
+     *
+     * @param event The event to be edited.
+     */
     public EditEventDialogFragment(Event event) {
         this.curEvent = event;
     }
 
+    /**
+     * Creates and returns the view for the dialog fragment.
+     *
+     * @param inflater           The LayoutInflater used to inflate the view.
+     * @param container          The parent view group.
+     * @param savedInstanceState The saved instance state bundle.
+     * @return The view for the dialog fragment.
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -128,7 +159,7 @@ public class EditEventDialogFragment extends DialogFragment {
         eventStartEdit.setText(eventStart);
         eventEndEdit.setText(eventEnd);
 
-        // Initialize ActivityResultLauncher
+        // Initialize ActivityResultLauncher for image picking
         pickImageLauncher = registerForActivityResult(
                 new ActivityResultContracts.GetContent(),
                 uri -> {
@@ -151,6 +182,7 @@ public class EditEventDialogFragment extends DialogFragment {
             pickImageLauncher.launch("image/*");
         });
 
+        // Set Remove Image Button Listener
         removeImageButton.setOnClickListener(v -> {
             selectedImageUri = null;
             pos = null;
@@ -292,9 +324,9 @@ public class EditEventDialogFragment extends DialogFragment {
     /**
      * Resizes a Bitmap to a target resolution while maintaining aspect ratio.
      *
-     * @param bitmap           The original bitmap to resize.
-     * @param targetResolution The desired resolution for the longest side.
-     * @return The resized bitmap.
+     * @param bitmap   The Bitmap to resize.
+     * @param targetResolution The target resolution.
+     * @return The resized Bitmap.
      */
     public Bitmap resizeBitmapToResolution(Bitmap bitmap, int targetResolution) {
         if (bitmap == null || targetResolution <= 0) {

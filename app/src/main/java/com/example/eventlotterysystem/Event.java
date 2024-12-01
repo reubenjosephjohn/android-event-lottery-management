@@ -9,7 +9,10 @@ import com.google.zxing.qrcode.QRCodeWriter;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
-
+/**
+ * Represents an Event in the lottery system with details such as name, description, user lists, and geo-settings.
+ * Provides functionality to generate a QR code for the event.
+ */
 public class Event {
     private int eventID;
     private String name;
@@ -26,10 +29,21 @@ public class Event {
     private Boolean geoSetting;
     private ArrayList<Double> latitudeList;
     private ArrayList<Double> longitudeList;
-
+    /**
+     * Default constructor required for Firestore serialization.
+     */
     // Default no-argument constructor (required for Firestore)
     public Event() {}
-
+    /**
+     * Constructor to create a new Event with necessary details such as event ID, name, description, limits, and geo settings.
+     *
+     * @param eventID         The unique identifier for the event.
+     * @param name            The name of the event.
+     * @param description     A description of the event.
+     * @param limitChosenList The limit of participants chosen for the event.
+     * @param limitWaitingList The limit of participants on the waiting list.
+     * @param geoSetting      A boolean indicating if geolocation settings are enabled.
+     */
     // For event creation
     public Event(int eventID, String name, String description, int limitChosenList, int limitWaitingList, boolean geoSetting) {
         this.eventID = eventID;
@@ -161,7 +175,10 @@ public class Event {
     public void setLongitudeList(ArrayList<Double> longitudeList) {
         this.longitudeList = longitudeList;
     }
-
+    /**
+     * Generates a QR code for the event using the event ID.
+     * The QR code is encoded as a Base64 string and stored in the `hashCodeQR` field.
+     */
     public void generateQR() {
         QRCodeWriter writer = new QRCodeWriter();
         try {

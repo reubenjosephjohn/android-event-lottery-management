@@ -24,14 +24,22 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
-
+/**
+ * Represents the landing page of the event lottery system.
+ *
+ * <p>This activity serves as the main entry point after login, providing navigation
+ * to various sections such as events, settings, profiles, notifications, facilities,
+ * and a QR code scanner.</p>
+ */
 public class Landing_page extends AppCompatActivity {
 
     private static final int DOUBLE_BACK_TIME = 2000; // Time in milliseconds
     private long lastBackPressedTime = 0;
     private Handler handler = new Handler();
 
-
+    /**
+     * Time threshold for double back press to exit the app, in milliseconds.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -214,8 +222,3 @@ public class Landing_page extends AppCompatActivity {
         }
     }
 }
-
-
-
-
-
