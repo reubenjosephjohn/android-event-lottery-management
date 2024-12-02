@@ -2,7 +2,7 @@
 
 **Unauthorized redistribution is forbidden under all circumstances.** Use of this project (including any code, designs, documentation, or other materials) without explicit authorization from the author is prohibited.
 
-This project was produced as a solution for the Course 301 project at the University of Alberta. The course staff has the right to analyze the project for originality and plagiarism using appropriate tools, even beyond the duration of the course.
+This project was produced as a solution for the course CMPUT 301 project (Fall 2024) at the University of Alberta. The course staff has the right to analyze the project for originality and plagiarism using appropriate tools, even beyond the duration of the course.
 
 Copying any part of this project without including this copyright notice is illegal.
 
