@@ -2,6 +2,7 @@ package com.example.eventlotterysystem;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.onData;
+import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.longClick;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
@@ -174,7 +175,7 @@ public class AdminTest {
         onView(withId(R.id.eventsIcon))
                 .perform(click());
         onView(withText(uniqueEventName)).perform(scrollTo(), click());
-        onView(withSubstring(uniqueEventName)).check(matches(isDisplayed()));
+        onView(withText(uniqueEventName)).check(matches(isDisplayed()));
         onView(withId(R.id.del_button)).perform(click());
         onView(withText("Poster")).perform(click());
         onView(withId(R.id.del_button)).perform(click());
@@ -182,10 +183,9 @@ public class AdminTest {
         onView(withId(R.id.del_button)).perform(click());
         onView(withText("Event")).perform(click());
         onView(withText("Delete")).perform(click());
-        onView(withSubstring(uniqueEventName)).check(doesNotExist());
-
-
-
+        pressBack();
+        onView(withId(R.id.eventsIcon)).perform(click());
+        onView(withText(uniqueEventName)).check(doesNotExist());
 
     }
 }
