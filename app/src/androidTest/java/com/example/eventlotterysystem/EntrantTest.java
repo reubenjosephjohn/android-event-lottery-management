@@ -87,6 +87,13 @@ public class EntrantTest {
     public void testEntrantActivity() throws InterruptedException, IOException, UiObjectNotFoundException {
         // Wait for 12 seconds to ensure the delay has passed
         Thread.sleep(12000);
+        // Reset current user
+        User curUser = Control.getCurrentUser();
+        curUser.setName("Default Name");
+        curUser.setEmail("user@example.com");
+        curUser.setContact("000-000-0000");
+        curUser.setPicture(null);
+        Control.getInstance().saveUser(curUser);
 
         // Check if Landing_page activity was launched
         onView(withId(R.id.landing_page))

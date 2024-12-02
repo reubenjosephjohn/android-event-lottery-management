@@ -76,6 +76,7 @@ public class AdminTest {
         onView(withId(R.id.facilities_list_view)).check(matches(isDisplayed()));
         onView(withText("Mock Facility")).check(matches(isDisplayed()));
         onView(withText("Mock Facility")).perform(click());
+        Thread.sleep(1000);
         onView(withId(R.id.del_button)).perform(click());
         onView(withText("Delete")).perform(click());
         onView(withText("Mock Facility")).check(doesNotExist());
