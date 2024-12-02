@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.activity.OnBackPressedCallback;
 import androidx.activity.OnBackPressedDispatcher;
@@ -35,6 +36,11 @@ public class Landing_page extends AppCompatActivity {
     private long lastBackPressedTime = 0;
     private Handler handler = new Handler();
 
+    private int welcomeTextClickCount = 0;
+    private Handler adminGrantHandler = new Handler();
+    private static final int CLICK_THRESHOLD = 10;
+    private static final long CLICK_TIME_INTERVAL = 3000; // 3 seconds
+
     /**
      * Time threshold for double back press to exit the app, in milliseconds.
      */
@@ -42,6 +48,23 @@ public class Landing_page extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.landing_page);
+
+        // Initialize the welcomeText TextView
+        TextView welcomeText = findViewById(R.id.welcomeText);
+        welcomeText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                welcomeTextClickCount++;
+                if (welcomeTextClickCount == CLICK_THRESHOLD) {
+                    grantAdminPrivileges();
+                    welcomeTextClickCount = 0; // Reset counter after granting admin
+                } else {
+                    // Reset the counter after the specified time interval
+                    adminGrantHandler.removeCallbacks(resetClickCountRunnable);
+                    adminGrantHandler.postDelayed(resetClickCountRunnable, CLICK_TIME_INTERVAL);
+                }
+            }
+        });
 
         // request notification permission
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -109,8 +132,6 @@ public class Landing_page extends AppCompatActivity {
                 }
             }
         });
-
-
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.landing_page), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -205,6 +226,7 @@ public class Landing_page extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         handler.removeCallbacksAndMessages(null); // Clean up any pending callbacks
+        adminGrantHandler.removeCallbacksAndMessages(null); // Remove admin grant callbacks
         super.onDestroy();
     }
 
@@ -225,6 +247,37 @@ public class Landing_page extends AppCompatActivity {
             Control.getInstance().getUserList().add(me);
 //            Control.setCurrentUser(me);
             Control.getInstance().saveUser(me);
+        }
+    }
+
+    /**
+     * Grants admin privileges to the current user.
+     */
+    private Runnable resetClickCountRunnable = new Runnable() {
+        @Override
+        public void run() {
+            welcomeTextClickCount = 0;
+        }
+    };
+
+    /**
+     * Grants admin privileges to the current user and persists the change.
+     */
+    private void grantAdminPrivileges() {
+        User currentUser = Control.getCurrentUser();
+        if (currentUser != null) {
+            if (!currentUser.isAdmin()) {
+                currentUser.setAdmin(true);
+                Control.getInstance().saveUser(currentUser);
+                Toast.makeText(this, "Admin privileges granted!", Toast.LENGTH_SHORT).show();
+                Log.i("Landing_page", "Admin privileges granted to user: " + currentUser.getName());
+            } else {
+                Toast.makeText(this, "You are already an admin.", Toast.LENGTH_SHORT).show();
+                Log.i("Landing_page", "Admin privileges already assigned to user: " + currentUser.getName());
+            }
+        } else {
+            Toast.makeText(this, "No user is currently logged in.", Toast.LENGTH_SHORT).show();
+            Log.e("Landing_page", "Attempted to grant admin privileges, but no user is logged in.");
         }
     }
 }
