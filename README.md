@@ -5,13 +5,6 @@ CMPUT 301 Fall Project
 
 We are aiming to make an event-lottery app. It allows users to create an event, joining the waiting list of an event, and apply a lottery system to decide which users can sign up for the event.
 
-## Table of contents
-* [Compatibility](#compatibility)
-* [Overview](#overview)
-* [Features](#features)
-* [Wiki Page](#wiki-page)
-* [License](#license)
-
 ## Team Members
 |**CCID**|**Github Username**|
 |--------|-------------------|
