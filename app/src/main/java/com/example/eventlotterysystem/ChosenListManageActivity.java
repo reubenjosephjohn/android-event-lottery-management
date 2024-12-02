@@ -103,9 +103,6 @@ public class ChosenListManageActivity extends AppCompatActivity implements Notif
         });
 
         memberList.setOnItemLongClickListener((parent, view, position, id) -> {
-            // Not sure how this one works
-            // User user = event.getChosenList().get(position);
-            // Will this work?
             User user = (User) parent.getItemAtPosition(position);
             showDeleteConfirmationDialog(user);
             return true;
@@ -263,6 +260,14 @@ public class ChosenListManageActivity extends AppCompatActivity implements Notif
                 .setTitle("Delete Entrant")
                 .setMessage("Are you sure you want to delete " + user.getName() + " from the Selected list?")
                 .setPositiveButton(R.string.dialog_yes, (dialog, which) -> {
+                    // Delete the notification
+                    for (Notification notification: Control.getInstance().getNotificationList()) {
+                        if (notification.getUserRef() == user.getUserID() && event.getEventID() == notification.getEventRef() && notification.getNeedAccept()) {
+                            Control.getInstance().deleteNotification(notification);
+                            break;
+                        }
+                    }
+
                     event.getChosenUserRefs().remove(Integer.valueOf(user.getUserID()));
                     event.getCancelledUserRefs().add(user.getUserID());
                     adapter.notifyDataSetChanged();
