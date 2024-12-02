@@ -63,31 +63,6 @@ public class UsersListActivity extends AppCompatActivity {
             }
         });
 
-//        usersListView.setOnItemLongClickListener((parent, view, position, id) -> {
-//            String selectedUserName = filteredUsersList.get(position);
-//            User selectedUser = users.stream().filter(user -> user.getName()
-//                    .equals(selectedUserName)).findFirst().orElse(null);
-//
-//            if (selectedUser != null) {
-//                new AlertDialog.Builder(UsersListActivity.this)
-//                        .setTitle("Delete Profile")
-//                        .setMessage("Are you sure you want to delete this profile?")
-//                        .setPositiveButton("Delete", (dialog, which) -> {
-//                            User currentUser = Control.getCurrentUser();
-//                            if (currentUser != null) {
-//                                //currentUser.adminDeleteUser(Control.getInstance(), selectedUser);
-//                                FirestoreManager.getInstance().saveControl(Control.getInstance());
-//                                filteredUsersList.remove(position);
-//                                adapter.notifyDataSetChanged();
-//                                Toast.makeText(UsersListActivity.this, "User deleted successfully", Toast.LENGTH_SHORT).show();
-//                            }
-//                        })
-//                        .setNegativeButton("Cancel", null)
-//                        .show();
-//            }
-//            return true;
-//        });
-
         // Set up back button listener
         ImageButton backButton = findViewById(R.id.back_button);
         backButton.setOnClickListener(view -> finish());
