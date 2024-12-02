@@ -5,6 +5,7 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -152,11 +153,14 @@ public class EntrantTest {
     public void testOptNotifications() throws InterruptedException {
         // Wait for 12 seconds to ensure the delay has passed
         Thread.sleep(12000);
-
+        // Reset Notification Setting
+        User curUser = Control.getCurrentUser();
+        curUser.setNotificationSetting(true);
+        Control.getInstance().saveUser(curUser);
         // Check if Landing_page activity was launched
         onView(withId(R.id.landing_page))
                 .check(matches(isDisplayed()));
-
+        onView(withId(R.id.settingsIcon)).perform(scrollTo());
         onView(withId(R.id.settingsIcon)).perform(click());
 
         // Check if the switch is initially on

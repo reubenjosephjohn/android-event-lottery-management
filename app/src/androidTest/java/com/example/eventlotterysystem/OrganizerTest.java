@@ -4,6 +4,7 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -88,10 +89,11 @@ public class OrganizerTest {
         onView(withId(R.id.email)).check(matches(withText("Test Facility Description")));
 
         // Create Events
+        String uniqueEventName = "Test Event " + System.currentTimeMillis();
         onView(withId(R.id.return_button)).perform(click());
         onView(withId(R.id.eventsIcon)).perform(click());
         onView(withId(R.id.create_button)).perform(click());
-        onView(withId(R.id.firstName)).perform(typeText("Test Event"), closeSoftKeyboard());
+        onView(withId(R.id.firstName)).perform(typeText(uniqueEventName), closeSoftKeyboard());
         onView(withId(R.id.title_edit5)).perform(typeText("Test Event Description"), closeSoftKeyboard());
         onView(withId(R.id.editTextNumber)).perform(typeText("3"), closeSoftKeyboard());
         onView(withId(R.id.editTextNumber2)).perform(typeText("2"), closeSoftKeyboard());
@@ -103,8 +105,9 @@ public class OrganizerTest {
         onView(withId(R.id.finish_button)).perform(click());
         onView(withId(R.id.imageViewQRCode)).check(matches(isDisplayed()));
         pressBack();
+        onView(withId(R.id.ownedEvents)).perform(scrollTo());
         onView(withId(R.id.ownedEvents)).check(matches(isDisplayed()));
-        onView(withText("Test Event")).perform(click());
+        onView(withText(uniqueEventName)).perform(scrollTo(), click());
 
         pressBack();
         pressBack();
