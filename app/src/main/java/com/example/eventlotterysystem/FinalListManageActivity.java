@@ -127,6 +127,10 @@ public class FinalListManageActivity extends AppCompatActivity implements Notify
         });
     }
 
+    /**
+     * Called when the activity is resumed. This method sets the selected item in the bottom navigation view
+     * and refreshes the list of final users.
+     */
     @Override
     protected void onResume() {
         super.onResume();
@@ -134,12 +138,20 @@ public class FinalListManageActivity extends AppCompatActivity implements Notify
         bottomNavigationView.setSelectedItemId(R.id.nav_final);
         refreshFinalList();
     }
+
+    /**
+     * Called when the activity is paused. This method overrides the default transition animation.
+     */
     @Override
     protected void onPause() {
         super.onPause();
         overridePendingTransition(0, 0);
     }
 
+    /**
+     * Refreshes the list of final users by fetching the final user references from the event
+     * and updating the adapter with the new list.
+     */
     private void refreshFinalList() {
         ListView memberList = findViewById(R.id.member_list);
         ArrayList<User> finalList = new ArrayList<>();
