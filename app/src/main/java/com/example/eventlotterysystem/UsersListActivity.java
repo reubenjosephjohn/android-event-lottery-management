@@ -8,17 +8,16 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 
 /**
- * UsersListActivity displays a list of all users in the system.
- * Users can be selected to view their details.
+ * An activity that displays a list of users for admin management. The admin can search and filter
+ * users by name. If the admin clicks on a user, they will be redirected to the user's profile and
+ * perform other operations.
  */
 public class UsersListActivity extends AppCompatActivity {
 

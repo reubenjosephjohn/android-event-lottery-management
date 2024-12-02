@@ -6,27 +6,50 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.util.Base64;
-
 import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
- * Represents a user in the lottery system with details such as name, email, contact, and picture.
+ * Represents a user in the event lottery system. The user will have a unique userID, name, email,
+ * contact information, picture, Firebase installation ID (FID). It also saves the user's admin status
+ * and notification settings.
  */
+
 public class User implements Serializable {
+    /**
+     * A unique user ID, which is automatically assigned by the system during user creation.
+     */
     private int userID;
+    /**
+     * User's details.
+     */
     private String name;
     private String email;
     private String contact;
+    /**
+     * User's encoded profile picture, which can be generated or uploaded.
+     */
     private String picture;
+    /**
+     * Indicates whether the user is an admin.
+     */
     private boolean isAdmin;
+    /**
+     * Indicates whether the user has notifications enabled or disabled.
+     */
     private Boolean notificationSetting;
+    /**
+     * Firebase installation ID.
+     */
     private String FID;
+    /**
+     * Firebase notification token.
+     */
     private String notificationToken;
 
     /**
-     * Default no-argument constructor (required for Firestore).
+     * Default no-argument constructor required for Firestore.
      */
     public User() {}
 
@@ -49,16 +72,17 @@ public class User implements Serializable {
     }
 
     /**
-     * Checks if the user is valid.
-     *
-     * @return True if the user is valid, false otherwise.
+     * Determine if a user's profile is valid or not. Users with invalid profiles may be rejected to
+     * perform some operations.
+     * @return true if the user has a valid name and email, false otherwise.
      */
-    public Boolean isValid (){
+    public boolean isValid (){
         if (name.equals("Default Name") || email.equals("user@example.com")) {
             return false;
         }
         return true;
     }
+
 
     // Getters and Setters
 

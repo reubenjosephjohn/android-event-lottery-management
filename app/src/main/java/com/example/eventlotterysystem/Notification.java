@@ -1,19 +1,38 @@
 package com.example.eventlotterysystem;
 
 /**
- * Represents a notification in the lottery system with details such as event reference, user reference, and acceptance status.
+ * Represents a notification in the event lottery system.
+ *
+ * <p>A notification contains information about the event reference, user reference, customMessage,
+ * documentID in the database and the status of this notification. </p>
+ *
  */
 public class Notification {
+    /**
+     * A reference to the event associated with the notification.
+     */
     private int eventRef;
+    /**
+     * A reference to the recipient of the notification.
+     */
     private int userRef;
+    /**
+     * Notification status flags.
+     */
     private Boolean needAccept;
     private Boolean isAccepted;
     private Boolean isDeclined;
+    /**
+     * A custom message associated with the notification.
+     */
     private String customMessage;
+    /**
+     * A unique identifier for the notification in the database.
+     */
     private String documentID;
 
     /**
-     * Default no-argument constructor (required for Firestore).
+     * Default no-argument constructor required for Firestore.
      */
     public Notification() {}
 
@@ -24,6 +43,7 @@ public class Notification {
      * @param userRef       The reference ID of the user.
      * @param needAccept    Whether the notification requires acceptance.
      * @param customMessage A custom message for the notification.
+
      */
     public Notification(int eventRef, int userRef, Boolean needAccept, String customMessage) {
         this.eventRef = eventRef;

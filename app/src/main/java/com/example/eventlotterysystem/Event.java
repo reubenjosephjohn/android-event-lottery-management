@@ -2,11 +2,9 @@ package com.example.eventlotterysystem;
 
 import android.graphics.Bitmap;
 import android.util.Base64;
-
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.qrcode.QRCodeWriter;
-
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 /**

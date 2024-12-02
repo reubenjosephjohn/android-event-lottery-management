@@ -3,7 +3,6 @@ package com.example.eventlotterysystem;
 import android.os.Bundle;
 import android.widget.ImageButton;
 import com.google.android.material.materialswitch.MaterialSwitch;
-
 import androidx.appcompat.app.AppCompatActivity;
 
 /**

@@ -3,11 +3,9 @@ package com.example.eventlotterysystem;
 import android.os.Bundle;
 import android.widget.ImageButton;
 import android.widget.TextView;
-
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
-
 import java.util.ArrayList;
 
 /**
