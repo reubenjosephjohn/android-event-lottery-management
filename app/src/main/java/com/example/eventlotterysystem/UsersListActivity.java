@@ -16,6 +16,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 
+/**
+ * UsersListActivity displays a list of all users in the system.
+ * Users can be selected to view their details.
+ */
 public class UsersListActivity extends AppCompatActivity {
 
     private ListView usersListView;
@@ -24,6 +28,11 @@ public class UsersListActivity extends AppCompatActivity {
     private ArrayList<User> users;
     private ArrayList<String> filteredUsersList;
 
+    /**
+     * Called when the activity is first created. Initializes the UI and populates the list of users.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut down then this Bundle contains the data it most recently supplied.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +93,11 @@ public class UsersListActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Filters the list of users based on the given query.
+     *
+     * @param query The search query to filter the users list.
+     */
     private void filterUsers(String query) {
         filteredUsersList.clear();
         for (String userName : usersList) {
@@ -94,6 +108,9 @@ public class UsersListActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();
     }
 
+    /**
+     * Called when the activity is resumed. Updates the list of users.
+     */
     @Override
     protected void onResume() {
         super.onResume();

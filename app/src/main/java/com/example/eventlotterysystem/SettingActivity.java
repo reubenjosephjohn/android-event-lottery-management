@@ -45,6 +45,10 @@ public class SettingActivity extends AppCompatActivity {
         ImageButton returnButton = findViewById(R.id.return_button);
         returnButton.setOnClickListener(view -> finish());
     }
+
+    /**
+     * Called when the activity is resumed. Updates the notification switch based on the user's preference.
+     */
     @Override
     protected void onResume() {
         super.onResume();

@@ -26,8 +26,18 @@ import com.google.firebase.messaging.FirebaseMessaging;
 
 import androidx.core.content.ContextCompat;
 
+/**
+ * The main activity of the application. This activity initializes the application, retrieves the Firebase installation ID,
+ * and navigates to the landing page after a delay.
+ */
 public class MainActivity extends AppCompatActivity {
 
+    /**
+     * Called when the activity is first created. This method sets up the UI, retrieves the Firebase installation ID,
+     * and navigates to the landing page after a delay.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut down then this Bundle contains the data it most recently supplied in onSaveInstanceState(Bundle).
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

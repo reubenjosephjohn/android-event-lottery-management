@@ -144,7 +144,14 @@ public class ViewOtherUserProfileActivity extends AppCompatActivity implements E
             return null;
         }
     }
-    // Helper method to encode Bitmap to a String (Base64 encoding or any method you prefer)
+
+
+    /**
+     * Encodes a Bitmap to a Base64 encoded string.
+     *
+     * @param bitmap The Bitmap to encode.
+     * @return The Base64 encoded string.
+     */
     private String encodeBitmap(Bitmap bitmap) {
         // Convert bitmap to a Base64 encoded string (as an example)
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -152,6 +159,14 @@ public class ViewOtherUserProfileActivity extends AppCompatActivity implements E
         byte[] byteArray = baos.toByteArray();
         return Base64.encodeToString(byteArray, Base64.DEFAULT);
     }
+
+    /**
+     * Resizes a Bitmap to a target resolution while maintaining the aspect ratio.
+     *
+     * @param bitmap The Bitmap to resize.
+     * @param targetResolution The target resolution for the longest side of the Bitmap.
+     * @return The resized Bitmap.
+     */
     public Bitmap resizeBitmapToResolution(Bitmap bitmap, int targetResolution) {
         int width = bitmap.getWidth();
         int height = bitmap.getHeight();
