@@ -70,31 +70,6 @@ public class FacilitiesListActivity extends AppCompatActivity {
             }
         });
 
-//        facilitiesListView.setOnItemLongClickListener((parent, view, position, id) -> {
-//            String selectedFacilityName = filteredFacilitiesList.get(position);
-//            Facility selectedFacility = facilities.stream().filter(facility -> facility.getName()
-//                    .equals(selectedFacilityName)).findFirst().orElse(null);
-//
-//            if (selectedFacility != null) {
-//                new AlertDialog.Builder(FacilitiesListActivity.this)
-//                        .setTitle("Delete Facility")
-//                        .setMessage("Are you sure you want to delete this facility?")
-//                        .setPositiveButton("Delete", (dialog, which) -> {
-//                            User currentUser = Control.getCurrentUser();
-//                            if (currentUser != null) {
-//                                currentUser.adminDeleteFacility(Control.getInstance(), selectedFacility);
-//                                FirestoreManager.getInstance().saveControl(Control.getInstance());
-//                                filteredFacilitiesList.remove(position);
-//                                adapter.notifyDataSetChanged();
-//                                Toast.makeText(FacilitiesListActivity.this, "Facility deleted successfully", Toast.LENGTH_SHORT).show();
-//                            }
-//                        })
-//                        .setNegativeButton("Cancel", null)
-//                        .show();
-//            }
-//            return true;
-//        });
-
 
         // Set up back button listener
         ImageButton backButton = findViewById(R.id.back_button);

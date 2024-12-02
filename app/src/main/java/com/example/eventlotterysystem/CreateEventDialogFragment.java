@@ -32,7 +32,8 @@ import java.util.List;
 
 
 /**
- * Previous UI approach to creating an event
+ * Dialog fragment used for creating events by the Organizer.
+ *
  */
 public class CreateEventDialogFragment extends DialogFragment {
 
@@ -250,6 +251,12 @@ public class CreateEventDialogFragment extends DialogFragment {
         byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
         return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
     }
+
+    /**
+     * Retrieves a Bitmap from a given URI.
+     * @param uri The URI from which to retrieve the Bitmap.
+     * @return The decoded Bitmap.
+     */
     private Bitmap getBitmapFromUri(Uri uri) {
         try {
             return MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), uri);
@@ -259,6 +266,12 @@ public class CreateEventDialogFragment extends DialogFragment {
         }
     }
     // Helper method to encode Bitmap to a String (Base64 encoding or any method you prefer)
+
+    /**
+     * Encodes a Bitmap to a Base64 encoded string.
+     * @param bitmap The Bitmap to encode.
+     * @return The Base64 encoded string.
+     */
     private String encodeBitmap(Bitmap bitmap) {
         // Convert bitmap to a Base64 encoded string (as an example)
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -266,6 +279,13 @@ public class CreateEventDialogFragment extends DialogFragment {
         byte[] byteArray = baos.toByteArray();
         return Base64.encodeToString(byteArray, Base64.DEFAULT);
     }
+
+    /**
+     * Resizes a Bitmap to a given resolution.
+     * @param bitmap The Bitmap to resize.
+     * @param targetResolution The target resolution.
+     * @return The resized Bitmap.
+     */
     public Bitmap resizeBitmapToResolution(Bitmap bitmap, int targetResolution) {
         int width = bitmap.getWidth();
         int height = bitmap.getHeight();
@@ -283,17 +303,36 @@ public class CreateEventDialogFragment extends DialogFragment {
         return Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);
     }
 
+    /**
+     * Validates whether input date matches the format YYYY-MM-DD
+     * @param date The date to validate
+     * @return True if the date is valid, false otherwise
+     */
     protected boolean validDate(String date) {
         String regex = "^\\d{0,4}(-\\d{0,2})?(-\\d{0,2})?$";
         return date.length() == 10 && date.matches(regex);
     }
 
+    /**
+     * Validates whether the start date is before the end date
+     * @param start date that should be first in the period
+     * @param end date that should be later in the period
+     * @return True if the period is valid, false otherwise
+     */
     protected boolean validPeriod(String start, String end) {
         LocalDate date1 = LocalDate.parse(start);
         LocalDate date2 = LocalDate.parse(end);
         return date1.isBefore(date2);
     }
 
+    /**
+     * Validates that registration start precedes registration end precedes event start precedes event end
+     * @param regStart beginning of registration period
+     * @param regEnd end of registration period
+     * @param eventStart beginning of event period
+     * @param eventEnd end of event period
+     * @return true if the dates are valid, false with a descriptive Toast explaining the error otherwise
+     */
     protected boolean validDates(String regStart, String regEnd, String eventStart, String eventEnd) {
         if (!validDate(regStart) || !validDate(regEnd) || !validDate(eventStart) || !validDate(eventEnd)) {
             Toast.makeText(getContext(), "Use date format: YYYY-MM-DD", Toast.LENGTH_SHORT).show();

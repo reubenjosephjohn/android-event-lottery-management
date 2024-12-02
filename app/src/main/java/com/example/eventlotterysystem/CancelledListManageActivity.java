@@ -125,6 +125,7 @@ public class CancelledListManageActivity extends AppCompatActivity implements No
             }
         });
     }
+
     @Override
     protected void onResume() {
         super.onResume();

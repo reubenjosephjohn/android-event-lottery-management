@@ -49,26 +49,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        // Create users
-//        User tom = new User(2, "Tom");
-//        control.getUserList().add(tom);
-//        control.saveUser(tom);
-//        User jerry = new User(3, "Jerry");
-//        control.getUserList().add(jerry);
-//        control.saveUser(jerry);
-//        User bob = new User(4, "Bob");
-//        control.getUserList().add(bob);
-//        control.saveUser(bob);
-//        User macy = new User(5, "Macy");
-//        control.getUserList().add(macy);
-//        control.saveUser(macy);
-
-        // Create notification
-//        Notification n1 = new Notification(16, 6, false, "Test message 2");
-//        control.getNotificationList().add(n1);
-//        control.addNotification(n1);
-
-
         Toast.makeText(MainActivity.this, "Synchronizing data...", Toast.LENGTH_SHORT).show();
         new android.os.Handler().postDelayed(new Runnable() {
             @Override

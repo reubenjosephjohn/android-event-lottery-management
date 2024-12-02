@@ -23,7 +23,6 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 import com.bumptech.glide.Glide;
@@ -56,8 +55,6 @@ public class EditEventDialogFragment extends DialogFragment {
     private EditText descriptionEditText;
     private EditText limitChosenEdit;
     private EditText limitWaitingEdit;
-//    private TextView chosenLimitText;
-//    private TextView waitingLimitText;
     private Switch geolocationSwitch;
 
     private Event curEvent;
@@ -115,8 +112,6 @@ public class EditEventDialogFragment extends DialogFragment {
         descriptionEditText = view.findViewById(R.id.title_edit5);
         limitChosenEdit = view.findViewById(R.id.editTextNumber2);
         limitWaitingEdit = view.findViewById(R.id.editTextNumber);
-//        chosenLimitText = view.findViewById(R.id.textView6);
-//        waitingLimitText = view.findViewById(R.id.textView7);
         geolocationSwitch = view.findViewById(R.id.location_loc);
         imagePreview = view.findViewById(R.id.imagePreview);
         removeImageButton = view.findViewById(R.id.removeImageButton);
@@ -130,8 +125,6 @@ public class EditEventDialogFragment extends DialogFragment {
         eventEndEdit = view.findViewById(R.id.event_end);
 
         // Hide limit fields
-//        chosenLimitText.setVisibility(View.GONE);
-//        waitingLimitText.setVisibility(View.GONE);
         limitChosenEdit.setVisibility(View.GONE);
         limitWaitingEdit.setVisibility(View.GONE);
 
@@ -351,6 +344,11 @@ public class EditEventDialogFragment extends DialogFragment {
         return Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);
     }
 
+    /**
+     * Extracts the first line of an Event Description
+     * @param input Event Description String
+     * @return First line of Event Description
+     */
     public static String shorten(String input) {
         if (input == null) {
             return null;
@@ -363,17 +361,35 @@ public class EditEventDialogFragment extends DialogFragment {
 
         return input.substring(0, newlineIndex);
     }
+    /**
+     * Validates whether input date matches the format YYYY-MM-DD
+     * @param date The date to validate
+     * @return True if the date is valid, false otherwise
+     */
     protected boolean validDate(String date) {
         String regex = "^\\d{0,4}(-\\d{0,2})?(-\\d{0,2})?$";
         return date.length() == 10 && date.matches(regex);
     }
 
+    /**
+     * Validates whether the start date is before the end date
+     * @param start date that should be first in the period
+     * @param end date that should be later in the period
+     * @return True if the period is valid, false otherwise
+     */
     protected boolean validPeriod(String start, String end) {
         LocalDate date1 = LocalDate.parse(start);
         LocalDate date2 = LocalDate.parse(end);
         return date1.isBefore(date2);
     }
-
+    /**
+     * Validates that registration start precedes registration end precedes event start precedes event end
+     * @param regStart beginning of registration period
+     * @param regEnd end of registration period
+     * @param eventStart beginning of event period
+     * @param eventEnd end of event period
+     * @return true if the dates are valid, false with a descriptive Toast explaining the error otherwise
+     */
     protected boolean validDates(String regStart, String regEnd, String eventStart, String eventEnd) {
         if (!validDate(regStart) || !validDate(regEnd) || !validDate(eventStart) || !validDate(eventEnd)) {
             Toast.makeText(getContext(), "Use date format: YYYY-MM-DD", Toast.LENGTH_SHORT).show();
@@ -394,6 +410,12 @@ public class EditEventDialogFragment extends DialogFragment {
         return true;
     }
 
+    /**
+     * Extracts the dates: registration start, registration end, event start, event end from event description
+     * @param eventDesc Event Description
+     * @param dateType which date needed to return by the function
+     * @return
+     */
     private String extractDate(String eventDesc, int dateType) {
         String regStart = "";
         String regEnd = "";

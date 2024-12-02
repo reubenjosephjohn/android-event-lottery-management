@@ -97,7 +97,6 @@ public class ManageEventActivity extends AppCompatActivity implements EditEventD
         // Return button to go back
         returnButton.setOnClickListener(v -> {
             Intent intent = new Intent(ManageEventActivity.this, EventslistActivity.class);
-//            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);
         });
 
@@ -137,10 +136,6 @@ public class ManageEventActivity extends AppCompatActivity implements EditEventD
             }
         });
         buttonMap.setOnClickListener(v -> {
-//            curEvent.getLatitudeList().add(53.5461);
-//            curEvent.getLongitudeList().add(-113.4937);
-//            curEvent.getLatitudeList().add(51.0447);
-//            curEvent.getLongitudeList().add(-114.0719);
             MapDialogFragment mapDialogFragment = new MapDialogFragment(curEvent);
             mapDialogFragment.show(getSupportFragmentManager(), "MapDialogFragment");
         });
@@ -196,43 +191,7 @@ public class ManageEventActivity extends AppCompatActivity implements EditEventD
                         .show();
             }
         });
-//        deleteButton.setOnClickListener(v -> {
-//            new AlertDialog.Builder(ManageEventActivity.this)
-//                    .setTitle("Delete Event")
-//                    .setMessage("Are you sure you want to delete your event?")
-//                    .setPositiveButton("Delete", (dialog, which) -> {
-//                        User currentUser = Control.getCurrentUser();
-//                        // Delete related Notifications
-//                        ArrayList<Notification> notificationsToDelete = new ArrayList<>();
-//                        for (Notification notification : Control.getInstance().getNotificationList()) {
-//                            if (notification.getEventRef() == curEvent.getEventID()) {
-//                                Control.getInstance().deleteNotification(notification);
-//                                notificationsToDelete.add(notification);
-//                            }
-//                        }
-//                        Control.getInstance().getNotificationList().removeAll(notificationsToDelete);
-//                        // Delete event from database and Control
-//                        Control.getInstance().deleteEvent(curEvent);
-//                        Control.getInstance().getEventList().remove(curEvent);
-//                        finish();
-//                    })
-//                    .setNegativeButton("Cancel", null)
-//                    .show();
-//        });
-
-
-
     }
-
-//    public void onEventUpdated() {
-//        if (curEvent != null) {
-//            eventTitle.setText(curEvent.getName());
-//            eventDetail.setText("Description: " + curEvent.getDescription() + "\n"
-//                    + "Capacity of Event: (" + (curEvent.getChosenUserRefs().size() + curEvent.getFinalUserRefs().size()) + "/" + curEvent.getLimitChosenList() + ")\n"
-//                    + "Capacity of Waiting List: (" + curEvent.getWaitingUserRefs().size() + "/" + curEvent.getLimitWaitingList() + ")");
-//        }
-//        Control.getInstance().saveEvent(curEvent);
-//    }
 
     /**
      * Decodes a Base64 encoded string back to a Bitmap.
@@ -244,6 +203,11 @@ public class ManageEventActivity extends AppCompatActivity implements EditEventD
         byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
         return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
     }
+    /**
+     * Retrieves a Bitmap from a given URI.
+     * @param uri The URI from which to retrieve the Bitmap.
+     * @return The decoded Bitmap.
+     */
     private Bitmap getBitmapFromUri(Uri uri) {
         try {
             return MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
@@ -252,7 +216,11 @@ public class ManageEventActivity extends AppCompatActivity implements EditEventD
             return null;
         }
     }
-    // Helper method to encode Bitmap to a String (Base64 encoding or any method you prefer)
+    /**
+     * Helper method to encode Bitmap to a String (Base64 encoding or any method you prefer)
+     * @param bitmap The Bitmap to encode.
+     * @return The Base64 encoded string.
+     */
     private String encodeBitmap(Bitmap bitmap) {
         // Convert bitmap to a Base64 encoded string (as an example)
         ByteArrayOutputStream baos = new ByteArrayOutputStream();

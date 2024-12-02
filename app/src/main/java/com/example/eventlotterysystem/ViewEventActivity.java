@@ -110,14 +110,6 @@ public class ViewEventActivity extends AppCompatActivity {
             eventPoster.setImageBitmap(pictureBitmap);  // Set the generated bitmap as the ImageView source
         }
 
-//        String eventDesc = curEvent.getDescription();
-//        String regStart = extractDate(eventDesc, 0);
-//        String regEnd = extractDate(eventDesc, 1);
-//        String eventStart = extractDate(eventDesc, 2);
-//        String eventEnd = extractDate(eventDesc, 3);
-//
-//        LocalDate curDate = LocalDate.now();
-//        String dateString = curDate.toString();
 
         if(inList(curEvent.getWaitingUserRefs(), curUser.getUserID())){
             joinbutton.setText("Cancel Event");
@@ -133,10 +125,7 @@ public class ViewEventActivity extends AppCompatActivity {
             joinbutton.setVisibility(View.GONE);
             declinebutton.setVisibility(View.GONE);
         }
-//        else if (!validPeriod(dateString,eventEnd)) {
-//            joinbutton.setVisibility(View.GONE);
-//            declinebutton.setVisibility(View.GONE);
-//        }
+
         else {
             joinbutton.setText("Join Event");
             declinebutton.setVisibility(View.GONE);
@@ -234,10 +223,7 @@ public class ViewEventActivity extends AppCompatActivity {
                             .create();
                     dialog.show();
                 }
-//                if (!validPeriod(dateString, regEnd)) {
-//                    Toast.makeText(this, "Registration Period has ended", Toast.LENGTH_SHORT).show();
-//                    return;
-//                }
+
                 else{
                     if (curEvent.getGeoSetting()) {
                         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
@@ -340,6 +326,13 @@ public class ViewEventActivity extends AppCompatActivity {
         });
 
     }
+
+    /**
+     * Checks if a list contains a specific integer.
+     * @param l  ArrayList of integers
+     * @param u integer to check for
+     * @return
+     */
     private boolean inList(ArrayList<Integer> l, int u) {
         for (int user : l) {
             if (user == u) {
@@ -359,6 +352,12 @@ public class ViewEventActivity extends AppCompatActivity {
         byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
         return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
     }
+
+    /**
+     * Decodes a Uri to a Bitmap.
+     * @param uri The Uri from database of the image to decode
+     * @return
+     */
     private Bitmap getBitmapFromUri(Uri uri) {
         try {
             return MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
@@ -367,7 +366,12 @@ public class ViewEventActivity extends AppCompatActivity {
             return null;
         }
     }
-    // Helper method to encode Bitmap to a String (Base64 encoding or any method you prefer)
+
+    /**
+     * Helper method to encode Bitmap to a String (Base64 encoding or any method you prefer)
+     * @param bitmap bitmap that needs to be encoded into a String for storage into database
+     * @return
+     */
     private String encodeBitmap(Bitmap bitmap) {
         // Convert bitmap to a Base64 encoded string (as an example)
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -376,6 +380,12 @@ public class ViewEventActivity extends AppCompatActivity {
         return Base64.encodeToString(byteArray, Base64.DEFAULT);
     }
 
+    /**
+     * Extracts the date from the event description string
+     * @param eventDesc eventDescription from database
+     * @param dateType which date to be extracted 0 for registration start, 1 for registration end, 2 for event start, 3 for event end
+     * @return the extracted date as a String
+     */
     private String extractDate(String eventDesc, int dateType) {
         String regStart = "";
         String regEnd = "";
@@ -412,6 +422,13 @@ public class ViewEventActivity extends AppCompatActivity {
         }
 
     }
+
+    /**
+     * Checks if the start date is before the end date
+     * @param start date that should be first in the period
+     * @param end date that should be second in the period
+     * @return true if the start date is before the end date, false otherwise
+     */
     protected boolean validPeriod(String start, String end) {
         LocalDate date1 = LocalDate.parse(start);
         LocalDate date2 = LocalDate.parse(end);
