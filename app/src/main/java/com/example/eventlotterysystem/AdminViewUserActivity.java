@@ -79,8 +79,10 @@ public class AdminViewUserActivity extends AppCompatActivity {
             emailTextView.setText("Email: " + user.getEmail());
             if (user.getPicture() != null) {
                 profileImageView.setImageBitmap(decodeBitmap(user.getPicture()));
+                profileImageView.setVisibility(View.VISIBLE);
             } else {
                 profileImageView.setImageBitmap(null);
+                profileImageView.setVisibility(View.GONE);
             }
         }
 
@@ -127,6 +129,7 @@ public class AdminViewUserActivity extends AppCompatActivity {
                                             user.setEmail("user@example.com");
                                             user.setContact("000-000-0000");
                                             user.setPicture(null);
+                                            profileImageView.setVisibility(View.GONE);
                                             Control.getInstance().saveUser(user);
                                             finish();
                                         })
@@ -144,6 +147,7 @@ public class AdminViewUserActivity extends AppCompatActivity {
                                             user.setPicture(null);
                                             Control.getInstance().saveUser(user);
                                             profileImageView.setImageBitmap(null);
+                                            profileImageView.setVisibility(View.GONE);
 
                                         })
                                         .setNegativeButton("Cancel", null)
