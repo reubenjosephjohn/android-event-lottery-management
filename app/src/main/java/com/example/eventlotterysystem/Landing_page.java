@@ -199,12 +199,20 @@ public class Landing_page extends AppCompatActivity {
 
     }
 
+    /**
+     * Called when the activity is destroyed. This method cleans up any pending callbacks.
+     */
     @Override
     protected void onDestroy() {
         handler.removeCallbacksAndMessages(null); // Clean up any pending callbacks
         super.onDestroy();
     }
 
+    /**
+     * Checks the device for the current user. If the current user is not found, a new user is created and saved.
+     *
+     * @param control The Control instance used to manage users.
+     */
     protected void checkDevice(Control control){
 //        for (User user : Control.getInstance().getUserList()) {
 //            if (user.getFID().equals(Control.getLocalFID())) {

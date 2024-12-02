@@ -182,6 +182,10 @@ public class ChosenListManageActivity extends AppCompatActivity implements Notif
         });
     }
 
+    /**
+     * Called when the activity is resumed. This method sets the selected item in the bottom navigation view
+     * and refreshes the list of chosen users.
+     */
     @Override
     protected void onResume() {
         super.onResume();
@@ -189,12 +193,19 @@ public class ChosenListManageActivity extends AppCompatActivity implements Notif
         bottomNavigationView.setSelectedItemId(R.id.nav_selected);
         refreshChosenList();
     }
+    /**
+     * Called when the activity is paused. This method overrides the default transition animation.
+     */
     @Override
     protected void onPause() {
         super.onPause();
         overridePendingTransition(0, 0);
     }
 
+    /**
+     * Refreshes the list of chosen users by fetching the chosen user references from the event
+     * and updating the adapter with the new list.
+     */
     private void refreshChosenList() {
         ListView memberList = findViewById(R.id.member_list);
         ArrayList<User> chosenList = new ArrayList<>();
