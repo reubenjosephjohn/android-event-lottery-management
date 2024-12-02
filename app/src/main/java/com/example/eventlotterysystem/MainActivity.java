@@ -1,30 +1,18 @@
 package com.example.eventlotterysystem;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.installations.FirebaseInstallations;
-import com.google.firebase.messaging.FirebaseMessaging;
 
-import androidx.core.content.ContextCompat;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -48,13 +36,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         Toast.makeText(MainActivity.this, "Synchronizing data...", Toast.LENGTH_SHORT).show();
         new android.os.Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                // Set the button visible after 3 seconds
-                // checkDeviceButton.setVisibility(View.VISIBLE);
                 // Automatically go to the next page
                 Control.getInstance();
                 Intent intent = new Intent(MainActivity.this, Landing_page.class);

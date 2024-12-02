@@ -20,7 +20,6 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import com.bumptech.glide.Glide;
-
 import java.util.Set;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

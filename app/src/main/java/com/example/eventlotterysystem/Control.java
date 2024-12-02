@@ -1,22 +1,14 @@
 package com.example.eventlotterysystem;
 
-import static androidx.core.content.ContextCompat.getSystemService;
-
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.util.Log;
-import android.Manifest;
-import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
-import androidx.core.content.ContextCompat;
-
 import com.google.firebase.firestore.DocumentChange;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -35,11 +27,9 @@ public class Control {
     private ArrayList<Notification> notificationList;
     // runtime attributes
     private static Control instance;
-//    private static User currentUser = null; // current logged in user
     private static String localFID = "";
     // Notification token
     public static String notificationToken = "";
-
     // Database
     private FirebaseFirestore db;
 
@@ -474,6 +464,29 @@ public class Control {
         if (notificationManager != null) {
             notificationManager.notify((int) System.currentTimeMillis(), builder.build());
         }
+    }
+
+
+    /**
+     * Get a test instance of the Control class (without database integration).
+     */
+    // For backend test only
+    public static Control getTestInstance() {
+        if (instance == null) {
+            instance = new Control(1);
+        }
+        return instance;
+    }
+    /**
+     * Constructor for the getTestInstance method.
+     */
+    private Control(int random) {
+        this.currentUserID = 0;
+        this.currentEventID = 0;
+        this.userList = new ArrayList<>();
+        this.facilityList = new ArrayList<>();
+        this.eventList = new ArrayList<>();
+        this.notificationList = new ArrayList<>();
     }
 
 
