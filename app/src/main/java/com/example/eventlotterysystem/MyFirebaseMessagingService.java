@@ -17,10 +17,18 @@ import androidx.core.content.ContextCompat;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+/**
+ * A service that extends FirebaseMessagingService to handle incoming FCM messages.
+ */
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private static final String CHANNEL_ID = "eventlotterysystem_notifications";
 
+    /**
+     * Called when a message is received.
+     *
+     * @param remoteMessage The message received from FCM.
+     */
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
@@ -33,6 +41,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         sendNotification(title, message);
     }
 
+    /**
+     * Sends a notification to the user.
+     *
+     * @param title   The title of the notification.
+     * @param message The message body of the notification.
+     */
     private void sendNotification(String title, String message) {
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         Log.i("Messaging", "Called Send Notification!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
@@ -75,6 +89,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         notificationManager.notify(0, builder.build());
     }
 
+    /**
+     * Called when a new token for the default Firebase project is generated.
+     *
+     * @param token The new token.
+     */
     @Override
     public void onNewToken(@NonNull String token) {
         super.onNewToken(token);

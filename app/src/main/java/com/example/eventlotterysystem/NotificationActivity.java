@@ -110,6 +110,14 @@ public class NotificationActivity extends AppCompatActivity {
 
         section.addView(NotifiView);
     }
+
+    /**
+     * Checks if a user is in a list of users.
+     *
+     * @param l The list of users to check.
+     * @param u The user to check for.
+     * @return True if the user is in the list, false otherwise.
+     */
     private boolean inList(ArrayList<User> l, User u) {
         for (User user : l) {
             if (user.getUserID() == u.getUserID()) {

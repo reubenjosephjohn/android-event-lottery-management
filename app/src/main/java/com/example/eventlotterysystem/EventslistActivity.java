@@ -204,6 +204,11 @@ public class EventslistActivity extends AppCompatActivity {
 
         section.addView(eventView);
     }
+
+    
+    /**
+     * Called when the activity is resumed. Updates the event lists with the latest data.
+     */
     @Override
     protected void onResume() {
         super.onResume();

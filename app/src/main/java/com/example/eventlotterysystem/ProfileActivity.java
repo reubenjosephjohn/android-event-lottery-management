@@ -296,7 +296,10 @@ public class ProfileActivity extends AppCompatActivity implements EditProfileFra
         emailTextView.setText("Email: " + curUser.getEmail());
         contactTextView.setText("Contact: " + curUser.getContact());
     }
-//
+
+    /**
+     * Generates a new profile picture for the user.
+     */
     private void generateProfilePicture() {
         // Generate picture for the user
         curUser.generate_picture();  // This calls the generate_picture method in the User class
@@ -322,6 +325,13 @@ public class ProfileActivity extends AppCompatActivity implements EditProfileFra
         byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
         return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
     }
+
+    /**
+     * Helper method to get a Bitmap from a Uri.
+     *
+     * @param uri The Uri of the image.
+     * @return The Bitmap representation of the image, or null if an error occurs.
+     */
     private Bitmap getBitmapFromUri(Uri uri) {
         try {
             return MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
@@ -330,7 +340,13 @@ public class ProfileActivity extends AppCompatActivity implements EditProfileFra
             return null;
         }
     }
-    // Helper method to encode Bitmap to a String (Base64 encoding or any method you prefer)
+
+    /**
+     * Helper method to encode a Bitmap to a Base64 encoded string.
+     *
+     * @param bitmap The Bitmap to encode.
+     * @return The Base64 encoded string representation of the bitmap.
+     */
     private String encodeBitmap(Bitmap bitmap) {
         // Convert bitmap to a Base64 encoded string (as an example)
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -338,6 +354,15 @@ public class ProfileActivity extends AppCompatActivity implements EditProfileFra
         byte[] byteArray = baos.toByteArray();
         return Base64.encodeToString(byteArray, Base64.DEFAULT);
     }
+
+
+    /**
+     * Resizes a bitmap to a target resolution while maintaining the aspect ratio.
+     *
+     * @param bitmap           The bitmap to resize.
+     * @param targetResolution The target resolution for the longest side of the bitmap.
+     * @return The resized bitmap.
+     */
     public Bitmap resizeBitmapToResolution(Bitmap bitmap, int targetResolution) {
         int width = bitmap.getWidth();
         int height = bitmap.getHeight();
@@ -355,6 +380,9 @@ public class ProfileActivity extends AppCompatActivity implements EditProfileFra
         return Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);
     }
 
+    /**
+     * Called when the activity is destroyed. This method performs any necessary cleanup.
+     */
     protected void onDestroy(){
         super.onDestroy();
     }
