@@ -10,21 +10,54 @@ import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/**
+ * Represents a user in the event lottery system. The user will have a unique userID, name, email,
+ * contact information, picture, Firebase installation ID (FID). It also saves the user's admin status
+ * and notification settings.
+ */
+
 public class User implements Serializable {
+    /**
+     * A unique user ID, which is automatically assigned by the system during user creation.
+     */
     private int userID;
+    /**
+     * User's details.
+     */
     private String name;
     private String email;
     private String contact;
+    /**
+     * User's encoded profile picture, which can be generated or uploaded.
+     */
     private String picture;
+    /**
+     * Indicates whether the user is an admin.
+     */
     private boolean isAdmin;
+    /**
+     * Indicates whether the user has notifications enabled or disabled.
+     */
     private Boolean notificationSetting;
+    /**
+     * Firebase installation ID.
+     */
     private String FID;
+    /**
+     * Firebase notification token.
+     */
     private String notificationToken;
 
-    // Default no-argument constructor (required for Firestore)
+    /**
+     * Default no-argument constructor required for Firestore.
+     */
     public User() {}
 
-    // For User creation after checking device
+    /**
+     * Constructor for creating a new user.
+     * @param UserID
+     * @param FID
+     */
     public User(int UserID, String FID) {
         this.userID = UserID;
         this.name = "Default Name";
@@ -36,12 +69,18 @@ public class User implements Serializable {
         this.FID = FID;
     }
 
-    public Boolean isValid (){
+    /**
+     * Determine if a user's profile is valid or not. Users with invalid profiles may be rejected to
+     * perform some operations.
+     * @return true if the user has a valid name and email, false otherwise.
+     */
+    public boolean isValid (){
         if (name.equals("Default Name") || email.equals("user@example.com")) {
             return false;
         }
         return true;
     }
+
 
     // Getters and Setters
     public int getUserID() {
@@ -108,6 +147,9 @@ public class User implements Serializable {
 
     public void setNotificationToken(String notificationToken) {this.notificationToken = notificationToken; }
 
+    /**
+     * Generates a picture for the user based on their name.
+     */
     public void generate_picture() {
         if (name != null && !name.isEmpty()) {
             // Extract initials from the user's name
@@ -121,7 +163,9 @@ public class User implements Serializable {
         }
     }
 
-    // Helper method to extract initials from the name
+    /**
+     * Helper method to extract initials from the name
+     */
     private String getInitials(String name) {
         String[] nameParts = name.split(" ");
         StringBuilder initials = new StringBuilder();
@@ -133,7 +177,9 @@ public class User implements Serializable {
         return initials.toString().toUpperCase();  // Convert initials to uppercase
     }
 
-    // Helper method to create a Bitmap with initials
+    /**
+     * Helper method to create a Bitmap with initials
+     */
     private Bitmap createImageWithInitials(String initials) {
         int width = 200;  // Image width
         int height = 200; // Image height
@@ -157,8 +203,9 @@ public class User implements Serializable {
 
         return bitmap;  // Return the generated bitmap
     }
-
-    // Helper method to encode Bitmap to a String (Base64 encoding or any method you prefer)
+    /**
+     * Helper method to encode Bitmap to a String (Base64 encoding)
+     */
     private String encodeBitmap(Bitmap bitmap) {
         // Convert bitmap to a Base64 encoded string (as an example)
         ByteArrayOutputStream baos = new ByteArrayOutputStream();

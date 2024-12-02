@@ -14,6 +14,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 
+/**
+ * An activity that displays a list of users for admin management. The admin can search and filter
+ * users by name. If the admin clicks on a user, they will be redirected to the user's profile and
+ * perform other operations.
+ */
 public class UsersListActivity extends AppCompatActivity {
 
     private ListView usersListView;
@@ -82,6 +87,11 @@ public class UsersListActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Filters the list of users based on the given query.
+     *
+     * @param query The search query.
+     */
     private void filterUsers(String query) {
         filteredUsersList.clear();
         for (String userName : usersList) {
@@ -91,6 +101,7 @@ public class UsersListActivity extends AppCompatActivity {
         }
         adapter.notifyDataSetChanged();
     }
+
 
     @Override
     protected void onResume() {

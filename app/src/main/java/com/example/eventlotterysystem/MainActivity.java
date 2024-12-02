@@ -12,7 +12,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.installations.FirebaseInstallations;
-
+/**
+ * Represents the loading page of the event lottery system.
+ *
+ * <p>This activity serves as the loading screen for the app. During the loading process, app control
+ * will be initiated, which will connect the app to the database and fetch the necessary data. After that,
+ * the screen will jump to the landing page automatically.</p>
+ */
 
 public class MainActivity extends AppCompatActivity {
 

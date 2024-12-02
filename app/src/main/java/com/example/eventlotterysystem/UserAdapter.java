@@ -8,6 +8,9 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import java.util.List;
 
+/**
+ * Custom adapter for displaying a list of users in a ListView.
+ */
 public class UserAdapter extends ArrayAdapter<User> {
     private Context context;
     private List<User> users;
