@@ -141,4 +141,51 @@ public class AdminTest {
         onView(withText("DELETE")).perform(click());
         onView(withText("Mock User")).check(doesNotExist());
     }
+
+    /**
+     * Test the admin Event Management
+     * Fulfill US:
+     *  US 03.04.01 As an administrator, I want to be able to browse events.
+     *  US 03.03.02 As an administrator, I want to be able to remove hashed QR code data
+     *  US 03.01.01 As an administrator, I want to be able to remove events.
+     * @throws InterruptedException
+     */
+    @Test
+    public void testEventManagement() throws InterruptedException {
+        // Wait for 12 seconds to ensure the delay has passed
+        Thread.sleep(12000);
+        // set that the user is an admin
+        User curUser = Control.getCurrentUser();
+        curUser.setAdmin(true);
+        curUser.generate_picture();
+        Control.getInstance().saveUser(curUser);
+        String mockPoster = curUser.getPicture();
+        // Create a mock event
+        String uniqueEventName = "Admin Test Event " + System.currentTimeMillis();
+        Event newEvent = new Event(Control.getInstance().getCurrentEventIDForEventCreation(), uniqueEventName, "Mock Description", 3, 2, true);
+        newEvent.setCreatorRef(-1);
+        newEvent.generateQR();
+        newEvent.setPoster(mockPoster);
+        Control.getInstance().getEventList().add(newEvent);
+        Control.getInstance().saveEvent(newEvent);
+        // Check if Landing_page activity was launched
+        onView(withId(R.id.landing_page))
+                .check(matches(isDisplayed()));
+        onView(withId(R.id.eventsIcon))
+                .perform(click());
+        onView(withText(uniqueEventName)).perform(scrollTo(), click());
+        onView(withSubstring(uniqueEventName)).check(matches(isDisplayed()));
+        onView(withId(R.id.del_button)).perform(click());
+        onView(withText("Poster")).perform(click());
+        onView(withId(R.id.del_button)).perform(click());
+        onView(withText("QR code")).perform(click());
+        onView(withId(R.id.del_button)).perform(click());
+        onView(withText("Event")).perform(click());
+        onView(withText("Delete")).perform(click());
+        onView(withSubstring(uniqueEventName)).check(doesNotExist());
+
+
+
+
+    }
 }

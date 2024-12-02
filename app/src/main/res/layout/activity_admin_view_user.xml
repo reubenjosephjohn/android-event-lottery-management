@@ -69,7 +69,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:inputType="text"
                 android:text="Contact"
                 android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
 
@@ -78,7 +77,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:inputType="text"
                 android:text="Email"
                 android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
 
